@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace EAD_Project.Migrations
+namespace fitTrack.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace EAD_Project.Migrations
+namespace fitTrack.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260327172425_InitialCreate")]

@@ -5,7 +5,7 @@ using FitTrackApi.DTOs;
 using FitTrackApi.Models;
 using FitTrackApi.Services;
 
-namespace EAD_Project.Controllers;
+namespace fitTrack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
