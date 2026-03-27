@@ -11,4 +11,9 @@ public class User
 
     [Required]
     public string PasswordHash { get; set; }
+
+    public double? Weight { get; set; }
+    [Required]    
+
+    public string Language { get; set; }
 }
