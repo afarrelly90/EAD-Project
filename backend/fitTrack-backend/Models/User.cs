@@ -6,6 +6,7 @@ namespace fitTrack.Models
 		public string Name { get; set; }
 		public string Email { get; set; }
 		public string PasswordHash { get; set; }
-
+        public double? Weight { get; set; }
+		public string Language { get; set; }
 	}
 }
