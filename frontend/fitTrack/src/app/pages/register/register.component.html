@@ -1,0 +1,63 @@
+<ion-content fullscreen class="register-page">
+  <div class="register-page__wrapper">
+    <div class="register-page__header">
+      <h1 class="register-page__title">Get Started</h1>
+      <p class="register-page__subtitle">Create an account to continue.</p>
+    </div>
+
+    <div class="register-page__image-container">
+      <img
+        src="assets/images/register-fitness.jpg"
+        alt="Workout"
+        class="register-page__image"
+      />
+    </div>
+
+    <div class="register-page__card">
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        class="register-page__form"
+      >
+        <ion-item lines="none" class="register-page__input">
+          <ion-input
+            placeholder="Full Name"
+            formControlName="fullName"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="register-page__input">
+          <ion-input
+            placeholder="Email Address"
+            formControlName="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="register-page__input">
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Password"
+            formControlName="password"
+          >
+          </ion-input>
+        </ion-item>
+
+        <div class="register-page__terms">
+          By signing up, you agree to our
+          <span class="register-page__terms-link">Terms & Conditions</span>
+        </div>
+
+        <ion-button expand="block" type="submit" class="register-page__button">
+          Sign Up
+        </ion-button>
+      </form>
+
+      <div class="register-page__login">
+        <span>Already have an account?</span>
+        <span class="register-page__login-link" routerLink="/login"
+          >Log In</span
+        >
+      </div>
+    </div>
+  </div>
+</ion-content>
