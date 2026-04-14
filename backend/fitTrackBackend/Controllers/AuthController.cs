@@ -29,7 +29,8 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Email = dto.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+            Language = dto.Language ?? "en",
         };
 
         _context.Users.Add(user);

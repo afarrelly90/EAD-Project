@@ -9,6 +9,7 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
+import { AuthService } from 'src/app/services/auth';
 
 @Component({
   selector: 'app-login',
@@ -28,10 +29,10 @@ import {
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
-  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -44,11 +45,16 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Login data:', this.loginForm.value);
-
-      this.router.navigate(['/home']);
-    } else {
-      this.loginForm.markAllAsTouched();
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Invalid credentials');
+        }
+      });
     }
   }
 }

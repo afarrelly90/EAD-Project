@@ -16,8 +16,9 @@ public class TokenService
             new Claim(ClaimTypes.Email, user.Email)
         };
 
+        var secret = "THIS_IS_A_SUPER_SECRET_KEY_12345"; 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes("my-secret-key"));
+            Encoding.UTF8.GetBytes(secret));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

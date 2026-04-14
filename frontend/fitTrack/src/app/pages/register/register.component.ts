@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 import {
   IonContent,
@@ -8,7 +13,8 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/services/auth';
 
 @Component({
   selector: 'app-register',
@@ -22,27 +28,38 @@ import { RouterModule } from '@angular/router';
     IonItem,
     IonInput,
     IonButton,
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class RegisterComponent implements OnInit {
-
   registerForm!: FormGroup;
-  showPassword = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      language: ['en']
     });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
+      this.authService.register(this.registerForm.value).subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert(err.error);
+        },
+      });
     }
   }
 }
