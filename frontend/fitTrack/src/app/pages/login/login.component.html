@@ -1,0 +1,60 @@
+<ion-content fullscreen class="login-page">
+
+  <div class="login-page__image-wrapper">
+    <img
+      src="assets/images/login-fitness.jpg"
+      alt="Workout"
+      class="login-page__image"
+    />
+  </div>
+
+  <div class="login-page__card">
+
+    <div class="login-page__header">
+      <h1 class="login-page__title">Welcome Back</h1>
+      <p class="login-page__subtitle">Log in to your account.</p>
+    </div>
+
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="login-page__form"
+    >
+
+      <ion-item lines="none" class="login-page__input">
+        <ion-input
+          placeholder="Email Address"
+          formControlName="email"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="login-page__input">
+        <ion-input
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Password"
+          formControlName="password"
+        ></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" class="login-page__button">
+        Log In
+      </ion-button>
+
+    </form>
+
+    <div class="login-page__divider">
+      <span>or</span>
+    </div>
+
+    <ion-button expand="block" fill="outline" class="login-page__signup-btn" routerLink="/register">
+      Sign Up
+    </ion-button>
+
+    <div class="login-page__signup">
+      <span>Don't have an account?</span>
+      <span class="login-page__signup-link" routerLink="/register">Sign Up</span>
+    </div>
+
+  </div>
+
+</ion-content>

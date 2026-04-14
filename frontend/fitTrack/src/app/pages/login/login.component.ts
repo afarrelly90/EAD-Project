@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 
 import {
   IonContent,
@@ -8,13 +9,12 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
-import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: 'app-login',
   standalone: true,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,27 +22,33 @@ import { RouterModule } from '@angular/router';
     IonItem,
     IonInput,
     IonButton,
-    RouterModule
+    RouterModule,
   ]
 })
-export class RegisterComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
-  registerForm!: FormGroup;
+  loginForm!: FormGroup;
   showPassword = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
-    this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required]],
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      console.log('Login data:', this.loginForm.value);
+
+      this.router.navigate(['/home']);
+    } else {
+      this.loginForm.markAllAsTouched();
     }
   }
 }
