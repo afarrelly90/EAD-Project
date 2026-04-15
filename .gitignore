@@ -80,6 +80,14 @@ coverage/
 
 # Database
 *.db
+*.db-shm
+*.db-wal
+*.db-journal
 *.sqlite
 *.sqlite3
-/.vs
+
+# Visual Studio / VS Code
+.vs/
+*.user
+*.suo
+.vscode/
