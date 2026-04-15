@@ -9,6 +9,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=app.db"));
 
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ExerciseService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
