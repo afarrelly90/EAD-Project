@@ -1,0 +1,154 @@
+.create-exercise-page {
+  --background: linear-gradient(180deg, #f4effb 0%, #f8f4fc 100%);
+
+  &__wrapper {
+    min-height: 100%;
+    padding: 18px 16px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  &__back-button {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(110, 97, 143, 0.12);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    color: #2d2744;
+    display: grid;
+    place-items: center;
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    color: #2b2542;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 22px;
+  }
+
+  &__card {
+    padding: 18px 12px 18px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  &__field {
+    margin-bottom: 16px;
+
+    &--metric {
+      flex: 1;
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2b2542;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__message {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(255, 233, 239, 0.9);
+    color: #9d496a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__input,
+  &__textarea {
+    --background: #f6f1fb;
+    --color: #2b2542;
+    --placeholder-color: #a49dbb;
+    --border-radius: 18px;
+    --padding-start: 10px;
+    --inner-padding-end: 12px;
+    border: 1px solid rgba(188, 178, 214, 0.34);
+    border-radius: 18px;
+  }
+
+  &__textarea {
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+  }
+
+  &__input-icon {
+    color: #8d86a6;
+    font-size: 18px;
+    margin-right: 2px;
+  }
+
+  &__field-error {
+    margin: 8px 4px 0;
+    color: #9d496a;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__chip {
+    min-height: 34px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: #eee7f7;
+    color: #716887;
+    font-size: 13px;
+    font-weight: 600;
+
+    &--active {
+      background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+      color: #ffffff;
+    }
+  }
+
+  &__metrics {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__footer {
+    padding: 12px;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.62);
+  }
+
+  &__submit {
+    --background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    --border-radius: 999px;
+    height: 54px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: none;
+  }
+}
