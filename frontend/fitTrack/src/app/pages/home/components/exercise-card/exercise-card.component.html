@@ -1,0 +1,19 @@
+<article class="exercise-card">
+  <img
+    [src]="exercise.image"
+    [alt]="exercise.title"
+    class="exercise-card__image"
+  />
+
+  <div class="exercise-card__content">
+    <h3 class="exercise-card__title">{{ exercise.title }}</h3>
+
+    <div class="exercise-card__meta">
+      <span class="exercise-card__category">{{ exercise.category }}</span>
+    </div>
+  </div>
+
+  <button type="button" class="exercise-card__action" aria-label="View exercise">
+    <ion-icon name="chevron-forward-outline"></ion-icon>
+  </button>
+</article>

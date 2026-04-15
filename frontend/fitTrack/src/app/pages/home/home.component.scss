@@ -1,0 +1,220 @@
+.home-page {
+  --background: linear-gradient(180deg, #d7c0fb 0%, #cdb2fb 45%, #c8a7f4 100%);
+
+  &__screen {
+    min-height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 26px 18px 28px;
+    background: #f8f6fa;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    margin: 0;
+    color: #26203e;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__icon-button {
+    width: 72px;
+    height: 72px;
+    border: 1px solid rgba(115, 104, 148, 0.14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.46);
+    display: grid;
+    place-items: center;
+    color: #2b2542;
+
+    ion-icon {
+      font-size: 30px;
+    }
+  }
+
+  &__create-card {
+    margin-top: 28px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.58);
+    border-radius: 34px;
+  }
+
+  &__create-action {
+    width: 100%;
+    border: 0;
+    border-radius: 30px;
+    padding: 20px 24px 20px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(90deg, #8d63ff, #b69cff);
+    text-align: left;
+  }
+
+  &__create-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    display: grid;
+    place-items: center;
+    color: #2d2744;
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__create-copy {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__create-title {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__create-subtitle {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  &__create-arrow {
+    font-size: 28px;
+    color: #fff;
+  }
+
+  &__section {
+    margin-top: 38px;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__section-title {
+    margin: 0;
+    color: #26203e;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__section-link {
+    border: 0;
+    background: transparent;
+    color: #847ca3;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 17px;
+    font-weight: 500;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: 14px;
+    margin-top: 22px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__filter {
+    min-width: 98px;
+    height: 52px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f1ebf8 0%, #ede6f5 100%);
+    color: #7c7698;
+    font-size: 16px;
+    font-weight: 600;
+
+    &--active {
+      background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+      color: #ffffff;
+    }
+  }
+
+  &__list {
+    margin-top: 24px;
+    padding: 8px 18px;
+    border-radius: 34px;
+    background: rgba(255, 255, 255, 0.62);
+  }
+
+  &__state {
+    margin-top: 24px;
+    padding: 22px 20px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.62);
+    color: #6f688c;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+
+    &--error {
+      color: #a14f71;
+    }
+  }
+
+  &__list-item {
+    display: block;
+    border-bottom: 1px solid rgba(195, 186, 217, 0.32);
+
+    &--last {
+      border-bottom: 0;
+    }
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  &__page-button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.72);
+    color: #7c7698;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+    &--active {
+      background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+      color: #ffffff;
+    }
+  }
+}
