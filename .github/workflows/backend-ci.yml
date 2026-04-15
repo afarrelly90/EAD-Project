@@ -32,3 +32,6 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
+
+      - name: Run backend tests
+        run: dotnet test ../fitTrackBackend.Tests/fitTrackBackend.Tests.csproj --configuration Release
