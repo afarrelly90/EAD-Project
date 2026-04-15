@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -23,7 +24,7 @@ type ExerciseListItem = ExerciseCardItem & {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, ExerciseCardComponent],
+  imports: [CommonModule, RouterModule, IonContent, IonIcon, ExerciseCardComponent],
 })
 export class HomeComponent implements OnInit {
   readonly filters: ExerciseFilter[] = ['All', 'Core', 'Upper', 'Lower'];
