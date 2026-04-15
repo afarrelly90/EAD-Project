@@ -1,3 +1,92 @@
-<p>
-  home works!
-</p>
+<ion-content fullscreen class="home-page">
+  <div class="home-page__screen">
+    <header class="home-page__header">
+      <h1 class="home-page__title">Exercises</h1>
+
+      <button type="button" class="home-page__icon-button" aria-label="Search">
+        <ion-icon name="search-outline"></ion-icon>
+      </button>
+    </header>
+
+    <section class="home-page__create-card">
+      <button type="button" class="home-page__create-action">
+        <span class="home-page__create-icon">
+          <ion-icon name="add-outline"></ion-icon>
+        </span>
+
+        <span class="home-page__create-copy">
+          <span class="home-page__create-title">Create New Exercise</span>
+          <span class="home-page__create-subtitle">Add a custom exercise</span>
+        </span>
+
+        <ion-icon
+          name="chevron-forward-outline"
+          class="home-page__create-arrow"
+        ></ion-icon>
+      </button>
+    </section>
+
+    <section class="home-page__section">
+      <div class="home-page__section-header">
+        <h2 class="home-page__section-title">All Exercises</h2>
+        <button type="button" class="home-page__section-link">
+          View Categories
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="home-page__filters">
+        <button
+          *ngFor="let filter of filters"
+          type="button"
+          class="home-page__filter"
+          [class.home-page__filter--active]="selectedFilter === filter"
+          (click)="selectFilter(filter)"
+        >
+          {{ filter }}
+        </button>
+      </div>
+
+      @if (isLoading) {
+        <div class="home-page__state">Loading exercises...</div>
+      }
+
+      @if (hasError) {
+        <div class="home-page__state home-page__state--error">
+          Could not load exercises right now.
+        </div>
+      }
+
+      @if (!isLoading && !hasError && filteredExercises.length === 0) {
+        <div class="home-page__state">
+          No exercises found.
+        </div>
+      }
+
+      @if (!isLoading && !hasError && filteredExercises.length > 0) {
+        <div class="home-page__list">
+          <app-exercise-card
+            *ngFor="let exercise of paginatedExercises; let isLast = last"
+            [exercise]="exercise"
+            [class.home-page__list-item--last]="isLast"
+            class="home-page__list-item"
+          ></app-exercise-card>
+        </div>
+      }
+
+      @if (!isLoading && !hasError && totalPages.length > 1) {
+        <div class="home-page__pagination">
+          <button
+            *ngFor="let page of totalPages"
+            type="button"
+            class="home-page__page-button"
+            [class.home-page__page-button--active]="currentPage === page"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+      }
+    </section>
+  </div>
+</ion-content>
