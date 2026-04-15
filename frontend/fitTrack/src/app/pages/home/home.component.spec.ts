@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { HomeComponent } from './home.component';
 import { ExerciseDto } from 'src/app/services/exercise';
@@ -9,6 +10,14 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let httpMock: HttpTestingController;
+  const mockRouter = {
+    navigate: jasmine.createSpy('navigate'),
+    createUrlTree: jasmine.createSpy('createUrlTree').and.returnValue({}),
+    serializeUrl: jasmine.createSpy('serializeUrl').and.returnValue(''),
+    events: {
+      subscribe: jasmine.createSpy('subscribe'),
+    },
+  };
   const apiUrl = 'http://localhost:5240/api/Exercises';
   const mockExercises: ExerciseDto[] = [
     {
@@ -94,6 +103,8 @@ describe('HomeComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: {} },
       ]
     }).compileComponents();
 
