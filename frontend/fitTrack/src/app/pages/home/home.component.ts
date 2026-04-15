@@ -53,6 +53,10 @@ export class HomeComponent implements OnInit {
     this.loadExercises();
   }
 
+  ionViewWillEnter(): void {
+    this.loadExercises();
+  }
+
   get filteredExercises(): ExerciseListItem[] {
     if (this.selectedFilter === 'All') {
       return this.exercises;
