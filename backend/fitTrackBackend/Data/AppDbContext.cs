@@ -9,4 +9,5 @@ public class AppDbContext : DbContext
         : base(options) {}
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Exercise> Exercises { get; set; }
 }
