@@ -142,6 +142,7 @@ public class AuthControllerTests
         using var context = TestDbContextFactory.CreateContext(nameof(UpdateProfile_UpdatesWeightAndLanguage));
         context.Users.Add(new User
         {
+            FullName = "Existing User",
             Email = "user@test.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("correct-password"),
             Weight = null,
