@@ -53,6 +53,45 @@ public class ExerciseService
         return MapToDto(exercise);
     }
 
+    public async Task<ExerciseDto?> UpdateAsync(int id, UpdateExerciseDto dto)
+    {
+        var exercise = await _context.Exercises.FirstOrDefaultAsync(x => x.Id == id);
+        if (exercise == null)
+        {
+            return null;
+        }
+
+        exercise.Title = dto.Title;
+        exercise.Description = dto.Description;
+        exercise.VideoLink = dto.VideoLink;
+        exercise.ImageUrl = dto.ImageUrl;
+        exercise.Calories = dto.Calories;
+        exercise.IsCore = dto.IsCore;
+        exercise.IsUpperBody = dto.IsUpperBody;
+        exercise.IsLowerBody = dto.IsLowerBody;
+        exercise.Difficulty = dto.Difficulty;
+        exercise.DurationMinutes = dto.DurationMinutes;
+        exercise.Equipment = dto.Equipment;
+
+        await _context.SaveChangesAsync();
+
+        return MapToDto(exercise);
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var exercise = await _context.Exercises.FirstOrDefaultAsync(x => x.Id == id);
+        if (exercise == null)
+        {
+            return false;
+        }
+
+        _context.Exercises.Remove(exercise);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     private static ExerciseDto MapToDto(Exercise exercise)
     {
         return new ExerciseDto

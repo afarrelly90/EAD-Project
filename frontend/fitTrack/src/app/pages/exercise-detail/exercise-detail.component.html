@@ -88,13 +88,29 @@
         }
       </div>
 
-      <ion-button
-        class="exercise-detail-page__cta"
-        expand="block"
-        type="button"
-      >
-        Let's Go!
-      </ion-button>
+      <div class="exercise-detail-page__actions">
+        <ion-button
+          class="exercise-detail-page__update-button"
+          expand="block"
+          type="button"
+          [href]="editExerciseUrl"
+        >
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Update Exercise
+        </ion-button>
+
+        <ion-button
+          class="exercise-detail-page__delete-button"
+          expand="block"
+          fill="outline"
+          color="danger"
+          type="button"
+          (click)="deleteExercise()"
+        >
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Delete Exercise
+        </ion-button>
+      </div>
     </section>
   }
 </ion-content>

@@ -4,10 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  createOutline,
   chevronBackOutline,
   flameOutline,
   playCircleOutline,
   timeOutline,
+  trashOutline,
 } from 'ionicons/icons';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
 
@@ -36,10 +38,12 @@ export class ExerciseDetailComponent implements OnInit {
     private exerciseService: ExerciseService
   ) {
     addIcons({
+      createOutline,
       chevronBackOutline,
       flameOutline,
       playCircleOutline,
       timeOutline,
+      trashOutline,
     });
   }
 
@@ -103,8 +107,44 @@ export class ExerciseDetailComponent implements OnInit {
     return this.exercise?.equipment || 'None';
   }
 
+  get editExerciseUrl(): string {
+    return this.exercise ? `/exercises/${this.exercise.id}/edit` : '/home';
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+
+  editExercise(): void {
+    if (!this.exercise) {
+      return;
+    }
+
+    window.location.href = this.editExerciseUrl;
+  }
+
+  deleteExercise(): void {
+    if (!this.exercise) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete ${this.exercise.title}? This action cannot be undone.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.exerciseService.deleteExercise(this.exercise.id).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error(error);
+        window.alert('Could not delete exercise.');
+      },
+    });
   }
 
   private loadExercise(): void {

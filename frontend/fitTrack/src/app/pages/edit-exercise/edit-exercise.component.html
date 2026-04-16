@@ -1,0 +1,185 @@
+<ion-content fullscreen class="edit-exercise-page">
+  <div class="edit-exercise-page__wrapper">
+    <header class="edit-exercise-page__header">
+      <button
+        type="button"
+        class="edit-exercise-page__back-button"
+        aria-label="Go back"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <h1 class="edit-exercise-page__title">Edit Exercise</h1>
+    </header>
+
+    @if (isLoading) {
+      <div class="edit-exercise-page__state">Loading exercise...</div>
+    } @else if (hasError || !exercise) {
+      <div class="edit-exercise-page__state edit-exercise-page__state--error">
+        Could not load this exercise.
+      </div>
+    } @else {
+      <form
+        [formGroup]="editExerciseForm"
+        (ngSubmit)="onSubmit()"
+        class="edit-exercise-page__form"
+      >
+        <section class="edit-exercise-page__card">
+          @if (showValidationMessage) {
+            <div class="edit-exercise-page__message">
+              Please fill in all required fields before updating the exercise.
+            </div>
+          }
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Image Link</label>
+            <ion-item lines="none" class="edit-exercise-page__input">
+              <ion-icon
+                name="link-outline"
+                slot="start"
+                class="edit-exercise-page__input-icon"
+              ></ion-icon>
+              <ion-input
+                formControlName="imageUrl"
+                placeholder="https://example.com/image.jpg"
+              ></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Video Link</label>
+            <ion-item lines="none" class="edit-exercise-page__input">
+              <ion-icon
+                name="link-outline"
+                slot="start"
+                class="edit-exercise-page__input-icon"
+              ></ion-icon>
+              <ion-input
+                formControlName="videoLink"
+                placeholder="https://example.com/video"
+              ></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Name</label>
+            <ion-item lines="none" class="edit-exercise-page__input">
+              <ion-input
+                formControlName="title"
+                placeholder="Enter exercise name..."
+              ></ion-input>
+            </ion-item>
+            @if (editExerciseForm.controls.title.touched && editExerciseForm.controls.title.invalid) {
+              <p class="edit-exercise-page__field-error">
+                Exercise name is required.
+              </p>
+            }
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Primary Muscle Group</label>
+            <div class="edit-exercise-page__chips">
+              @for (group of muscleGroups; track group) {
+                <button
+                  type="button"
+                  class="edit-exercise-page__chip"
+                  [class.edit-exercise-page__chip--active]="selectedMuscleGroup === group"
+                  (click)="selectMuscleGroup(group)"
+                >
+                  @if (group === 'Upper') {
+                    Upper Body
+                  } @else if (group === 'Lower') {
+                    Lower Body
+                  } @else {
+                    {{ group }}
+                  }
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Instructions</label>
+            <ion-item lines="none" class="edit-exercise-page__textarea">
+              <ion-textarea
+                formControlName="description"
+                placeholder="Enter any instructions for the exercise..."
+                autoGrow="true"
+                rows="4"
+              ></ion-textarea>
+            </ion-item>
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Equipment</label>
+            <ion-item lines="none" class="edit-exercise-page__input">
+              <ion-select
+                formControlName="equipment"
+                interface="action-sheet"
+                toggleIcon="chevron-down-outline"
+              >
+                @for (option of equipmentOptions; track option) {
+                  <ion-select-option [value]="option">
+                    {{ option }}
+                  </ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+          </div>
+
+          <div class="edit-exercise-page__metrics">
+            <div class="edit-exercise-page__field edit-exercise-page__field--metric">
+              <label class="edit-exercise-page__label">Calories</label>
+              <ion-item lines="none" class="edit-exercise-page__input">
+                <ion-input
+                  type="number"
+                  formControlName="calories"
+                  placeholder="50"
+                ></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="edit-exercise-page__field edit-exercise-page__field--metric">
+              <label class="edit-exercise-page__label">Minutes</label>
+              <ion-item lines="none" class="edit-exercise-page__input">
+                <ion-input
+                  type="number"
+                  formControlName="durationMinutes"
+                  placeholder="10"
+                ></ion-input>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="edit-exercise-page__field">
+            <label class="edit-exercise-page__label">Difficulty</label>
+            <div class="edit-exercise-page__chips">
+              @for (difficulty of difficultyOptions; track difficulty) {
+                <button
+                  type="button"
+                  class="edit-exercise-page__chip"
+                  [class.edit-exercise-page__chip--active]="editExerciseForm.value.difficulty === difficulty"
+                  (click)="editExerciseForm.patchValue({ difficulty: difficulty })"
+                >
+                  {{ difficulty }}
+                </button>
+              }
+            </div>
+          </div>
+        </section>
+
+        <div class="edit-exercise-page__footer">
+          <ion-button
+            expand="block"
+            type="submit"
+            class="edit-exercise-page__submit"
+            [disabled]="isSaving"
+          >
+            {{ isSaving ? 'Updating...' : 'Update Exercise' }}
+          </ion-button>
+        </div>
+      </form>
+    }
+  </div>
+</ion-content>

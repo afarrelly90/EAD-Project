@@ -32,6 +32,20 @@ export interface CreateExerciseDto {
   equipment?: string | null;
 }
 
+export interface UpdateExerciseDto {
+  title: string;
+  description?: string | null;
+  videoLink?: string | null;
+  imageUrl?: string | null;
+  calories: number;
+  isCore: boolean;
+  isUpperBody: boolean;
+  isLowerBody: boolean;
+  difficulty: string;
+  durationMinutes: number;
+  equipment?: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -50,5 +64,13 @@ export class ExerciseService {
 
   createExercise(data: CreateExerciseDto): Observable<ExerciseDto> {
     return this.http.post<ExerciseDto>(this.apiUrl, data);
+  }
+
+  updateExercise(id: number, data: UpdateExerciseDto): Observable<ExerciseDto> {
+    return this.http.put<ExerciseDto>(`${this.apiUrl}/${id}`, data);
+  }
+
+  deleteExercise(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

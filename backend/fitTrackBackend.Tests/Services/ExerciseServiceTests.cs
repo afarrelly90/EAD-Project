@@ -61,4 +61,56 @@ public class ExerciseServiceTests
         Assert.True(result.IsCore);
         Assert.Single(context.Exercises);
     }
+
+    [Fact]
+    public async Task UpdateAsync_UpdatesExerciseAndReturnsDto()
+    {
+        using var context = TestDbContextFactory.CreateContext(nameof(UpdateAsync_UpdatesExerciseAndReturnsDto));
+        context.Exercises.Add(new Exercise
+        {
+            Title = "Old Title",
+            Calories = 20,
+            Difficulty = "Beginner",
+            DurationMinutes = 4
+        });
+        await context.SaveChangesAsync();
+
+        var service = new ExerciseService(context);
+        var dto = new UpdateExerciseDto
+        {
+            Title = "New Title",
+            Calories = 90,
+            IsUpperBody = true,
+            Difficulty = "Advanced",
+            DurationMinutes = 18
+        };
+
+        var result = await service.UpdateAsync(1, dto);
+
+        Assert.NotNull(result);
+        Assert.Equal("New Title", result!.Title);
+        Assert.True(result.IsUpperBody);
+        Assert.Equal("Advanced", result.Difficulty);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_RemovesExercise_WhenItExists()
+    {
+        using var context = TestDbContextFactory.CreateContext(nameof(DeleteAsync_RemovesExercise_WhenItExists));
+        context.Exercises.Add(new Exercise
+        {
+            Title = "Burpees",
+            Calories = 100,
+            Difficulty = "Intermediate",
+            DurationMinutes = 10
+        });
+        await context.SaveChangesAsync();
+
+        var service = new ExerciseService(context);
+
+        var result = await service.DeleteAsync(1);
+
+        Assert.True(result);
+        Assert.Empty(context.Exercises);
+    }
 }

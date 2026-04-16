@@ -40,4 +40,28 @@ public class ExercisesController : ControllerBase
         var exercise = await _exerciseService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = exercise.Id }, exercise);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<ExerciseDto>> Update(int id, UpdateExerciseDto dto)
+    {
+        var exercise = await _exerciseService.UpdateAsync(id, dto);
+        if (exercise == null)
+        {
+            return NotFound(new { message = "Exercise not found" });
+        }
+
+        return Ok(exercise);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted = await _exerciseService.DeleteAsync(id);
+        if (!deleted)
+        {
+            return NotFound(new { message = "Exercise not found" });
+        }
+
+        return NoContent();
+    }
 }
