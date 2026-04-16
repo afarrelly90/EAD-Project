@@ -1,0 +1,100 @@
+<ion-content fullscreen class="exercise-detail-page">
+  @if (isLoading) {
+    <div class="exercise-detail-page__state">Loading exercise...</div>
+  } @else if (hasError || !exercise) {
+    <div class="exercise-detail-page__state exercise-detail-page__state--error">
+      Could not load this exercise.
+    </div>
+  } @else {
+    <div class="exercise-detail-page__hero">
+      <img
+        [src]="heroImage"
+        [alt]="exercise.title"
+        class="exercise-detail-page__hero-image"
+      />
+
+      <button
+        type="button"
+        class="exercise-detail-page__back-button"
+        aria-label="Go back"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+    </div>
+
+    <section class="exercise-detail-page__sheet">
+      <div class="exercise-detail-page__sheet-header">
+        <div>
+          <p class="exercise-detail-page__category">{{ categoryLabel }}</p>
+          <h1 class="exercise-detail-page__title">{{ exercise.title }}</h1>
+        </div>
+
+        <div class="exercise-detail-page__difficulty">
+          {{ exercise.difficulty }}
+        </div>
+      </div>
+
+      <div class="exercise-detail-page__stats">
+        <div class="exercise-detail-page__stat">
+          <ion-icon name="flame-outline"></ion-icon>
+          <span>{{ exercise.calories }} Kcal</span>
+        </div>
+
+        <div class="exercise-detail-page__stat">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ exercise.durationMinutes }} Min</span>
+        </div>
+      </div>
+
+      <div class="exercise-detail-page__description">
+        {{ exercise.description || 'A solid movement to build strength and stay consistent with your training.' }}
+      </div>
+
+      <div class="exercise-detail-page__info-card">
+        <div class="exercise-detail-page__info-row">
+          <span class="exercise-detail-page__info-label">Equipment</span>
+          <span class="exercise-detail-page__info-value">{{ equipmentLabel }}</span>
+        </div>
+
+        <div class="exercise-detail-page__info-row">
+          <span class="exercise-detail-page__info-label">Muscle Group</span>
+          <span class="exercise-detail-page__info-value">{{ categoryLabel }}</span>
+        </div>
+
+        <div class="exercise-detail-page__info-row">
+          <span class="exercise-detail-page__info-label">Intensity</span>
+          <span class="exercise-detail-page__info-value">{{ exercise.difficulty }}</span>
+        </div>
+
+        @if (exercise.videoLink) {
+          <a
+            class="exercise-detail-page__video-card"
+            [href]="exercise.videoLink"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="exercise-detail-page__video-icon">
+              <ion-icon name="play-circle-outline"></ion-icon>
+            </div>
+
+            <div class="exercise-detail-page__video-copy">
+              <div class="exercise-detail-page__video-title">Watch Demo</div>
+              <div class="exercise-detail-page__video-subtitle">
+                Open the exercise video guide
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+
+      <ion-button
+        class="exercise-detail-page__cta"
+        expand="block"
+        type="button"
+      >
+        Let's Go!
+      </ion-button>
+    </section>
+  }
+</ion-content>

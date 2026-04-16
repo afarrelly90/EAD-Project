@@ -1,0 +1,207 @@
+.exercise-detail-page {
+  --background: linear-gradient(180deg, #e7d7ff 0%, #f7f2fb 36%, #f7f3fb 100%);
+
+  &__hero {
+    position: relative;
+    height: 48vh;
+    min-height: 360px;
+    max-height: 460px;
+  }
+
+  &__hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__back-button {
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #241f39;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 24px rgba(36, 31, 57, 0.12);
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__sheet {
+    margin-top: -28px;
+    padding: 22px 16px 26px;
+    border-radius: 28px 28px 0 0;
+    background: #f8f6fa;
+    min-height: calc(52vh + 28px);
+    position: relative;
+  }
+
+  &__sheet-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  &__category {
+    margin: 0 0 6px;
+    color: #8a84a4;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__title {
+    margin: 0;
+    color: #211c36;
+    font-size: 30px;
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__difficulty {
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #51496c;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+    color: #544d70;
+  }
+
+  &__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 17px;
+    }
+  }
+
+  &__description {
+    margin-top: 18px;
+    color: #302a48;
+    font-size: 15px;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  &__info-card {
+    margin-top: 22px;
+    padding: 18px 14px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  &__info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(208, 200, 228, 0.5);
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
+  }
+
+  &__info-label {
+    color: #8a84a4;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__info-value {
+    color: #2b2542;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  &__video-card {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f0eafa 0%, #ece5f8 100%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  &__video-icon {
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+
+  &__video-copy {
+    min-width: 0;
+  }
+
+  &__video-title {
+    color: #241f39;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &__video-subtitle {
+    margin-top: 4px;
+    color: #7d7598;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  &__cta {
+    --background: linear-gradient(180deg, #1e1931 0%, #171326 100%);
+    --border-radius: 18px;
+    margin-top: 22px;
+    height: 54px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  &__state {
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    color: #6f688c;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+
+    &--error {
+      color: #a14f71;
+    }
+  }
+}
