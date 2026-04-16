@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/create-exercise/create-exercise.component').then( m => m.CreateExerciseComponent)
   },
   {
+    path: 'exercises/:id/edit',
+    loadComponent: () => import('./pages/edit-exercise/edit-exercise.component').then( m => m.EditExerciseComponent)
+  },
+  {
     path: 'exercises/:id',
     loadComponent: () => import('./pages/exercise-detail/exercise-detail.component').then( m => m.ExerciseDetailComponent)
   },
