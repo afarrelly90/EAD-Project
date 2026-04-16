@@ -1,0 +1,251 @@
+.profile-page {
+  --background: linear-gradient(180deg, #e7d7ff 0%, #f7f2fb 36%, #f7f3fb 100%);
+
+  &__hero {
+    position: relative;
+    min-height: 340px;
+    padding: 22px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 18px;
+  }
+
+  &__back-button {
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #241f39;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 24px rgba(36, 31, 57, 0.12);
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__hero-copy {
+    max-width: 320px;
+  }
+
+  &__eyebrow {
+    margin: 0 0 8px;
+    color: #8a84a4;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__title {
+    margin: 0;
+    color: #211c36;
+    font-size: 30px;
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    word-break: break-word;
+  }
+
+  &__subtitle {
+    margin: 10px 0 0;
+    color: #544d70;
+    font-size: 15px;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  &__avatar {
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 16px 32px rgba(36, 31, 57, 0.18);
+    position: absolute;
+    right: 18px;
+    bottom: 26px;
+
+    ion-icon {
+      position: absolute;
+      inset: 0;
+      font-size: 102px;
+      opacity: 0.18;
+    }
+
+    span {
+      position: relative;
+      z-index: 1;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+  }
+
+  &__sheet {
+    margin-top: -22px;
+    padding: 22px 16px 28px;
+    border-radius: 28px 28px 0 0;
+    background: #f8f6fa;
+    min-height: calc(100vh - 318px);
+  }
+
+  &__sheet-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__section-label {
+    margin: 0 0 6px;
+    color: #8a84a4;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__section-title {
+    margin: 0;
+    color: #211c36;
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__edit-button {
+    height: 42px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+
+  &__info-card {
+    margin-top: 18px;
+    padding: 18px 14px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  &__info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(208, 200, 228, 0.5);
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
+  }
+
+  &__info-label {
+    color: #8a84a4;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__info-value {
+    color: #2b2542;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  &__form {
+    margin-top: 18px;
+    padding: 18px 14px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2b2542;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__input {
+    --background: #f6f1fb;
+    --color: #2b2542;
+    --placeholder-color: #a49dbb;
+    --border-radius: 18px;
+    --padding-start: 10px;
+    --inner-padding-end: 12px;
+    border: 1px solid rgba(188, 178, 214, 0.34);
+    border-radius: 18px;
+  }
+
+  &__help-text {
+    margin: 8px 4px 0;
+    color: #8a84a4;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  &__save-button {
+    --background: linear-gradient(180deg, #1e1931 0%, #171326 100%);
+    --border-radius: 18px;
+    height: 54px;
+    margin-top: 6px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  &__actions {
+    margin-top: 18px;
+  }
+
+  &__logout-button {
+    --border-radius: 18px;
+    height: 54px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  &__state {
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    color: #6f688c;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+
+    &--error {
+      color: #a14f71;
+    }
+  }
+}

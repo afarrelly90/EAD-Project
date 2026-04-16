@@ -28,6 +28,7 @@ public class AuthController : ControllerBase
 
         var user = new User
         {
+            FullName = dto.FullName,
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Language = dto.Language ?? "en",
@@ -59,8 +60,54 @@ public class AuthController : ControllerBase
             user = new
             {
                 user.Id,
-                user.Email
+                user.FullName,
+                user.Email,
+                user.Weight,
+                user.Language
             }
         });
+    }
+
+    [HttpGet("profile/{id:int}")]
+    public async Task<IActionResult> GetProfile(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(MapProfile(user));
+    }
+
+    [HttpPut("profile/{id:int}")]
+    public async Task<IActionResult> UpdateProfile(int id, UpdateProfileDto dto)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.Weight = dto.Weight;
+        user.Language = string.IsNullOrWhiteSpace(dto.Language) ? "en" : dto.Language;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(MapProfile(user));
+    }
+
+    private static object MapProfile(User user)
+    {
+        return new
+        {
+            user.Id,
+            user.FullName,
+            user.Email,
+            user.Weight,
+            user.Language
+        };
     }
 }

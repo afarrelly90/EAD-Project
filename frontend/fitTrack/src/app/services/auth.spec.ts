@@ -23,7 +23,8 @@ describe('AuthService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); 
+    httpMock.verify();
+    localStorage.clear();
   });
 
   it('should be created', () => {
@@ -46,7 +47,16 @@ describe('AuthService', () => {
 
   it('should call login API', () => {
     const mockData = { email: 'test@test.com', password: '123456' };
-    const mockResponse = { token: 'fake-jwt-token' };
+    const mockResponse = {
+      token: 'fake-jwt-token',
+      user: {
+        id: 1,
+        fullName: 'Test User',
+        email: 'test@test.com',
+        weight: null,
+        language: 'en',
+      },
+    };
 
     service.login(mockData).subscribe(response => {
       expect(response).toEqual(mockResponse);
@@ -57,5 +67,28 @@ describe('AuthService', () => {
     expect(req.request.body).toEqual(mockData);
 
     req.flush(mockResponse);
+  });
+
+  it('should store and clear the session', () => {
+    const response = {
+      token: 'fake-jwt-token',
+      user: {
+        id: 1,
+        fullName: 'Test User',
+        email: 'test@test.com',
+        weight: 72,
+        language: 'it',
+      },
+    };
+
+    service.storeSession(response);
+
+    expect(localStorage.getItem('token')).toBe('fake-jwt-token');
+    expect(service.getStoredUser()).toEqual(response.user);
+
+    service.clearSession();
+
+    expect(localStorage.getItem('token')).toBeNull();
+    expect(localStorage.getItem('user')).toBeNull();
   });
 });

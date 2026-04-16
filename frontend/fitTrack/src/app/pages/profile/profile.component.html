@@ -1,0 +1,130 @@
+<ion-content fullscreen class="profile-page">
+  @if (isLoading) {
+    <div class="profile-page__state">Loading profile...</div>
+  } @else if (hasError || !user) {
+    <div class="profile-page__state profile-page__state--error">
+      Could not load your profile.
+    </div>
+  } @else {
+    <div class="profile-page__hero">
+      <button
+        type="button"
+        class="profile-page__back-button"
+        aria-label="Go back"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <div class="profile-page__hero-copy">
+        <p class="profile-page__eyebrow">User Profile</p>
+        <h2 class="profile-page__title">{{ user.fullName || user.email }}</h2>
+        <p class="profile-page__subtitle">
+          Keep your account details up to date.
+        </p>
+      </div>
+
+      <div class="profile-page__avatar">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <span>{{ initials }}</span>
+      </div>
+    </div>
+
+    <section class="profile-page__sheet">
+      <div class="profile-page__sheet-header">
+        <div>
+          <p class="profile-page__section-label">Account details</p>
+          <h2 class="profile-page__section-title">Your information</h2>
+        </div>
+
+        <button
+          type="button"
+          class="profile-page__edit-button"
+          (click)="toggleEditing()"
+        >
+          <ion-icon [name]="isEditing ? 'close-outline' : 'create-outline'"></ion-icon>
+          {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+        </button>
+      </div>
+
+      <div class="profile-page__info-card">
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">Email</span>
+          <span class="profile-page__info-value">{{ user.email }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">Full Name</span>
+          <span class="profile-page__info-value">{{ user.fullName || 'Not set' }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">Weight</span>
+          <span class="profile-page__info-value">{{ weightLabel }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">Language</span>
+          <span class="profile-page__info-value">{{ languageLabel }}</span>
+        </div>
+      </div>
+
+      @if (isEditing) {
+        <form
+          [formGroup]="profileForm"
+          (ngSubmit)="saveProfile()"
+          class="profile-page__form"
+        >
+          <div class="profile-page__field">
+            <label class="profile-page__label">Weight</label>
+            <ion-item lines="none" class="profile-page__input">
+              <ion-input
+                type="number"
+                inputmode="decimal"
+                formControlName="weight"
+                placeholder="Enter your weight (kg)"
+              ></ion-input>
+            </ion-item>
+            <p class="profile-page__help-text">
+              Leave this blank if you do not want to set a weight yet.
+            </p>
+          </div>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label">Language</label>
+            <ion-item lines="none" class="profile-page__input">
+              <ion-select formControlName="language" interface="action-sheet">
+                <ion-select-option value="en">English</ion-select-option>
+                <ion-select-option value="it">Italian</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            class="profile-page__save-button"
+            [disabled]="isSaving"
+          >
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          </ion-button>
+        </form>
+      }
+
+      <div class="profile-page__actions">
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="medium"
+          type="button"
+          class="profile-page__logout-button"
+          (click)="logout()"
+        >
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Logout
+        </ion-button>
+      </div>
+    </section>
+  }
+</ion-content>
