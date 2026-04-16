@@ -15,6 +15,13 @@
     align-items: center;
   }
 
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
   &__title {
     margin: 0;
     color: #26203e;
@@ -36,6 +43,22 @@
 
     ion-icon {
       font-size: 30px;
+    }
+  }
+
+  &__profile-button {
+    width: 54px;
+    height: 54px;
+    border: 1px solid rgba(115, 104, 148, 0.14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.72);
+    display: grid;
+    place-items: center;
+    color: #2b2542;
+    flex: 0 0 54px;
+
+    ion-icon {
+      font-size: 32px;
     }
   }
 

@@ -63,7 +63,16 @@ describe('LoginComponent', () => {
       password: '123456'
     };
 
-    const mockResponse = { token: 'fake-jwt-token' };
+    const mockResponse = {
+      token: 'fake-jwt-token',
+      user: {
+        id: 1,
+        fullName: 'Test User',
+        email: 'test@test.com',
+        weight: null,
+        language: 'en'
+      }
+    };
 
     component.loginForm.setValue(formData);
 
@@ -76,6 +85,7 @@ describe('LoginComponent', () => {
     req.flush(mockResponse);
 
     expect(localStorage.getItem('token')).toBe('fake-jwt-token');
+    expect(JSON.parse(localStorage.getItem('user') || 'null')).toEqual(mockResponse.user);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
   });
 
