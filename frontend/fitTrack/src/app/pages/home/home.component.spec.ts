@@ -190,6 +190,35 @@ describe('HomeComponent', () => {
     ]);
   });
 
+  it('should toggle search and clear the term when closed', () => {
+    const req = httpMock.expectOne(apiUrl);
+    req.flush(mockExercises);
+
+    component.toggleSearch();
+    component.onSearchTermChange('plank');
+
+    expect(component.isSearchOpen).toBeTrue();
+    expect(component.searchTerm).toBe('plank');
+
+    component.toggleSearch();
+
+    expect(component.isSearchOpen).toBeFalse();
+    expect(component.searchTerm).toBe('');
+  });
+
+  it('should search exercises by title and reset pagination', () => {
+    const req = httpMock.expectOne(apiUrl);
+    req.flush(mockExercises);
+
+    component.currentPage = 2;
+    component.toggleSearch();
+    component.onSearchTermChange('push');
+
+    expect(component.currentPage).toBe(1);
+    expect(component.filteredExercises.length).toBe(1);
+    expect(component.filteredExercises[0].title).toBe('Push-Ups');
+  });
+
   it('should handle API errors', () => {
     spyOn(console, 'error');
 

@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import {
   addOutline,
   chevronForwardOutline,
+  closeOutline,
   searchOutline,
 } from 'ionicons/icons';
 import {
@@ -37,6 +38,8 @@ export class HomeComponent implements OnInit {
 
   selectedFilter: ExerciseFilter = 'All';
   currentPage = 1;
+  searchTerm = '';
+  isSearchOpen = false;
   exercises: ExerciseListItem[] = [];
   isLoading = true;
   hasError = false;
@@ -45,6 +48,7 @@ export class HomeComponent implements OnInit {
     addIcons({
       addOutline,
       chevronForwardOutline,
+      closeOutline,
       searchOutline,
     });
   }
@@ -58,12 +62,19 @@ export class HomeComponent implements OnInit {
   }
 
   get filteredExercises(): ExerciseListItem[] {
-    if (this.selectedFilter === 'All') {
-      return this.exercises;
+    const exercisesByFilter = this.selectedFilter === 'All'
+      ? this.exercises
+      : this.exercises.filter(
+          (exercise) => exercise.filter === this.selectedFilter
+        );
+
+    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+    if (!normalizedSearchTerm) {
+      return exercisesByFilter;
     }
 
-    return this.exercises.filter(
-      (exercise) => exercise.filter === this.selectedFilter
+    return exercisesByFilter.filter((exercise) =>
+      exercise.title.toLowerCase().includes(normalizedSearchTerm)
     );
   }
 
@@ -101,6 +112,21 @@ export class HomeComponent implements OnInit {
 
   selectFilter(filter: ExerciseFilter): void {
     this.selectedFilter = filter;
+    this.currentPage = 1;
+  }
+
+  toggleSearch(): void {
+    this.isSearchOpen = !this.isSearchOpen;
+
+    if (!this.isSearchOpen) {
+      this.searchTerm = '';
+    }
+
+    this.currentPage = 1;
+  }
+
+  onSearchTermChange(term: string): void {
+    this.searchTerm = term;
     this.currentPage = 1;
   }
 

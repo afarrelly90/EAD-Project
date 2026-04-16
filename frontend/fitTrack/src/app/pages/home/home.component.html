@@ -3,10 +3,27 @@
     <header class="home-page__header">
       <h1 class="home-page__title">Exercises</h1>
 
-      <button type="button" class="home-page__icon-button" aria-label="Search">
-        <ion-icon name="search-outline"></ion-icon>
+      <button
+        type="button"
+        class="home-page__icon-button"
+        [attr.aria-label]="isSearchOpen ? 'Close search' : 'Search exercises'"
+        (click)="toggleSearch()"
+      >
+        <ion-icon [name]="isSearchOpen ? 'close-outline' : 'search-outline'"></ion-icon>
       </button>
     </header>
+
+    @if (isSearchOpen) {
+      <div class="home-page__search">
+        <input
+          type="text"
+          class="home-page__search-input"
+          placeholder="Search for an exercise..."
+          [value]="searchTerm"
+          (input)="onSearchTermChange($any($event.target).value)"
+        />
+      </div>
+    }
 
     <section class="home-page__create-card">
       <button
