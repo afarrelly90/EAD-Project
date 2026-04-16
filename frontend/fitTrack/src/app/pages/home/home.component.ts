@@ -138,6 +138,7 @@ export class HomeComponent implements OnInit {
     const filter = this.resolveFilter(exercise);
 
     return {
+      id: exercise.id,
       title: exercise.title,
       category: this.getCategoryLabel(filter),
       filter,
