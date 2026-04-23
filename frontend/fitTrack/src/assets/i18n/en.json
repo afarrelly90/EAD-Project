@@ -1,0 +1,211 @@
+{
+  "common": {
+    "or": "or",
+    "not_set": "Not set",
+    "none": "None",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "back": "Go back",
+    "email": "Email",
+    "full_name": "Full Name",
+    "weight": "Weight",
+    "language": "Language",
+    "logout": "Logout",
+    "delete": "Delete",
+    "update": "Update",
+    "search": "Search",
+    "minutes_short": "Min",
+    "calories_short": "Kcal",
+    "kg": "kg",
+    "close": "Close",
+    "save_changes": "Save Changes",
+    "saving": "Saving..."
+  },
+  "auth": {
+    "login": {
+      "image_alt": "Workout",
+      "title": "Welcome Back",
+      "subtitle": "Log in to your account.",
+      "email_placeholder": "Email Address",
+      "password_placeholder": "Password",
+      "submit": "Log In",
+      "sign_up": "Sign Up",
+      "no_account": "Don't have an account?",
+      "invalid_credentials": "Invalid credentials"
+    },
+    "register": {
+      "image_alt": "Workout",
+      "title": "Get Started",
+      "subtitle": "Create an account to continue.",
+      "full_name_placeholder": "Full Name",
+      "email_placeholder": "Email Address",
+      "password_placeholder": "Password",
+      "terms_prefix": "By signing up, you agree to our",
+      "terms_link": "Terms & Conditions",
+      "submit": "Sign Up",
+      "have_account": "Already have an account?",
+      "login": "Log In"
+    }
+  },
+  "home": {
+    "open_profile": "Open profile",
+    "title": "Exercises",
+    "close_search": "Close search",
+    "search_exercises": "Search exercises",
+    "search_placeholder": "Search for an exercise...",
+    "create_title": "Create New Exercise",
+    "create_subtitle": "Add a custom exercise",
+    "all_exercises": "All Exercises",
+    "loading": "Loading exercises...",
+    "error": "Could not load exercises right now.",
+    "empty": "No exercises found.",
+    "view_exercise": "View exercise",
+    "filters": {
+      "all": "All",
+      "core": "Core",
+      "upper": "Upper Body",
+      "lower": "Lower Body"
+    }
+  },
+  "profile": {
+    "loading": "Loading profile...",
+    "error": "Could not load your profile.",
+    "eyebrow": "User Profile",
+    "subtitle": "Keep your account details up to date.",
+    "section_label": "Account details",
+    "section_title": "Your information",
+    "edit_profile": "Edit Profile",
+    "weight_placeholder": "Enter your weight (kg)",
+    "weight_help": "Leave this blank if you do not want to set a weight yet.",
+    "language_options": {
+      "en": "English",
+      "it": "Italian"
+    },
+    "update_error": "Could not update your profile."
+  },
+  "exercise": {
+    "muscle_groups": {
+      "core": "Core",
+      "upper": "Upper Body",
+      "lower": "Lower Body",
+      "other": "Other",
+      "general": "General Fitness"
+    },
+    "difficulty_options": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "equipment_options": {
+      "none": "None",
+      "mat": "Mat",
+      "dumbbell": "Dumbbell",
+      "resistance_band": "Resistance Band",
+      "kettlebell": "Kettlebell",
+      "bench": "Bench"
+    }
+  },
+  "create_exercise": {
+    "title": "Create New Exercise",
+    "validation_message": "Please fill in all required fields before saving the exercise.",
+    "image_link": "Image Link",
+    "video_link": "Video Link",
+    "name": "Name",
+    "name_placeholder": "Enter exercise name...",
+    "name_required": "Exercise name is required.",
+    "primary_muscle_group": "Primary Muscle Group",
+    "instructions": "Instructions",
+    "instructions_placeholder": "Enter any instructions for the exercise...",
+    "equipment": "Equipment",
+    "calories": "Calories",
+    "minutes": "Minutes",
+    "difficulty": "Difficulty",
+    "saving": "Saving...",
+    "save": "Save Exercise",
+    "save_error": "Could not save exercise."
+  },
+  "edit_exercise": {
+    "title": "Edit Exercise",
+    "loading": "Loading exercise...",
+    "error": "Could not load this exercise.",
+    "validation_message": "Please fill in all required fields before updating the exercise.",
+    "image_link": "Image Link",
+    "video_link": "Video Link",
+    "name": "Name",
+    "name_placeholder": "Enter exercise name...",
+    "name_required": "Exercise name is required.",
+    "primary_muscle_group": "Primary Muscle Group",
+    "instructions": "Instructions",
+    "instructions_placeholder": "Enter any instructions for the exercise...",
+    "equipment": "Equipment",
+    "calories": "Calories",
+    "minutes": "Minutes",
+    "difficulty": "Difficulty",
+    "updating": "Updating...",
+    "update": "Update Exercise",
+    "update_error": "Could not update exercise."
+  },
+  "exercise_detail": {
+    "loading": "Loading exercise...",
+    "error": "Could not load this exercise.",
+    "description_fallback": "A solid movement to build strength and stay consistent with your training.",
+    "ready_kicker": "Ready to train?",
+    "ready_title": "Open the workout timer",
+    "ready_copy": "Start this exercise on a timer screen with set tracking and rest between rounds.",
+    "start_workout": "Start Workout",
+    "equipment": "Equipment",
+    "muscle_group": "Muscle Group",
+    "intensity": "Intensity",
+    "watch_demo": "Watch Demo",
+    "watch_demo_copy": "Open the exercise video guide",
+    "update_exercise": "Update Exercise",
+    "delete_exercise": "Delete Exercise",
+    "delete_confirm": "Delete {{title}}? This action cannot be undone.",
+    "delete_error": "Could not delete exercise."
+  },
+  "workout": {
+    "loading": "Loading workout...",
+    "error": "Could not load this workout.",
+    "eyebrow": "Workout Timer",
+    "button": {
+      "begin": "Begin Workout",
+      "complete": "Workout Complete",
+      "exercise_running": "Exercise in progress",
+      "rest_running": "Rest in progress",
+      "running": "Workout in progress",
+      "reset": "Reset Timer"
+    },
+    "status": {
+      "setup_title": "Set up your workout",
+      "complete_title": "All sets complete",
+      "exercise_title": "Exercise set {{current}} of {{total}}",
+      "rest_title": "Rest before set {{next}}",
+      "current_title": "Current set: {{current}} of {{total}}",
+      "setup_message": "Choose your set count, exercise length, and rest time, then start when you are ready.",
+      "complete_message": "You finished {{count}} set{{suffix}}.",
+      "exercise_message": "{{time}} left in set {{current}}.",
+      "rest_message": "{{time}} remaining before the next set.",
+      "ready_message": "Workout ready."
+    },
+    "countdown": {
+      "complete": "Workout complete",
+      "exercise": "Exercise countdown",
+      "rest": "Rest countdown",
+      "target": "Exercise target"
+    },
+    "phase": {
+      "done": "Done",
+      "exercise": "Exercise",
+      "rest": "Rest",
+      "ready": "Ready"
+    },
+    "fields": {
+      "sets": "Sets",
+      "exercise_seconds": "Exercise seconds",
+      "rest_seconds": "Rest seconds"
+    },
+    "validation_message": "Enter {{minSets}}-{{maxSets}} sets, {{minExercise}}-{{maxExercise}} exercise seconds, and {{minRest}}-{{maxRest}} rest seconds."
+  }
+}
