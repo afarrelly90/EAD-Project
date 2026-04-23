@@ -1,0 +1,211 @@
+{
+  "common": {
+    "or": "oppure",
+    "not_set": "Non impostato",
+    "none": "Nessuno",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "edit": "Modifica",
+    "loading": "Caricamento...",
+    "back": "Indietro",
+    "email": "Email",
+    "full_name": "Nome completo",
+    "weight": "Peso",
+    "language": "Lingua",
+    "logout": "Esci",
+    "delete": "Elimina",
+    "update": "Aggiorna",
+    "search": "Cerca",
+    "minutes_short": "Min",
+    "calories_short": "Kcal",
+    "kg": "kg",
+    "close": "Chiudi",
+    "save_changes": "Salva modifiche",
+    "saving": "Salvataggio..."
+  },
+  "auth": {
+    "login": {
+      "image_alt": "Allenamento",
+      "title": "Bentornato",
+      "subtitle": "Accedi al tuo account.",
+      "email_placeholder": "Indirizzo email",
+      "password_placeholder": "Password",
+      "submit": "Accedi",
+      "sign_up": "Registrati",
+      "no_account": "Non hai un account?",
+      "invalid_credentials": "Credenziali non valide"
+    },
+    "register": {
+      "image_alt": "Allenamento",
+      "title": "Inizia ora",
+      "subtitle": "Crea un account per continuare.",
+      "full_name_placeholder": "Nome completo",
+      "email_placeholder": "Indirizzo email",
+      "password_placeholder": "Password",
+      "terms_prefix": "Registrandoti, accetti i nostri",
+      "terms_link": "Termini e condizioni",
+      "submit": "Registrati",
+      "have_account": "Hai gia un account?",
+      "login": "Accedi"
+    }
+  },
+  "home": {
+    "open_profile": "Apri profilo",
+    "title": "Esercizi",
+    "close_search": "Chiudi ricerca",
+    "search_exercises": "Cerca esercizi",
+    "search_placeholder": "Cerca un esercizio...",
+    "create_title": "Crea nuovo esercizio",
+    "create_subtitle": "Aggiungi un esercizio personalizzato",
+    "all_exercises": "Tutti gli esercizi",
+    "loading": "Caricamento esercizi...",
+    "error": "Impossibile caricare gli esercizi in questo momento.",
+    "empty": "Nessun esercizio trovato.",
+    "view_exercise": "Visualizza esercizio",
+    "filters": {
+      "all": "Tutti",
+      "core": "Core",
+      "upper": "Parte superiore",
+      "lower": "Parte inferiore"
+    }
+  },
+  "profile": {
+    "loading": "Caricamento profilo...",
+    "error": "Impossibile caricare il tuo profilo.",
+    "eyebrow": "Profilo utente",
+    "subtitle": "Mantieni aggiornati i dettagli del tuo account.",
+    "section_label": "Dettagli account",
+    "section_title": "Le tue informazioni",
+    "edit_profile": "Modifica profilo",
+    "weight_placeholder": "Inserisci il tuo peso (kg)",
+    "weight_help": "Lascia vuoto se non vuoi ancora impostare un peso.",
+    "language_options": {
+      "en": "Inglese",
+      "it": "Italiano"
+    },
+    "update_error": "Impossibile aggiornare il tuo profilo."
+  },
+  "exercise": {
+    "muscle_groups": {
+      "core": "Core",
+      "upper": "Parte superiore",
+      "lower": "Parte inferiore",
+      "other": "Altro",
+      "general": "Fitness generale"
+    },
+    "difficulty_options": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzato"
+    },
+    "equipment_options": {
+      "none": "Nessuno",
+      "mat": "Tappetino",
+      "dumbbell": "Manubrio",
+      "resistance_band": "Banda elastica",
+      "kettlebell": "Kettlebell",
+      "bench": "Panca"
+    }
+  },
+  "create_exercise": {
+    "title": "Crea nuovo esercizio",
+    "validation_message": "Compila tutti i campi obbligatori prima di salvare l'esercizio.",
+    "image_link": "Link immagine",
+    "video_link": "Link video",
+    "name": "Nome",
+    "name_placeholder": "Inserisci il nome dell'esercizio...",
+    "name_required": "Il nome dell'esercizio e obbligatorio.",
+    "primary_muscle_group": "Gruppo muscolare principale",
+    "instructions": "Istruzioni",
+    "instructions_placeholder": "Inserisci le istruzioni per l'esercizio...",
+    "equipment": "Attrezzatura",
+    "calories": "Calorie",
+    "minutes": "Minuti",
+    "difficulty": "Difficolta",
+    "saving": "Salvataggio...",
+    "save": "Salva esercizio",
+    "save_error": "Impossibile salvare l'esercizio."
+  },
+  "edit_exercise": {
+    "title": "Modifica esercizio",
+    "loading": "Caricamento esercizio...",
+    "error": "Impossibile caricare questo esercizio.",
+    "validation_message": "Compila tutti i campi obbligatori prima di aggiornare l'esercizio.",
+    "image_link": "Link immagine",
+    "video_link": "Link video",
+    "name": "Nome",
+    "name_placeholder": "Inserisci il nome dell'esercizio...",
+    "name_required": "Il nome dell'esercizio e obbligatorio.",
+    "primary_muscle_group": "Gruppo muscolare principale",
+    "instructions": "Istruzioni",
+    "instructions_placeholder": "Inserisci le istruzioni per l'esercizio...",
+    "equipment": "Attrezzatura",
+    "calories": "Calorie",
+    "minutes": "Minuti",
+    "difficulty": "Difficolta",
+    "updating": "Aggiornamento...",
+    "update": "Aggiorna esercizio",
+    "update_error": "Impossibile aggiornare l'esercizio."
+  },
+  "exercise_detail": {
+    "loading": "Caricamento esercizio...",
+    "error": "Impossibile caricare questo esercizio.",
+    "description_fallback": "Un ottimo movimento per sviluppare forza e rimanere costante con l'allenamento.",
+    "ready_kicker": "Pronto ad allenarti?",
+    "ready_title": "Apri il timer allenamento",
+    "ready_copy": "Avvia questo esercizio in una schermata timer con monitoraggio delle serie e recupero tra i round.",
+    "start_workout": "Inizia allenamento",
+    "equipment": "Attrezzatura",
+    "muscle_group": "Gruppo muscolare",
+    "intensity": "Intensita",
+    "watch_demo": "Guarda demo",
+    "watch_demo_copy": "Apri la guida video dell'esercizio",
+    "update_exercise": "Aggiorna esercizio",
+    "delete_exercise": "Elimina esercizio",
+    "delete_confirm": "Eliminare {{title}}? Questa azione non puo essere annullata.",
+    "delete_error": "Impossibile eliminare l'esercizio."
+  },
+  "workout": {
+    "loading": "Caricamento allenamento...",
+    "error": "Impossibile caricare questo allenamento.",
+    "eyebrow": "Timer allenamento",
+    "button": {
+      "begin": "Inizia allenamento",
+      "complete": "Allenamento completato",
+      "exercise_running": "Esercizio in corso",
+      "rest_running": "Recupero in corso",
+      "running": "Allenamento in corso",
+      "reset": "Reimposta timer"
+    },
+    "status": {
+      "setup_title": "Configura il tuo allenamento",
+      "complete_title": "Tutte le serie completate",
+      "exercise_title": "Serie esercizio {{current}} di {{total}}",
+      "rest_title": "Recupero prima della serie {{next}}",
+      "current_title": "Serie attuale: {{current}} di {{total}}",
+      "setup_message": "Scegli il numero di serie, la durata dell'esercizio e il recupero, poi inizia quando sei pronto.",
+      "complete_message": "Hai completato {{count}} serie{{suffix}}.",
+      "exercise_message": "{{time}} rimasti nella serie {{current}}.",
+      "rest_message": "{{time}} rimanenti prima della serie successiva.",
+      "ready_message": "Allenamento pronto."
+    },
+    "countdown": {
+      "complete": "Allenamento completato",
+      "exercise": "Conto esercizio",
+      "rest": "Conto recupero",
+      "target": "Durata esercizio"
+    },
+    "phase": {
+      "done": "Fatto",
+      "exercise": "Esercizio",
+      "rest": "Recupero",
+      "ready": "Pronto"
+    },
+    "fields": {
+      "sets": "Serie",
+      "exercise_seconds": "Secondi esercizio",
+      "rest_seconds": "Secondi recupero"
+    },
+    "validation_message": "Inserisci {{minSets}}-{{maxSets}} serie, {{minExercise}}-{{maxExercise}} secondi di esercizio e {{minRest}}-{{maxRest}} secondi di recupero."
+  }
+}
