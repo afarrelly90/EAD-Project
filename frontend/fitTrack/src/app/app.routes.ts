@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/edit-exercise/edit-exercise.component').then( m => m.EditExerciseComponent)
   },
   {
+    path: 'exercises/:id/workout',
+    loadComponent: () => import('./pages/workout-timer/workout-timer.component').then( m => m.WorkoutTimerComponent)
+  },
+  {
     path: 'exercises/:id',
     loadComponent: () => import('./pages/exercise-detail/exercise-detail.component').then( m => m.ExerciseDetailComponent)
   },

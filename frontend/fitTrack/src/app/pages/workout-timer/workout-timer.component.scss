@@ -1,0 +1,259 @@
+.workout-timer-page {
+  --background:
+    radial-gradient(circle at top, rgba(255, 160, 122, 0.28), transparent 30%),
+    linear-gradient(180deg, #171226 0%, #231b3d 52%, #1b1530 100%);
+
+  &__shell {
+    min-height: 100%;
+    padding: 18px 16px 28px;
+  }
+
+  &__back-button {
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__hero {
+    margin-top: 24px;
+    color: #ffffff;
+  }
+
+  &__eyebrow {
+    margin: 0 0 8px;
+    color: rgba(242, 232, 255, 0.72);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 34px;
+    line-height: 1.02;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  &__message {
+    margin: 14px 0 0;
+    max-width: 34ch;
+    color: rgba(244, 239, 252, 0.82);
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  &__countdown-card {
+    margin-top: 28px;
+    border-radius: 30px;
+    padding: 20px 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%);
+    backdrop-filter: blur(12px);
+  }
+
+  &__phase-pill {
+    width: fit-content;
+    margin: 0 auto 18px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff2e9;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__countdown-ring {
+    --progress: 0%;
+
+    width: min(74vw, 300px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    border-radius: 50%;
+    padding: 14px;
+    background:
+      radial-gradient(circle at center, rgba(21, 17, 34, 0.96) 68%, transparent 69%),
+      conic-gradient(
+        #ffb78d 0 var(--progress),
+        rgba(255, 255, 255, 0.14) var(--progress) 100%
+      );
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #ffffff;
+    transition: background 0.35s linear, transform 0.2s ease;
+
+    ion-icon {
+      font-size: 28px;
+      color: #ffb78d;
+    }
+  }
+
+  &__countdown {
+    margin-top: 12px;
+    font-size: clamp(40px, 11vw, 64px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.06em;
+  }
+
+  &__countdown-label {
+    margin-top: 8px;
+    color: rgba(242, 232, 255, 0.72);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__progress {
+    margin-top: 18px;
+    color: rgba(245, 240, 251, 0.86);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__config-card {
+    margin-top: 22px;
+    padding: 22px 18px 20px;
+    border-radius: 28px;
+    background: #f8f4ed;
+    box-shadow: 0 18px 34px rgba(25, 20, 40, 0.12);
+  }
+
+  &__config-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__config-title {
+    margin: 0;
+    color: #211a33;
+    font-size: 24px;
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__complete-pill {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #dff4e7;
+    color: #1c7a4e;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__inputs {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  &__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  &__label {
+    color: #6e6486;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &__field input {
+    width: 100%;
+    border: 1px solid rgba(95, 82, 126, 0.12);
+    border-radius: 18px;
+    background: #ffffff;
+    color: #241c38;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    outline: none;
+
+    &:disabled {
+      opacity: 0.68;
+    }
+  }
+
+  &__actions {
+    margin-top: 20px;
+    display: grid;
+    gap: 10px;
+  }
+
+  &__validation-message {
+    margin: 0;
+    color: #b34b63;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 700;
+  }
+
+  &__primary-button {
+    --background: linear-gradient(180deg, #241c38 0%, #171226 100%);
+    --color: #ffffff;
+    --border-radius: 18px;
+    height: 54px;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: none;
+  }
+
+  &__secondary-button {
+    --border-color: rgba(46, 35, 70, 0.14);
+    --color: #241c38;
+    --border-radius: 18px;
+    height: 52px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  &__state {
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    color: #f1eaff;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+
+    &--error {
+      color: #ffcad3;
+    }
+  }
+
+  @media (max-width: 520px) {
+    &__inputs {
+      grid-template-columns: 1fr;
+    }
+
+    &__config-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

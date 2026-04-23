@@ -111,6 +111,10 @@ export class ExerciseDetailComponent implements OnInit {
     return this.exercise ? `/exercises/${this.exercise.id}/edit` : '/home';
   }
 
+  get workoutUrl(): string {
+    return this.exercise ? `/exercises/${this.exercise.id}/workout` : '/home';
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
