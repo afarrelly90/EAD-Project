@@ -75,6 +75,7 @@ describe('ExerciseDetailComponent', () => {
   it('should load the exercise and expose the edit url', () => {
     expect(component.exercise?.title).toBe(exerciseResponse.title);
     expect(component.editExerciseUrl).toBe('/exercises/3/edit');
+    expect(component.workoutUrl).toBe('/exercises/3/workout');
   });
 
   it('should delete the exercise and navigate home', () => {
@@ -97,4 +98,5 @@ describe('ExerciseDetailComponent', () => {
     httpMock.expectNone(`${apiUrl}/3`);
     expect(mockRouter.navigate).not.toHaveBeenCalledWith(['/home']);
   });
+
 });

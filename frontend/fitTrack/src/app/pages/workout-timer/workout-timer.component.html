@@ -1,0 +1,125 @@
+<ion-content fullscreen class="workout-timer-page">
+  @if (isLoading) {
+    <div class="workout-timer-page__state">Loading workout...</div>
+  } @else if (hasError || !exercise) {
+    <div class="workout-timer-page__state workout-timer-page__state--error">
+      Could not load this workout.
+    </div>
+  } @else {
+    <section class="workout-timer-page__shell">
+      <button
+        type="button"
+        class="workout-timer-page__back-button"
+        aria-label="Go back to exercise"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <div class="workout-timer-page__hero">
+        <p class="workout-timer-page__eyebrow">Workout Timer</p>
+        <h1 class="workout-timer-page__title">{{ exercise.title }}</h1>
+        <p class="workout-timer-page__message">{{ timerStatusMessage }}</p>
+      </div>
+
+      <div class="workout-timer-page__countdown-card">
+        <div class="workout-timer-page__phase-pill">
+          {{ phaseLabel }}
+        </div>
+
+        <div
+          class="workout-timer-page__countdown-ring"
+          [style.--progress]="timerProgressPercent + '%'"
+        >
+          <ion-icon name="timer-outline"></ion-icon>
+          <div class="workout-timer-page__countdown">{{ timerDisplayTime }}</div>
+          <div class="workout-timer-page__countdown-label">
+            {{ countdownLabel }}
+          </div>
+        </div>
+
+        <div class="workout-timer-page__progress">
+          <span>Set {{ currentSet }}</span>
+          <span>{{ plannedSets }} total</span>
+        </div>
+      </div>
+
+      <section class="workout-timer-page__config-card">
+        <div class="workout-timer-page__config-header">
+          <h2 class="workout-timer-page__config-title">{{ timerStatusTitle }}</h2>
+          @if (workoutComplete) {
+            <span class="workout-timer-page__complete-pill">Done</span>
+          }
+        </div>
+
+        <div class="workout-timer-page__inputs">
+          <label class="workout-timer-page__field">
+            <span class="workout-timer-page__label">Sets</span>
+            <input
+              type="number"
+              [min]="minSets"
+              [max]="maxSets"
+              [value]="plannedSetsInput"
+              [disabled]="workoutStarted"
+              (input)="updatePlannedSets(($any($event.target).value ?? '').toString())"
+            />
+          </label>
+
+          <label class="workout-timer-page__field">
+            <span class="workout-timer-page__label">Exercise seconds</span>
+            <input
+              type="number"
+              [min]="minExerciseSeconds"
+              [max]="maxExerciseSeconds"
+              [value]="exerciseSecondsInput"
+              [disabled]="workoutStarted"
+              (input)="updateExerciseSeconds(($any($event.target).value ?? '').toString())"
+            />
+          </label>
+
+          <label class="workout-timer-page__field">
+            <span class="workout-timer-page__label">Rest seconds</span>
+            <input
+              type="number"
+              [min]="minRestSeconds"
+              [max]="maxRestSeconds"
+              [value]="restSecondsInput"
+              [disabled]="workoutStarted"
+              (input)="updateRestSeconds(($any($event.target).value ?? '').toString())"
+            />
+          </label>
+        </div>
+
+        <div class="workout-timer-page__actions">
+          @if (workoutConfigErrorMessage) {
+            <p class="workout-timer-page__validation-message">
+              {{ workoutConfigErrorMessage }}
+            </p>
+          }
+
+          <ion-button
+            class="workout-timer-page__primary-button"
+            expand="block"
+            type="button"
+            [disabled]="isTimerRunning || workoutComplete || !isWorkoutConfigValid"
+            (click)="handleTimerAction()"
+          >
+            {{ timerButtonLabel }}
+          </ion-button>
+
+          <ion-button
+            class="workout-timer-page__secondary-button"
+            expand="block"
+            fill="outline"
+            type="button"
+            [disabled]="!workoutStarted && !workoutComplete"
+            (click)="resetWorkoutTimer()"
+          >
+            <ion-icon name="refresh-outline" slot="start"></ion-icon>
+            Reset Timer
+          </ion-button>
+        </div>
+      </section>
+    </section>
+  }
+</ion-content>

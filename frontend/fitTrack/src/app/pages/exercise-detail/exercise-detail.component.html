@@ -51,6 +51,23 @@
         {{ exercise.description || 'A solid movement to build strength and stay consistent with your training.' }}
       </div>
 
+      <section class="exercise-detail-page__workout-card">
+        <p class="exercise-detail-page__workout-kicker">Ready to train?</p>
+        <h2 class="exercise-detail-page__workout-title">Open the workout timer</h2>
+        <p class="exercise-detail-page__workout-copy">
+          Start this exercise on a timer screen with set tracking and rest between rounds.
+        </p>
+
+        <ion-button
+          class="exercise-detail-page__workout-button"
+          expand="block"
+          type="button"
+          [routerLink]="workoutUrl"
+        >
+          Start Workout
+        </ion-button>
+      </section>
+
       <div class="exercise-detail-page__info-card">
         <div class="exercise-detail-page__info-row">
           <span class="exercise-detail-page__info-label">Equipment</span>

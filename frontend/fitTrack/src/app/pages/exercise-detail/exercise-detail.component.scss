@@ -103,6 +103,51 @@
     font-weight: 500;
   }
 
+  &__workout-card {
+    margin-top: 22px;
+    padding: 18px 16px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #221c37 0%, #171227 100%);
+    color: #ffffff;
+    box-shadow: 0 18px 32px rgba(25, 20, 40, 0.18);
+  }
+
+  &__workout-kicker {
+    margin: 0 0 6px;
+    color: rgba(224, 216, 247, 0.78);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__workout-title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  &__workout-copy {
+    margin: 14px 0 0;
+    color: rgba(239, 235, 250, 0.82);
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  &__workout-button {
+    margin-top: 18px;
+    --background: linear-gradient(180deg, #ff8f6c 0%, #ff6b4a 100%);
+    --border-radius: 18px;
+    height: 54px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: none;
+  }
+
   &__info-card {
     margin-top: 22px;
     padding: 18px 14px;
@@ -215,6 +260,16 @@
 
     &--error {
       color: #a14f71;
+    }
+  }
+
+  @media (max-width: 520px) {
+    &__sheet-header {
+      flex-direction: column;
+    }
+
+    &__difficulty {
+      align-self: flex-start;
     }
   }
 }
