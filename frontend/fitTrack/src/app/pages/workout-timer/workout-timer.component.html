@@ -16,14 +16,14 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
-      <div class="workout-timer-page__hero">
+      <div class="workout-timer-page__hero" data-testid="timer-hero">
         <p class="workout-timer-page__eyebrow">{{ 'workout.eyebrow' | t }}</p>
-        <h1 class="workout-timer-page__title">{{ exercise.title }}</h1>
-        <p class="workout-timer-page__message">{{ timerStatusMessage }}</p>
+        <h1 class="workout-timer-page__title" data-testid="timer-title">{{ exercise.title }}</h1>
+        <p class="workout-timer-page__message" data-testid="timer-message">{{ timerStatusMessage }}</p>
       </div>
 
-      <div class="workout-timer-page__countdown-card">
-        <div class="workout-timer-page__phase-pill">
+      <div class="workout-timer-page__countdown-card" data-testid="timer-countdown-card">
+        <div class="workout-timer-page__phase-pill" data-testid="timer-phase-pill">
           {{ phaseLabel }}
         </div>
 
@@ -32,7 +32,7 @@
           [style.--progress]="timerProgressPercent + '%'"
         >
           <ion-icon name="timer-outline"></ion-icon>
-          <div class="workout-timer-page__countdown">{{ timerDisplayTime }}</div>
+          <div class="workout-timer-page__countdown" data-testid="timer-countdown">{{ timerDisplayTime }}</div>
           <div class="workout-timer-page__countdown-label">
             {{ countdownLabel }}
           </div>
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <section class="workout-timer-page__config-card">
+      <section class="workout-timer-page__config-card" data-testid="timer-config-card">
         <div class="workout-timer-page__config-header">
           <h2 class="workout-timer-page__config-title">{{ timerStatusTitle }}</h2>
           @if (workoutComplete) {
@@ -98,6 +98,7 @@
           }
 
           <ion-button
+            data-testid="timer-primary-button"
             class="workout-timer-page__primary-button"
             expand="block"
             type="button"
@@ -108,6 +109,7 @@
           </ion-button>
 
           <ion-button
+            data-testid="timer-reset-button"
             class="workout-timer-page__secondary-button"
             expand="block"
             fill="outline"
