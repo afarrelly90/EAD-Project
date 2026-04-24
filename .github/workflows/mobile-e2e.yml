@@ -74,9 +74,7 @@ jobs:
             adb wait-for-device
 
             echo "=== Waiting for Android boot ==="
-            until adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do
-              sleep 2
-            done
+            while ! adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do sleep 2; done
 
             # Extra stabilization (important for CI)
             sleep 10
@@ -104,24 +102,7 @@ jobs:
             export CHROME_BUILD="$(echo "$WEBVIEW_VERSION" | cut -d. -f1-3)"
 
             echo "=== Resolving Chromedriver ==="
-            python3 - <<'PY'
-            import json
-            import os
-            import urllib.request
-
-            build = os.environ["CHROME_BUILD"]
-            url = "https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build-with-downloads.json"
-            with urllib.request.urlopen(url) as response:
-                data = json.load(response)
-
-            downloads = data.get("builds", {}).get(build, {}).get("downloads", {}).get("chromedriver", [])
-            linux = next((item["url"] for item in downloads if item["platform"] == "linux64"), None)
-            if not linux:
-                raise SystemExit(f"No linux64 chromedriver found for Chrome build {build}")
-
-            with open("/tmp/chromedriver-url.txt", "w", encoding="utf-8") as handle:
-                handle.write(linux)
-            PY
+            python3 -c "import json, os, urllib.request; build=os.environ['CHROME_BUILD']; url='https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build-with-downloads.json'; data=json.load(urllib.request.urlopen(url)); downloads=data.get('builds', {}).get(build, {}).get('downloads', {}).get('chromedriver', []); linux=next((item['url'] for item in downloads if item['platform']=='linux64'), None); linux or (_ for _ in ()).throw(SystemExit(f'No linux64 chromedriver found for Chrome build {build}')); open('/tmp/chromedriver-url.txt', 'w', encoding='utf-8').write(linux)"
 
             CHROMEDRIVER_URL="$(cat /tmp/chromedriver-url.txt)"
             echo "Downloading Chromedriver from $CHROMEDRIVER_URL"
@@ -137,17 +118,9 @@ jobs:
 
             echo "=== Starting Appium ==="
             npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.log 2>&1 &
-            APPIUM_PID=$!
-
-            cleanup() {
-              kill "$APPIUM_PID" >/dev/null 2>&1 || true
-            }
-            trap cleanup EXIT
 
             echo "=== Waiting for Appium ==="
-            until curl -s http://localhost:4725/status | grep -q '"ready":true'; do
-              sleep 2
-            done
+            while ! curl -s http://localhost:4725/status | grep -q '"ready":true'; do sleep 2; done
 
             echo "=== Running E2E tests ==="
             APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="$CHROMEDRIVER_BIN" npm run test:e2e:register
