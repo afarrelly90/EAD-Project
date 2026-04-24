@@ -94,3 +94,6 @@ APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:
 
 echo "=== Running register E2E ==="
 APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:register
+
+echo "=== Running home E2E ==="
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:home

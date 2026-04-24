@@ -5,13 +5,14 @@
         <button
           type="button"
           class="home-page__profile-button"
+          data-testid="home-profile-button"
           routerLink="/profile"
           [attr.aria-label]="'home.open_profile' | t"
         >
           <ion-icon name="person-circle-outline"></ion-icon>
         </button>
 
-        <h1 class="home-page__title">{{ 'home.title' | t }}</h1>
+        <h1 class="home-page__title" data-testid="home-title">{{ 'home.title' | t }}</h1>
       </div>
 
       <button
@@ -36,10 +37,11 @@
       </div>
     }
 
-    <section class="home-page__create-card">
+    <section class="home-page__create-card" data-testid="home-create-card">
       <button
         type="button"
         class="home-page__create-action"
+        data-testid="home-create-action"
         routerLink="/exercises/create"
       >
         <span class="home-page__create-icon">
@@ -58,7 +60,7 @@
       </button>
     </section>
 
-    <section class="home-page__section">
+    <section class="home-page__section" data-testid="home-exercises-section">
       <div class="home-page__section-header">
         <h2 class="home-page__section-title">{{ 'home.all_exercises' | t }}</h2>
       </div>
