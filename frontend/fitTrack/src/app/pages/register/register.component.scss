@@ -27,8 +27,8 @@
   }
 
   &__image-container {
-    height: 290px;
     margin-top: 20px;
+    aspect-ratio: 1.4 / 1;
   }
 
   &__image {
@@ -46,7 +46,7 @@
     padding: 24px 18px 30px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   &__form {
@@ -100,5 +100,46 @@
     font-weight: 600;
     margin-top: 10px;
     font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    &__wrapper {
+      padding: 0 12px;
+    }
+
+    &__title {
+      font-size: 26px;
+    }
+
+    &__subtitle {
+      font-size: 13px;
+    }
+
+    &__image-container {
+      margin-top: 18px;
+      height: 300px;
+      aspect-ratio: auto;
+    }
+
+    &__card {
+      margin-top: -30px;
+      padding: 20px 14px 24px;
+      border-radius: 24px 24px 0 0;
+    }
+
+    &__button {
+      height: 48px;
+      font-size: 16px;
+    }
+
+    &__login {
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    &__login-link {
+      font-size: 16px;
+      margin-top: 6px;
+    }
   }
 }

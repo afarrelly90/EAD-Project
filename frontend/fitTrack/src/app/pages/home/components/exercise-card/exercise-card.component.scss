@@ -52,4 +52,34 @@
       font-size: 26px;
     }
   }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 92px 1fr auto;
+    gap: 10px;
+    padding: 14px 0;
+
+    &__image {
+      width: 92px;
+      height: 76px;
+      border-radius: 18px;
+    }
+
+    &__title {
+      font-size: 17px;
+    }
+
+    &__meta {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    &__action {
+      width: 42px;
+      height: 42px;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
 }

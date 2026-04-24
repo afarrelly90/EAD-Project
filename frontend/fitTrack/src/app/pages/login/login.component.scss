@@ -19,18 +19,13 @@
   &__card {
     background: #ffffff;
     border-radius: 28px 28px 0 0;
-
     margin-top: -40px;
-
     flex: 1;
     min-height: calc(100vh - 280px);
-
     padding: 26px 20px 30px;
-
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-
+    justify-content: flex-start;
     position: relative;
     z-index: 2;
   }
@@ -63,7 +58,6 @@
     --color: #1e1e2f;
 
     --border-radius: 16px;
-
     margin-bottom: 14px;
     padding-left: 10px;
   }
@@ -128,5 +122,45 @@
     color: #8d63ff;
     font-weight: 600;
     margin-left: 6px;
+  }
+
+  @media (max-width: 420px) {
+    &__image-wrapper {
+      height: 280px;
+    }
+
+    &__card {
+      min-height: calc(100vh - 240px);
+      margin-top: -32px;
+      padding: 20px 14px 24px;
+      border-radius: 24px 24px 0 0;
+    }
+
+    &__header {
+      margin-bottom: 8px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__subtitle {
+      font-size: 13px;
+    }
+
+    &__button,
+    &__signup-btn {
+      height: 48px;
+      font-size: 16px;
+    }
+
+    &__divider {
+      margin: 16px 0;
+    }
+
+    &__signup {
+      margin-top: 12px;
+      font-size: 13px;
+    }
   }
 }
