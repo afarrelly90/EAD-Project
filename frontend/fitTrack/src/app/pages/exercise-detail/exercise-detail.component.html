@@ -1,9 +1,9 @@
 <ion-content fullscreen class="exercise-detail-page">
   @if (isLoading) {
-    <div class="exercise-detail-page__state">Loading exercise...</div>
+    <div class="exercise-detail-page__state">{{ 'exercise_detail.loading' | t }}</div>
   } @else if (hasError || !exercise) {
     <div class="exercise-detail-page__state exercise-detail-page__state--error">
-      Could not load this exercise.
+      {{ 'exercise_detail.error' | t }}
     </div>
   } @else {
     <div class="exercise-detail-page__hero">
@@ -16,7 +16,7 @@
       <button
         type="button"
         class="exercise-detail-page__back-button"
-        aria-label="Go back"
+        [attr.aria-label]="'common.back' | t"
         (click)="goBack()"
       >
         <ion-icon name="chevron-back-outline"></ion-icon>
@@ -31,31 +31,31 @@
         </div>
 
         <div class="exercise-detail-page__difficulty">
-          {{ exercise.difficulty }}
+          {{ difficultyKey | t }}
         </div>
       </div>
 
       <div class="exercise-detail-page__stats">
         <div class="exercise-detail-page__stat">
           <ion-icon name="flame-outline"></ion-icon>
-          <span>{{ exercise.calories }} Kcal</span>
+          <span>{{ exercise.calories }} {{ 'common.calories_short' | t }}</span>
         </div>
 
         <div class="exercise-detail-page__stat">
           <ion-icon name="time-outline"></ion-icon>
-          <span>{{ exercise.durationMinutes }} Min</span>
+          <span>{{ exercise.durationMinutes }} {{ 'common.minutes_short' | t }}</span>
         </div>
       </div>
 
       <div class="exercise-detail-page__description">
-        {{ exercise.description || 'A solid movement to build strength and stay consistent with your training.' }}
+        {{ exercise.description || ('exercise_detail.description_fallback' | t) }}
       </div>
 
       <section class="exercise-detail-page__workout-card">
-        <p class="exercise-detail-page__workout-kicker">Ready to train?</p>
-        <h2 class="exercise-detail-page__workout-title">Open the workout timer</h2>
+        <p class="exercise-detail-page__workout-kicker">{{ 'exercise_detail.ready_kicker' | t }}</p>
+        <h2 class="exercise-detail-page__workout-title">{{ 'exercise_detail.ready_title' | t }}</h2>
         <p class="exercise-detail-page__workout-copy">
-          Start this exercise on a timer screen with set tracking and rest between rounds.
+          {{ 'exercise_detail.ready_copy' | t }}
         </p>
 
         <ion-button
@@ -64,24 +64,24 @@
           type="button"
           [routerLink]="workoutUrl"
         >
-          Start Workout
+          {{ 'exercise_detail.start_workout' | t }}
         </ion-button>
       </section>
 
       <div class="exercise-detail-page__info-card">
         <div class="exercise-detail-page__info-row">
-          <span class="exercise-detail-page__info-label">Equipment</span>
+          <span class="exercise-detail-page__info-label">{{ 'exercise_detail.equipment' | t }}</span>
           <span class="exercise-detail-page__info-value">{{ equipmentLabel }}</span>
         </div>
 
         <div class="exercise-detail-page__info-row">
-          <span class="exercise-detail-page__info-label">Muscle Group</span>
+          <span class="exercise-detail-page__info-label">{{ 'exercise_detail.muscle_group' | t }}</span>
           <span class="exercise-detail-page__info-value">{{ categoryLabel }}</span>
         </div>
 
         <div class="exercise-detail-page__info-row">
-          <span class="exercise-detail-page__info-label">Intensity</span>
-          <span class="exercise-detail-page__info-value">{{ exercise.difficulty }}</span>
+          <span class="exercise-detail-page__info-label">{{ 'exercise_detail.intensity' | t }}</span>
+          <span class="exercise-detail-page__info-value">{{ difficultyKey | t }}</span>
         </div>
 
         @if (exercise.videoLink) {
@@ -96,9 +96,9 @@
             </div>
 
             <div class="exercise-detail-page__video-copy">
-              <div class="exercise-detail-page__video-title">Watch Demo</div>
+              <div class="exercise-detail-page__video-title">{{ 'exercise_detail.watch_demo' | t }}</div>
               <div class="exercise-detail-page__video-subtitle">
-                Open the exercise video guide
+                {{ 'exercise_detail.watch_demo_copy' | t }}
               </div>
             </div>
           </a>
@@ -113,7 +113,7 @@
           [href]="editExerciseUrl"
         >
           <ion-icon name="create-outline" slot="start"></ion-icon>
-          Update Exercise
+          {{ 'exercise_detail.update_exercise' | t }}
         </ion-button>
 
         <ion-button
@@ -125,7 +125,7 @@
           (click)="deleteExercise()"
         >
           <ion-icon name="trash-outline" slot="start"></ion-icon>
-          Delete Exercise
+          {{ 'exercise_detail.delete_exercise' | t }}
         </ion-button>
       </div>
     </section>

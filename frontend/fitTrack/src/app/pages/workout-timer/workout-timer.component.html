@@ -1,23 +1,23 @@
 <ion-content fullscreen class="workout-timer-page">
   @if (isLoading) {
-    <div class="workout-timer-page__state">Loading workout...</div>
+    <div class="workout-timer-page__state">{{ 'workout.loading' | t }}</div>
   } @else if (hasError || !exercise) {
     <div class="workout-timer-page__state workout-timer-page__state--error">
-      Could not load this workout.
+      {{ 'workout.error' | t }}
     </div>
   } @else {
     <section class="workout-timer-page__shell">
       <button
         type="button"
         class="workout-timer-page__back-button"
-        aria-label="Go back to exercise"
+        [attr.aria-label]="'common.back' | t"
         (click)="goBack()"
       >
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
       <div class="workout-timer-page__hero">
-        <p class="workout-timer-page__eyebrow">Workout Timer</p>
+        <p class="workout-timer-page__eyebrow">{{ 'workout.eyebrow' | t }}</p>
         <h1 class="workout-timer-page__title">{{ exercise.title }}</h1>
         <p class="workout-timer-page__message">{{ timerStatusMessage }}</p>
       </div>
@@ -39,8 +39,8 @@
         </div>
 
         <div class="workout-timer-page__progress">
-          <span>Set {{ currentSet }}</span>
-          <span>{{ plannedSets }} total</span>
+          <span>{{ 'workout.fields.sets' | t }} {{ currentSet }}</span>
+          <span>{{ 'workout.total_sets' | t:{ count: plannedSets } }}</span>
         </div>
       </div>
 
@@ -48,13 +48,13 @@
         <div class="workout-timer-page__config-header">
           <h2 class="workout-timer-page__config-title">{{ timerStatusTitle }}</h2>
           @if (workoutComplete) {
-            <span class="workout-timer-page__complete-pill">Done</span>
+            <span class="workout-timer-page__complete-pill">{{ 'workout.phase.done' | t }}</span>
           }
         </div>
 
         <div class="workout-timer-page__inputs">
           <label class="workout-timer-page__field">
-            <span class="workout-timer-page__label">Sets</span>
+            <span class="workout-timer-page__label">{{ 'workout.fields.sets' | t }}</span>
             <input
               type="number"
               [min]="minSets"
@@ -66,7 +66,7 @@
           </label>
 
           <label class="workout-timer-page__field">
-            <span class="workout-timer-page__label">Exercise seconds</span>
+            <span class="workout-timer-page__label">{{ 'workout.fields.exercise_seconds' | t }}</span>
             <input
               type="number"
               [min]="minExerciseSeconds"
@@ -78,7 +78,7 @@
           </label>
 
           <label class="workout-timer-page__field">
-            <span class="workout-timer-page__label">Rest seconds</span>
+            <span class="workout-timer-page__label">{{ 'workout.fields.rest_seconds' | t }}</span>
             <input
               type="number"
               [min]="minRestSeconds"
@@ -116,7 +116,7 @@
             (click)="resetWorkoutTimer()"
           >
             <ion-icon name="refresh-outline" slot="start"></ion-icon>
-            Reset Timer
+            {{ 'workout.button.reset' | t }}
           </ion-button>
         </div>
       </section>

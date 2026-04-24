@@ -15,6 +15,7 @@ import {
   ExerciseCardItem,
 } from './components/exercise-card/exercise-card.component';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 
 type ExerciseFilter = 'All' | 'Core' | 'Upper' | 'Lower';
 type ExerciseListItem = ExerciseCardItem & {
@@ -26,7 +27,14 @@ type ExerciseListItem = ExerciseCardItem & {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, IonContent, IonIcon, ExerciseCardComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    IonContent,
+    IonIcon,
+    ExerciseCardComponent,
+    TranslatePipe,
+  ],
 })
 export class HomeComponent implements OnInit {
   readonly filters: ExerciseFilter[] = ['All', 'Core', 'Upper', 'Lower'];
@@ -142,7 +150,7 @@ export class HomeComponent implements OnInit {
     return {
       id: exercise.id,
       title: exercise.title,
-      category: this.getCategoryLabel(filter),
+      categoryKey: this.getCategoryKey(filter),
       filter,
       image: exercise.imageUrl || this.getFallbackImage(filter),
     };
@@ -160,16 +168,8 @@ export class HomeComponent implements OnInit {
     return 'Core';
   }
 
-  private getCategoryLabel(filter: Exclude<ExerciseFilter, 'All'>): string {
-    if (filter === 'Upper') {
-      return 'Upper Body';
-    }
-
-    if (filter === 'Lower') {
-      return 'Lower Body';
-    }
-
-    return 'Core';
+  private getCategoryKey(filter: Exclude<ExerciseFilter, 'All'>): string {
+    return `exercise.muscle_groups.${filter.toLowerCase()}`;
   }
 
   private getFallbackImage(filter: Exclude<ExerciseFilter, 'All'>): string {

@@ -24,10 +24,10 @@ export interface UpdateProfileDto {
   providedIn: 'root'
 })
 export class AuthService {
-
   private apiUrl = 'http://localhost:5240/api/Auth';
   private readonly tokenKey = 'token';
   private readonly userKey = 'user';
+  private readonly languageKey = 'language';
 
   constructor(private http: HttpClient) {}
 
@@ -50,6 +50,7 @@ export class AuthService {
   storeSession(response: AuthLoginResponse): void {
     localStorage.setItem(this.tokenKey, response.token);
     localStorage.setItem(this.userKey, JSON.stringify(response.user));
+    localStorage.setItem(this.languageKey, response.user.language || 'en');
   }
 
   getStoredUser(): AuthUserProfile | null {
@@ -69,5 +70,6 @@ export class AuthService {
   clearSession(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.languageKey);
   }
 }

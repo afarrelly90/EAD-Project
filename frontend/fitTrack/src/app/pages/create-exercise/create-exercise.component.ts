@@ -14,7 +14,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronDownOutline, linkOutline } from 'ionicons/icons';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 import { CreateExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { I18nService } from 'src/app/services/i18n.service';
 
 type MuscleGroup = 'Core' | 'Upper' | 'Lower' | 'Other';
 
@@ -35,6 +37,7 @@ type MuscleGroup = 'Core' | 'Upper' | 'Lower' | 'Other';
     IonTextarea,
     IonSelect,
     IonSelectOption,
+    TranslatePipe,
   ],
 })
 export class CreateExerciseComponent implements OnInit {
@@ -67,7 +70,8 @@ export class CreateExerciseComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private exerciseService: ExerciseService,
-    private router: Router
+    private router: Router,
+    private i18nService: I18nService
   ) {
     addIcons({
       chevronBackOutline,
@@ -123,7 +127,7 @@ export class CreateExerciseComponent implements OnInit {
       error: (error) => {
         console.error(error);
         this.isSaving = false;
-        alert('Could not save exercise.');
+        alert(this.i18nService.translate('create_exercise.save_error'));
       },
     });
   }

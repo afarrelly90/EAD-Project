@@ -3,7 +3,7 @@
   <div class="login-page__image-wrapper">
     <img
       src="assets/images/login-fitness.jpg"
-      alt="Workout"
+      [alt]="'auth.login.image_alt' | t"
       class="login-page__image"
     />
   </div>
@@ -11,8 +11,8 @@
   <div class="login-page__card">
 
     <div class="login-page__header">
-      <h1 class="login-page__title">Welcome Back</h1>
-      <p class="login-page__subtitle">Log in to your account.</p>
+      <h1 class="login-page__title">{{ 'auth.login.title' | t }}</h1>
+      <p class="login-page__subtitle">{{ 'auth.login.subtitle' | t }}</p>
     </div>
 
     <form
@@ -23,7 +23,7 @@
 
       <ion-item lines="none" class="login-page__input">
         <ion-input
-          placeholder="Email Address"
+          [placeholder]="'auth.login.email_placeholder' | t"
           formControlName="email"
         ></ion-input>
       </ion-item>
@@ -31,28 +31,28 @@
       <ion-item lines="none" class="login-page__input">
         <ion-input
           type="password"
-          placeholder="Password"
+          [placeholder]="'auth.login.password_placeholder' | t"
           formControlName="password"
         ></ion-input>
       </ion-item>
 
       <ion-button expand="block" type="submit" class="login-page__button">
-        Log In
+        {{ 'auth.login.submit' | t }}
       </ion-button>
 
     </form>
 
     <div class="login-page__divider">
-      <span>or</span>
+      <span>{{ 'common.or' | t }}</span>
     </div>
 
     <ion-button expand="block" fill="outline" class="login-page__signup-btn" routerLink="/register">
-      Sign Up
+      {{ 'auth.login.sign_up' | t }}
     </ion-button>
 
     <div class="login-page__signup">
-      <span>Don't have an account?</span>
-      <span class="login-page__signup-link" routerLink="/register">Sign Up</span>
+      <span>{{ 'auth.login.no_account' | t }}</span>
+      <span class="login-page__signup-link" routerLink="/register">{{ 'auth.login.sign_up' | t }}</span>
     </div>
 
   </div>

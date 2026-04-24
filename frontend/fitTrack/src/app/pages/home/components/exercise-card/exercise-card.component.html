@@ -9,11 +9,11 @@
     <h3 class="exercise-card__title">{{ exercise.title }}</h3>
 
     <div class="exercise-card__meta">
-      <span class="exercise-card__category">{{ exercise.category }}</span>
+      <span class="exercise-card__category">{{ exercise.categoryKey | t }}</span>
     </div>
   </div>
 
-  <button type="button" class="exercise-card__action" aria-label="View exercise">
+  <button type="button" class="exercise-card__action" [attr.aria-label]="'home.view_exercise' | t">
     <ion-icon name="chevron-forward-outline"></ion-icon>
   </button>
 </article>

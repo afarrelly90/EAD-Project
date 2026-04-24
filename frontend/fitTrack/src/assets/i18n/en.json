@@ -206,6 +206,7 @@
       "exercise_seconds": "Exercise seconds",
       "rest_seconds": "Rest seconds"
     },
+    "total_sets": "{{count}} total",
     "validation_message": "Enter {{minSets}}-{{maxSets}} sets, {{minExercise}}-{{maxExercise}} exercise seconds, and {{minRest}}-{{maxRest}} rest seconds."
   }
 }

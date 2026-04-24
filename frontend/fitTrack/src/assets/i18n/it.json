@@ -206,6 +206,7 @@
       "exercise_seconds": "Secondi esercizio",
       "rest_seconds": "Secondi recupero"
     },
+    "total_sets": "{{count}} totali",
     "validation_message": "Inserisci {{minSets}}-{{maxSets}} serie, {{minExercise}}-{{maxExercise}} secondi di esercizio e {{minRest}}-{{maxRest}} secondi di recupero."
   }
 }

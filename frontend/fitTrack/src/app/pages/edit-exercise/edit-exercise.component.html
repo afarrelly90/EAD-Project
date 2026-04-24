@@ -4,20 +4,20 @@
       <button
         type="button"
         class="edit-exercise-page__back-button"
-        aria-label="Go back"
+        [attr.aria-label]="'common.back' | t"
         (click)="goBack()"
       >
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
-      <h1 class="edit-exercise-page__title">Edit Exercise</h1>
+      <h1 class="edit-exercise-page__title">{{ 'edit_exercise.title' | t }}</h1>
     </header>
 
     @if (isLoading) {
-      <div class="edit-exercise-page__state">Loading exercise...</div>
+      <div class="edit-exercise-page__state">{{ 'edit_exercise.loading' | t }}</div>
     } @else if (hasError || !exercise) {
       <div class="edit-exercise-page__state edit-exercise-page__state--error">
-        Could not load this exercise.
+        {{ 'edit_exercise.error' | t }}
       </div>
     } @else {
       <form
@@ -28,12 +28,12 @@
         <section class="edit-exercise-page__card">
           @if (showValidationMessage) {
             <div class="edit-exercise-page__message">
-              Please fill in all required fields before updating the exercise.
+              {{ 'edit_exercise.validation_message' | t }}
             </div>
           }
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Image Link</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.image_link' | t }}</label>
             <ion-item lines="none" class="edit-exercise-page__input">
               <ion-icon
                 name="link-outline"
@@ -48,7 +48,7 @@
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Video Link</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.video_link' | t }}</label>
             <ion-item lines="none" class="edit-exercise-page__input">
               <ion-icon
                 name="link-outline"
@@ -63,22 +63,22 @@
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Name</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.name' | t }}</label>
             <ion-item lines="none" class="edit-exercise-page__input">
               <ion-input
                 formControlName="title"
-                placeholder="Enter exercise name..."
+                [placeholder]="'edit_exercise.name_placeholder' | t"
               ></ion-input>
             </ion-item>
             @if (editExerciseForm.controls.title.touched && editExerciseForm.controls.title.invalid) {
               <p class="edit-exercise-page__field-error">
-                Exercise name is required.
+                {{ 'edit_exercise.name_required' | t }}
               </p>
             }
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Primary Muscle Group</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.primary_muscle_group' | t }}</label>
             <div class="edit-exercise-page__chips">
               @for (group of muscleGroups; track group) {
                 <button
@@ -87,24 +87,18 @@
                   [class.edit-exercise-page__chip--active]="selectedMuscleGroup === group"
                   (click)="selectMuscleGroup(group)"
                 >
-                  @if (group === 'Upper') {
-                    Upper Body
-                  } @else if (group === 'Lower') {
-                    Lower Body
-                  } @else {
-                    {{ group }}
-                  }
+                  {{ ('exercise.muscle_groups.' + group.toLowerCase()) | t }}
                 </button>
               }
             </div>
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Instructions</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.instructions' | t }}</label>
             <ion-item lines="none" class="edit-exercise-page__textarea">
               <ion-textarea
                 formControlName="description"
-                placeholder="Enter any instructions for the exercise..."
+                [placeholder]="'edit_exercise.instructions_placeholder' | t"
                 autoGrow="true"
                 rows="4"
               ></ion-textarea>
@@ -112,7 +106,7 @@
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Equipment</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.equipment' | t }}</label>
             <ion-item lines="none" class="edit-exercise-page__input">
               <ion-select
                 formControlName="equipment"
@@ -121,7 +115,7 @@
               >
                 @for (option of equipmentOptions; track option) {
                   <ion-select-option [value]="option">
-                    {{ option }}
+                    {{ ('exercise.equipment_options.' + option.toLowerCase().replace(' ', '_')) | t }}
                   </ion-select-option>
                 }
               </ion-select>
@@ -130,7 +124,7 @@
 
           <div class="edit-exercise-page__metrics">
             <div class="edit-exercise-page__field edit-exercise-page__field--metric">
-              <label class="edit-exercise-page__label">Calories</label>
+              <label class="edit-exercise-page__label">{{ 'edit_exercise.calories' | t }}</label>
               <ion-item lines="none" class="edit-exercise-page__input">
                 <ion-input
                   type="number"
@@ -141,7 +135,7 @@
             </div>
 
             <div class="edit-exercise-page__field edit-exercise-page__field--metric">
-              <label class="edit-exercise-page__label">Minutes</label>
+              <label class="edit-exercise-page__label">{{ 'edit_exercise.minutes' | t }}</label>
               <ion-item lines="none" class="edit-exercise-page__input">
                 <ion-input
                   type="number"
@@ -153,7 +147,7 @@
           </div>
 
           <div class="edit-exercise-page__field">
-            <label class="edit-exercise-page__label">Difficulty</label>
+            <label class="edit-exercise-page__label">{{ 'edit_exercise.difficulty' | t }}</label>
             <div class="edit-exercise-page__chips">
               @for (difficulty of difficultyOptions; track difficulty) {
                 <button
@@ -162,7 +156,7 @@
                   [class.edit-exercise-page__chip--active]="editExerciseForm.value.difficulty === difficulty"
                   (click)="editExerciseForm.patchValue({ difficulty: difficulty })"
                 >
-                  {{ difficulty }}
+                  {{ ('exercise.difficulty_options.' + difficulty.toLowerCase()) | t }}
                 </button>
               }
             </div>
@@ -176,7 +170,7 @@
             class="edit-exercise-page__submit"
             [disabled]="isSaving"
           >
-            {{ isSaving ? 'Updating...' : 'Update Exercise' }}
+            {{ isSaving ? ('edit_exercise.updating' | t) : ('edit_exercise.update' | t) }}
           </ion-button>
         </div>
       </form>
