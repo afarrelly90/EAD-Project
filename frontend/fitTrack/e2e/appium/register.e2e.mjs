@@ -51,6 +51,15 @@ const getWebviewContext = async () => {
   return contexts.find((context) => context.startsWith('WEBVIEW'));
 };
 
+const getCurrentLocation = async () =>
+  browser.execute(() => ({
+    href: window.location.href,
+    origin: window.location.origin,
+    pathname: window.location.pathname,
+    hash: window.location.hash,
+    readyState: document.readyState,
+  }));
+
 const waitForWebView = async () => {
   await browser.waitUntil(
     async () => Boolean(await getWebviewContext()),
@@ -69,19 +78,50 @@ const waitForWebView = async () => {
   await browser.switchContext(webviewContext);
 };
 
-const waitForRegisterPage = async () => {
-  await browser.url('/register');
+const waitForAppReady = async () => {
+  await browser.waitUntil(
+    async () =>
+      browser.execute(() => {
+        return document.readyState === 'complete' && !!document.querySelector('ion-app');
+      }),
+    {
+      timeout: 15000,
+      timeoutMsg: 'Ionic app did not mount.',
+    }
+  );
+};
 
-  const registerSection = await browser.$('[data-testid="register-login-section"]');
+const navigateToRegister = async () => {
+  await browser.execute(() => {
+    if (window.location.pathname === '/register') {
+      return;
+    }
+
+    history.pushState({}, '', '/register');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
 
   await browser.waitUntil(
     async () => {
-      const url = await browser.getUrl();
-      return url.includes('/register') && (await registerSection.isDisplayed());
+      const location = await getCurrentLocation();
+      return location.pathname === '/register';
     },
     {
+      timeout: 10000,
+      timeoutMsg: 'Navigation to register route did not start.',
+    }
+  );
+};
+
+const waitForRegisterPage = async () => {
+  await browser.waitUntil(
+    async () =>
+      browser.execute(() => {
+        return !!document.querySelector('[data-testid="register-login-section"]');
+      }),
+    {
       timeout: 15000,
-      timeoutMsg: 'Register page did not finish rendering.',
+      timeoutMsg: 'Register page did not render.',
     }
   );
 };
@@ -90,30 +130,34 @@ const setIonInputValue = async (testId, value) => {
   const host = await browser.$(`[data-testid="${testId}"]`);
   await host.waitForDisplayed({ timeout: 15000 });
 
-  await browser.execute((element, nextValue) => {
-    const input = element.shadowRoot?.querySelector('input');
-
-    if (input) {
-      input.focus();
-      input.value = nextValue;
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-      input.blur();
-    }
-
-    element.value = nextValue;
-    element.dispatchEvent(new CustomEvent('ionInput', { bubbles: true, detail: { value: nextValue } }));
-    element.dispatchEvent(new CustomEvent('ionChange', { bubbles: true, detail: { value: nextValue } }));
-  }, host, value);
-
   await browser.waitUntil(
-    async () =>
-      browser.execute((element) => {
+    async () => {
+      await browser.execute((element, nextValue) => {
+        const input = element.shadowRoot?.querySelector('input');
+
+        if (input) {
+          input.focus();
+          input.value = nextValue;
+          input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+          input.blur();
+        }
+
+        element.value = nextValue;
+        element.dispatchEvent(new CustomEvent('ionInput', { bubbles: true, composed: true, detail: { value: nextValue } }));
+        element.dispatchEvent(new CustomEvent('ionChange', { bubbles: true, composed: true, detail: { value: nextValue } }));
+      }, host, value);
+
+      const currentValue = await browser.execute((element) => {
         const input = element.shadowRoot?.querySelector('input');
         return String(input?.value ?? element.value ?? '');
-      }, host) === value,
+      }, host);
+
+      return currentValue === value;
+    },
     {
       timeout: 5000,
+      interval: 250,
       timeoutMsg: `Input "${testId}" did not keep the expected value.`,
     }
   );
@@ -130,9 +174,10 @@ const fillRegisterForm = async () => {
 };
 
 const collectFailureContext = async () => {
-  const [url, contexts] = await Promise.all([
+  const [url, contexts, location] = await Promise.all([
     browser.getUrl().catch(() => 'unavailable'),
     browser.getContexts().catch(() => []),
+    getCurrentLocation().catch(() => ({ href: 'unavailable', origin: 'unavailable', pathname: 'unavailable', hash: 'unavailable', readyState: 'unavailable' })),
   ]);
 
   let readyMarkers = {};
@@ -145,16 +190,20 @@ const collectFailureContext = async () => {
       submit: Boolean(document.querySelector('[data-testid="register-submit"]')),
       title: document.title,
       pathname: window.location.pathname,
+      hash: window.location.hash,
+      ionApp: Boolean(document.querySelector('ion-app')),
     }));
   } catch {
     readyMarkers = { inspectable: false };
   }
 
-  return { url, contexts, readyMarkers };
+  return { url, contexts, location, readyMarkers };
 };
 
 try {
   await waitForWebView();
+  await waitForAppReady();
+  await navigateToRegister();
   await waitForRegisterPage();
   await fillRegisterForm();
 
