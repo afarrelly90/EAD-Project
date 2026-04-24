@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "test:e2e:register": "node e2e/appium/register.e2e.mjs"
+    "test:e2e:register": "node e2e/appium/register.e2e.mjs",
+    "test:e2e:login": "node e2e/appium/login.e2e.mjs"
   },
   "private": true,
   "dependencies": {

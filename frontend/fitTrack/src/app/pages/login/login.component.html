@@ -23,6 +23,7 @@
 
       <ion-item lines="none" class="login-page__input">
         <ion-input
+          data-testid="login-email"
           [placeholder]="'auth.login.email_placeholder' | t"
           formControlName="email"
         ></ion-input>
@@ -30,13 +31,14 @@
 
       <ion-item lines="none" class="login-page__input">
         <ion-input
+          data-testid="login-password"
           type="password"
           [placeholder]="'auth.login.password_placeholder' | t"
           formControlName="password"
         ></ion-input>
       </ion-item>
 
-      <ion-button expand="block" type="submit" class="login-page__button">
+      <ion-button data-testid="login-submit" expand="block" type="submit" class="login-page__button">
         {{ 'auth.login.submit' | t }}
       </ion-button>
 
@@ -50,7 +52,7 @@
       {{ 'auth.login.sign_up' | t }}
     </ion-button>
 
-    <div class="login-page__signup">
+    <div class="login-page__signup" data-testid="login-signup-section">
       <span>{{ 'auth.login.no_account' | t }}</span>
       <span class="login-page__signup-link" routerLink="/register">{{ 'auth.login.sign_up' | t }}</span>
     </div>
