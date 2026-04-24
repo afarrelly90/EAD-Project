@@ -64,8 +64,8 @@ jobs:
       - name: Run Appium register E2E
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          target: google_atd
+          api-level: 31
+          target: google_apis
           arch: x86_64
           disk-size: 4096M
           disable-linux-hw-accel: false
@@ -74,16 +74,7 @@ jobs:
           script: |
             set -eu
 
-            echo "=== Restarting ADB ==="
-            adb kill-server || true
-            adb start-server
-            adb wait-for-device
-
-            echo "=== Waiting for Android boot ==="
-            while ! adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do
-              sleep 2
-            done
-
+            # The action has already booted the emulator before this script runs.
             sleep 10
 
             echo "=== Connected devices ==="
@@ -120,9 +111,8 @@ jobs:
             npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.log 2>&1 &
 
             echo "=== Waiting for Appium ==="
-            while ! curl -s http://localhost:4725/status | grep -q '"ready":true'; do
-              sleep 2
-            done
+            sleep 10
+            curl -fsS http://localhost:4725/status > /tmp/appium-status.json
 
             echo "=== Running E2E tests ==="
             APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="$CHROMEDRIVER_BIN" npm run test:e2e:register
