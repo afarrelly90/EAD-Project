@@ -5,7 +5,10 @@
 
   &__shell {
     min-height: 100%;
-    padding: 18px 16px 28px;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: max(18px, env(safe-area-inset-top)) 16px
+      max(28px, env(safe-area-inset-bottom));
   }
 
   &__back-button {
@@ -24,7 +27,7 @@
   }
 
   &__hero {
-    margin-top: 24px;
+    margin-top: 20px;
     color: #ffffff;
   }
 
@@ -39,7 +42,7 @@
 
   &__title {
     margin: 0;
-    font-size: 34px;
+    font-size: clamp(26px, 8vw, 34px);
     line-height: 1.02;
     font-weight: 800;
     letter-spacing: -0.04em;
@@ -123,6 +126,7 @@
     color: rgba(245, 240, 251, 0.86);
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 16px;
     font-size: 14px;
     font-weight: 700;
@@ -247,6 +251,32 @@
   }
 
   @media (max-width: 520px) {
+    &__shell {
+      padding-inline: 12px;
+    }
+
+    &__hero {
+      margin-top: 16px;
+    }
+
+    &__message {
+      font-size: 14px;
+    }
+
+    &__countdown-card {
+      padding: 16px 14px;
+      border-radius: 24px;
+    }
+
+    &__countdown-ring {
+      width: min(78vw, 270px);
+      padding: 12px;
+    }
+
+    &__countdown {
+      font-size: clamp(34px, 12vw, 52px);
+    }
+
     &__inputs {
       grid-template-columns: 1fr;
     }
@@ -254,6 +284,18 @@
     &__config-header {
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    &__config-card {
+      padding: 18px 14px;
+      border-radius: 22px;
+    }
+  }
+
+  @media (min-width: 700px) {
+    &__shell {
+      max-width: 760px;
+      padding-inline: 24px;
     }
   }
 }
