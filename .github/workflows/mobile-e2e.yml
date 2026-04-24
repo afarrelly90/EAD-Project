@@ -64,7 +64,7 @@ jobs:
           target: default
           emulator-boot-timeout: 1200
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -accel off -no-metrics
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -no-metrics
           script: |
             set -euo pipefail
 
