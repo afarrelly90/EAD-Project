@@ -21,6 +21,7 @@
       >
         <ion-item lines="none" class="register-page__input">
           <ion-input
+            data-testid="register-full-name"
             [placeholder]="'auth.register.full_name_placeholder' | t"
             formControlName="fullName"
           ></ion-input>
@@ -28,6 +29,7 @@
 
         <ion-item lines="none" class="register-page__input">
           <ion-input
+            data-testid="register-email"
             [placeholder]="'auth.register.email_placeholder' | t"
             formControlName="email"
           ></ion-input>
@@ -35,6 +37,7 @@
 
         <ion-item lines="none" class="register-page__input">
           <ion-input
+            data-testid="register-password"
             type="password"
             [placeholder]="'auth.register.password_placeholder' | t"
             formControlName="password"
@@ -47,12 +50,17 @@
           <span class="register-page__terms-link">{{ 'auth.register.terms_link' | t }}</span>
         </div>
 
-        <ion-button expand="block" type="submit" class="register-page__button">
+        <ion-button
+          data-testid="register-submit"
+          expand="block"
+          type="submit"
+          class="register-page__button"
+        >
           {{ 'auth.register.submit' | t }}
         </ion-button>
       </form>
 
-      <div class="register-page__login">
+      <div class="register-page__login" data-testid="register-login-section">
         <span>{{ 'auth.register.have_account' | t }}</span>
         <span class="register-page__login-link" routerLink="/login">{{ 'auth.register.login' | t }}</span>
       </div>
