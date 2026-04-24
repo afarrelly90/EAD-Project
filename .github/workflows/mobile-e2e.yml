@@ -58,33 +58,51 @@ jobs:
       - name: Run Appium register E2E
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 33                 # ✅ modern + stable
+          target: google_apis          # ✅ REQUIRED for WebView/Appium
           arch: x86_64
-          profile: Nexus 6
-          target: default
           disable-linux-hw-accel: false
           emulator-boot-timeout: 1200
           disable-animations: true
           script: |
             set -euo pipefail
 
-            cd frontend/fitTrack/android
-            ./gradlew app:installDebug
+            echo "=== Restarting ADB ==="
+            adb kill-server || true
+            adb start-server
+            adb wait-for-device
+
+            echo "=== Waiting for Android boot ==="
+            until adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do
+              sleep 2
+            done
+
+            # Extra stabilization (important for CI)
+            sleep 10
+
+            echo "=== Connected devices ==="
+            adb devices
+
+            echo "=== Installing app ==="
+            cd android
+            ./gradlew app:installDebug --stacktrace
             cd ..
 
+            echo "=== Detecting WebView version ==="
             WEBVIEW_VERSION="$(adb shell dumpsys package com.google.android.webview | sed -n 's/.*versionName=//p' | head -n 1 | tr -d '\r')"
             if [ -z "$WEBVIEW_VERSION" ]; then
               WEBVIEW_VERSION="$(adb shell dumpsys package com.android.chrome | sed -n 's/.*versionName=//p' | head -n 1 | tr -d '\r')"
             fi
 
             if [ -z "$WEBVIEW_VERSION" ]; then
-              echo "Could not detect Android WebView/Chrome version"
+              echo "❌ Could not detect Android WebView/Chrome version"
               exit 1
             fi
 
             echo "Detected WebView version: $WEBVIEW_VERSION"
             export CHROME_BUILD="$(echo "$WEBVIEW_VERSION" | cut -d. -f1-3)"
 
+            echo "=== Resolving Chromedriver ==="
             python3 - <<'PY'
             import json
             import os
@@ -98,7 +116,7 @@ jobs:
             downloads = data.get("builds", {}).get(build, {}).get("downloads", {}).get("chromedriver", [])
             linux = next((item["url"] for item in downloads if item["platform"] == "linux64"), None)
             if not linux:
-                raise SystemExit(f"No linux64 chromedriver download found for Chrome build {build}")
+                raise SystemExit(f"No linux64 chromedriver found for Chrome build {build}")
 
             with open("/tmp/chromedriver-url.txt", "w", encoding="utf-8") as handle:
                 handle.write(linux)
@@ -111,11 +129,12 @@ jobs:
 
             CHROMEDRIVER_BIN="$(find /tmp/chromedriver -type f -name chromedriver | head -n 1)"
             if [ -z "$CHROMEDRIVER_BIN" ]; then
-              echo "Chromedriver binary was not found after unzip"
+              echo "❌ Chromedriver binary not found"
               exit 1
             fi
             chmod +x "$CHROMEDRIVER_BIN"
 
+            echo "=== Starting Appium ==="
             npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.log 2>&1 &
             APPIUM_PID=$!
 
@@ -124,8 +143,12 @@ jobs:
             }
             trap cleanup EXIT
 
-            sleep 5
+            echo "=== Waiting for Appium ==="
+            until curl -s http://localhost:4725/status | grep -q '"ready":true'; do
+              sleep 2
+            done
 
+            echo "=== Running E2E tests ==="
             APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="$CHROMEDRIVER_BIN" npm run test:e2e:register
 
       - name: Upload Appium log
