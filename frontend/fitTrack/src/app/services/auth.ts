@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface AuthUserProfile {
   id: number;
@@ -24,7 +25,7 @@ export interface UpdateProfileDto {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5240/api/Auth';
+  private apiUrl = `${environment.apiBaseUrl}/Auth`;
   private readonly tokenKey = 'token';
   private readonly userKey = 'user';
   private readonly languageKey = 'language';

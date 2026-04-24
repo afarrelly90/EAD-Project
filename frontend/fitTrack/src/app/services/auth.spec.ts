@@ -7,7 +7,8 @@ describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
 
-  const apiUrl = 'http://localhost:5240/api/Auth';
+  const apiUrl =
+    'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Auth';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
