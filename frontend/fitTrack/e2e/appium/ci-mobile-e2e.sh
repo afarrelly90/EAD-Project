@@ -17,10 +17,8 @@ echo "=== Installing app ==="
   ./gradlew app:installDebug --stacktrace
 )
 
-echo "=== Installing Chrome APK ==="
-curl -L -o /tmp/chrome.apk https://dl.google.com/android/repository/com.android.chrome.apk
-
-adb install -r /tmp/chrome.apk || true
+echo "=== Ensuring Chrome is available ==="
+adb shell cmd package install-existing com.android.chrome || true
 
 echo "=== Setting Chrome as WebView ==="
 adb shell settings put global webview_provider com.android.chrome || true
@@ -42,6 +40,33 @@ if [ -z "${WEBVIEW_VERSION}" ]; then
 fi
 
 echo "Detected WebView version: ${WEBVIEW_VERSION}"
+CHROME_MAJOR="$(echo "${WEBVIEW_VERSION}" | cut -d. -f1)"
+CHROME_BUILD="$(echo "${WEBVIEW_VERSION}" | cut -d. -f1-3)"
+
+echo "=== Resolving Chromedriver ==="
+if [ "${CHROME_MAJOR}" -ge 115 ]; then
+  export CHROME_BUILD
+  python3 -c "import json, os, urllib.request; build=os.environ['CHROME_BUILD']; url='https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build-with-downloads.json'; data=json.load(urllib.request.urlopen(url)); downloads=data.get('builds', {}).get(build, {}).get('downloads', {}).get('chromedriver', []); linux=next((item['url'] for item in downloads if item['platform']=='linux64'), None); linux or (_ for _ in ()).throw(SystemExit(f'No linux64 chromedriver found for Chrome build {build}')); open('/tmp/chromedriver-url.txt', 'w', encoding='utf-8').write(linux)"
+else
+  case "${CHROME_MAJOR}" in
+    91) CHROMEDRIVER_VERSION="91.0.4472.101" ;;
+    *) echo "No pinned legacy Chromedriver configured for Chrome major ${CHROME_MAJOR}"; exit 1 ;;
+  esac
+  CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+  printf '%s' "${CHROMEDRIVER_URL}" > /tmp/chromedriver-url.txt
+fi
+
+CHROMEDRIVER_URL="$(cat /tmp/chromedriver-url.txt)"
+echo "Using Chromedriver URL: ${CHROMEDRIVER_URL}"
+curl -fsSL "${CHROMEDRIVER_URL}" -o /tmp/chromedriver.zip
+unzip -oq /tmp/chromedriver.zip -d /tmp/chromedriver
+
+CHROMEDRIVER_BIN="$(find /tmp/chromedriver -type f -name chromedriver | head -n 1)"
+if [ -z "${CHROMEDRIVER_BIN}" ]; then
+  echo "Chromedriver binary not found after download"
+  exit 1
+fi
+chmod +x "${CHROMEDRIVER_BIN}"
 
 echo "=== Starting Appium ==="
 npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.log 2>&1 &
@@ -65,4 +90,4 @@ until curl -fsS http://localhost:4725/status | grep -q '"ready":true'; do
 done
 
 echo "=== Running E2E tests ==="
-APPIUM_PORT=4725 npm run test:e2e:register
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:register

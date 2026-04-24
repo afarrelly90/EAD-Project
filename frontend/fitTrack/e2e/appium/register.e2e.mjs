@@ -1,14 +1,21 @@
 import { remote } from 'webdriverio';
 import { fileURLToPath } from 'node:url';
+import { existsSync, readdirSync } from 'node:fs';
 
 const {
   APPIUM_HOST = '127.0.0.1',
   APPIUM_PORT = '4723',
   ANDROID_APP_PACKAGE = 'io.ionic.starter',
   ANDROID_APP_ACTIVITY = 'io.ionic.starter.MainActivity',
-  CHROMEDRIVER_DIR = fileURLToPath(new URL('./chromedrivers/', import.meta.url)),
+  CHROMEDRIVER_DIR,
   CHROMEDRIVER_EXECUTABLE,
 } = process.env;
+
+const defaultChromedriverDir = fileURLToPath(new URL('./chromedrivers/', import.meta.url));
+const resolvedChromedriverDir = CHROMEDRIVER_DIR ?? defaultChromedriverDir;
+const hasLocalChromedriverDir =
+  existsSync(resolvedChromedriverDir) &&
+  readdirSync(resolvedChromedriverDir).some((entry) => !entry.startsWith('.'));
 
 const testUser = {
   fullName: `Appium User ${Date.now()}`,
@@ -33,7 +40,9 @@ const browser = await remote({
     'appium:waitForWebviewMs': 10000,
     ...(CHROMEDRIVER_EXECUTABLE
       ? { 'appium:chromedriverExecutable': CHROMEDRIVER_EXECUTABLE }
-      : { 'appium:chromedriverExecutableDir': CHROMEDRIVER_DIR }),
+      : hasLocalChromedriverDir
+        ? { 'appium:chromedriverExecutableDir': resolvedChromedriverDir }
+        : {}),
   },
 });
 
