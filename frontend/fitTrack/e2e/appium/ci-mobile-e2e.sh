@@ -17,9 +17,16 @@ echo "=== Installing app ==="
   ./gradlew app:installDebug --stacktrace
 )
 
-echo "=== Ensuring Chrome is available ==="
-adb shell cmd package install-existing com.android.chrome || true
+echo "=== Installing Chrome APK ==="
+curl -L -o /tmp/chrome.apk https://dl.google.com/android/repository/com.android.chrome.apk
+
+adb install -r /tmp/chrome.apk || true
+
+echo "=== Setting Chrome as WebView ==="
 adb shell settings put global webview_provider com.android.chrome || true
+
+adb shell am force-stop com.android.chrome || true
+adb shell am force-stop com.google.android.webview || true
 
 sleep 5
 
