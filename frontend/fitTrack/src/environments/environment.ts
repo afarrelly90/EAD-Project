@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiBaseUrl:
+    'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api',
 };
 
 /*

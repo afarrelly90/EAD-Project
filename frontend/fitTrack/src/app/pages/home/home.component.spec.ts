@@ -18,7 +18,8 @@ describe('HomeComponent', () => {
       subscribe: jasmine.createSpy('subscribe'),
     },
   };
-  const apiUrl = 'http://localhost:5240/api/Exercises';
+  const apiUrl =
+    'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Exercises';
   const mockExercises: ExerciseDto[] = [
     {
       id: 1,

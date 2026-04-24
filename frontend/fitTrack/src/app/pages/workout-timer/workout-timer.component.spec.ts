@@ -14,7 +14,8 @@ describe('WorkoutTimerComponent', () => {
   let fixture: ComponentFixture<WorkoutTimerComponent>;
   let httpMock: HttpTestingController;
 
-  const apiUrl = 'http://localhost:5240/api/Exercises';
+  const apiUrl =
+    'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Exercises';
   const exerciseResponse = {
     id: 3,
     title: 'Goblet Squats',

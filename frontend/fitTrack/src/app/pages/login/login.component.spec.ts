@@ -78,7 +78,9 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    const req = httpMock.expectOne('http://localhost:5240/api/Auth/login');
+    const req = httpMock.expectOne(
+      'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Auth/login'
+    );
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(formData);
 
@@ -101,7 +103,9 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    const req = httpMock.expectOne('http://localhost:5240/api/Auth/login');
+    const req = httpMock.expectOne(
+      'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Auth/login'
+    );
     req.flush('Error', { status: 401, statusText: 'Unauthorized' });
 
     expect(window.alert).toHaveBeenCalledWith('Invalid credentials');

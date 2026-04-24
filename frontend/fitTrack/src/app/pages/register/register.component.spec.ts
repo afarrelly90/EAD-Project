@@ -67,7 +67,9 @@ describe('RegisterComponent', () => {
 
     component.onSubmit();
 
-    const req = httpMock.expectOne('http://localhost:5240/api/Auth/register');
+    const req = httpMock.expectOne(
+      'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Auth/register'
+    );
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(formData);
 
@@ -90,7 +92,9 @@ describe('RegisterComponent', () => {
 
     component.onSubmit();
 
-    const req = httpMock.expectOne('http://localhost:5240/api/Auth/register');
+    const req = httpMock.expectOne(
+      'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Auth/register'
+    );
     req.flush('Error', { status: 400, statusText: 'Bad Request' });
 
     expect(window.alert).toHaveBeenCalled();
