@@ -17,10 +17,6 @@ jobs:
   register-e2e:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: frontend/fitTrack
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "20"   # ✅ stable with Appium
           cache: npm
           cache-dependency-path: frontend/fitTrack/package-lock.json
 
@@ -47,13 +43,23 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Install frontend dependencies
+        working-directory: frontend/fitTrack
         run: npm ci
 
       - name: Build Ionic app
+        working-directory: frontend/fitTrack
         run: npm run build
 
       - name: Sync Capacitor Android project
+        working-directory: frontend/fitTrack
         run: npx cap sync android
+
+      # Optional but helps avoid disk issues
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          df -h
 
       - name: Run Appium register E2E
         uses: reactivecircus/android-emulator-runner@v2
@@ -74,18 +80,17 @@ jobs:
             adb wait-for-device
 
             echo "=== Waiting for Android boot ==="
-            while ! adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do sleep 2; done
+            while ! adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' | grep -q '^1$'; do
+              sleep 2
+            done
 
-            # Extra stabilization (important for CI)
             sleep 10
 
             echo "=== Connected devices ==="
             adb devices
 
             echo "=== Installing app ==="
-            cd android
-            ./gradlew app:installDebug --stacktrace
-            cd ..
+            cd frontend/fitTrack/android && ./gradlew app:installDebug --stacktrace
 
             echo "=== Detecting WebView version ==="
             WEBVIEW_VERSION="$(adb shell dumpsys package com.google.android.webview | sed -n 's/.*versionName=//p' | head -n 1 | tr -d '\r')"
@@ -105,22 +110,19 @@ jobs:
             python3 -c "import json, os, urllib.request; build=os.environ['CHROME_BUILD']; url='https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build-with-downloads.json'; data=json.load(urllib.request.urlopen(url)); downloads=data.get('builds', {}).get(build, {}).get('downloads', {}).get('chromedriver', []); linux=next((item['url'] for item in downloads if item['platform']=='linux64'), None); linux or (_ for _ in ()).throw(SystemExit(f'No linux64 chromedriver found for Chrome build {build}')); open('/tmp/chromedriver-url.txt', 'w', encoding='utf-8').write(linux)"
 
             CHROMEDRIVER_URL="$(cat /tmp/chromedriver-url.txt)"
-            echo "Downloading Chromedriver from $CHROMEDRIVER_URL"
             curl -fsSL "$CHROMEDRIVER_URL" -o /tmp/chromedriver.zip
             unzip -oq /tmp/chromedriver.zip -d /tmp/chromedriver
 
             CHROMEDRIVER_BIN="$(find /tmp/chromedriver -type f -name chromedriver | head -n 1)"
-            if [ -z "$CHROMEDRIVER_BIN" ]; then
-              echo "❌ Chromedriver binary not found"
-              exit 1
-            fi
             chmod +x "$CHROMEDRIVER_BIN"
 
             echo "=== Starting Appium ==="
             npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.log 2>&1 &
 
             echo "=== Waiting for Appium ==="
-            while ! curl -s http://localhost:4725/status | grep -q '"ready":true'; do sleep 2; done
+            while ! curl -s http://localhost:4725/status | grep -q '"ready":true'; do
+              sleep 2
+            done
 
             echo "=== Running E2E tests ==="
             APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="$CHROMEDRIVER_BIN" npm run test:e2e:register
