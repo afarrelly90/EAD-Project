@@ -89,5 +89,8 @@ until curl -fsS http://localhost:4725/status | grep -q '"ready":true'; do
   sleep 2
 done
 
-echo "=== Running E2E tests ==="
+echo "=== Running login E2E ==="
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:login
+
+echo "=== Running register E2E ==="
 APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:register
