@@ -46,20 +46,21 @@ const browser = await remote({
   },
 });
 
+const getWebviewContext = async () => {
+  const contexts = await browser.getContexts();
+  return contexts.find((context) => context.startsWith('WEBVIEW'));
+};
+
 const waitForWebView = async () => {
   await browser.waitUntil(
-    async () => {
-      const contexts = await browser.getContexts();
-      return contexts.some((context) => context.startsWith('WEBVIEW'));
-    },
+    async () => Boolean(await getWebviewContext()),
     {
       timeout: 20000,
       timeoutMsg: 'WEBVIEW context did not become available.',
     }
   );
 
-  const contexts = await browser.getContexts();
-  const webviewContext = contexts.find((context) => context.startsWith('WEBVIEW'));
+  const webviewContext = await getWebviewContext();
 
   if (!webviewContext) {
     throw new Error('Could not find a WEBVIEW context.');
@@ -68,22 +69,93 @@ const waitForWebView = async () => {
   await browser.switchContext(webviewContext);
 };
 
+const waitForRegisterPage = async () => {
+  await browser.url('/register');
+
+  const registerSection = await browser.$('[data-testid="register-login-section"]');
+
+  await browser.waitUntil(
+    async () => {
+      const url = await browser.getUrl();
+      return url.includes('/register') && (await registerSection.isDisplayed());
+    },
+    {
+      timeout: 15000,
+      timeoutMsg: 'Register page did not finish rendering.',
+    }
+  );
+};
+
+const setIonInputValue = async (testId, value) => {
+  const host = await browser.$(`[data-testid="${testId}"]`);
+  await host.waitForDisplayed({ timeout: 15000 });
+
+  await browser.execute((element, nextValue) => {
+    const input = element.shadowRoot?.querySelector('input');
+
+    if (input) {
+      input.focus();
+      input.value = nextValue;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      input.blur();
+    }
+
+    element.value = nextValue;
+    element.dispatchEvent(new CustomEvent('ionInput', { bubbles: true, detail: { value: nextValue } }));
+    element.dispatchEvent(new CustomEvent('ionChange', { bubbles: true, detail: { value: nextValue } }));
+  }, host, value);
+
+  await browser.waitUntil(
+    async () =>
+      browser.execute((element) => {
+        const input = element.shadowRoot?.querySelector('input');
+        return String(input?.value ?? element.value ?? '');
+      }, host) === value,
+    {
+      timeout: 5000,
+      timeoutMsg: `Input "${testId}" did not keep the expected value.`,
+    }
+  );
+};
+
 const fillRegisterForm = async () => {
-  const fullNameInput = await browser.$('[data-testid="register-full-name"] input');
-  const emailInput = await browser.$('[data-testid="register-email"] input');
-  const passwordInput = await browser.$('[data-testid="register-password"] input');
   const submitButton = await browser.$('[data-testid="register-submit"]');
 
-  await fullNameInput.waitForDisplayed({ timeout: 15000 });
-  await fullNameInput.setValue(testUser.fullName);
-  await emailInput.setValue(testUser.email);
-  await passwordInput.setValue(testUser.password);
+  await setIonInputValue('register-full-name', testUser.fullName);
+  await setIonInputValue('register-email', testUser.email);
+  await setIonInputValue('register-password', testUser.password);
+  await submitButton.waitForDisplayed({ timeout: 15000 });
   await submitButton.click();
+};
+
+const collectFailureContext = async () => {
+  const [url, contexts] = await Promise.all([
+    browser.getUrl().catch(() => 'unavailable'),
+    browser.getContexts().catch(() => []),
+  ]);
+
+  let readyMarkers = {};
+  try {
+    readyMarkers = await browser.execute(() => ({
+      registerSection: Boolean(document.querySelector('[data-testid="register-login-section"]')),
+      fullName: Boolean(document.querySelector('[data-testid="register-full-name"]')),
+      email: Boolean(document.querySelector('[data-testid="register-email"]')),
+      password: Boolean(document.querySelector('[data-testid="register-password"]')),
+      submit: Boolean(document.querySelector('[data-testid="register-submit"]')),
+      title: document.title,
+      pathname: window.location.pathname,
+    }));
+  } catch {
+    readyMarkers = { inspectable: false };
+  }
+
+  return { url, contexts, readyMarkers };
 };
 
 try {
   await waitForWebView();
-  await browser.url('/register');
+  await waitForRegisterPage();
   await fillRegisterForm();
 
   await browser.waitUntil(
@@ -95,6 +167,12 @@ try {
   );
 
   console.log(`Register E2E passed for ${testUser.email}`);
+} catch (error) {
+  const failureContext = await collectFailureContext().catch(() => null);
+  if (failureContext) {
+    console.error('Register E2E failure context:', JSON.stringify(failureContext));
+  }
+  throw error;
 } finally {
   await browser.deleteSession();
 }
