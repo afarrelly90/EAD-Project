@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { I18nService } from './services/i18n.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private i18nService: I18nService) {
+    this.i18nService.init();
+  }
 }

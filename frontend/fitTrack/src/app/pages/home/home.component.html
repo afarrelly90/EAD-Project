@@ -6,18 +6,18 @@
           type="button"
           class="home-page__profile-button"
           routerLink="/profile"
-          aria-label="Open profile"
+          [attr.aria-label]="'home.open_profile' | t"
         >
           <ion-icon name="person-circle-outline"></ion-icon>
         </button>
 
-        <h1 class="home-page__title">Exercises</h1>
+        <h1 class="home-page__title">{{ 'home.title' | t }}</h1>
       </div>
 
       <button
         type="button"
         class="home-page__icon-button"
-        [attr.aria-label]="isSearchOpen ? 'Close search' : 'Search exercises'"
+        [attr.aria-label]="isSearchOpen ? ('home.close_search' | t) : ('home.search_exercises' | t)"
         (click)="toggleSearch()"
       >
         <ion-icon [name]="isSearchOpen ? 'close-outline' : 'search-outline'"></ion-icon>
@@ -29,7 +29,7 @@
         <input
           type="text"
           class="home-page__search-input"
-          placeholder="Search for an exercise..."
+          [placeholder]="'home.search_placeholder' | t"
           [value]="searchTerm"
           (input)="onSearchTermChange($any($event.target).value)"
         />
@@ -47,8 +47,8 @@
         </span>
 
         <span class="home-page__create-copy">
-          <span class="home-page__create-title">Create New Exercise</span>
-          <span class="home-page__create-subtitle">Add a custom exercise</span>
+          <span class="home-page__create-title">{{ 'home.create_title' | t }}</span>
+          <span class="home-page__create-subtitle">{{ 'home.create_subtitle' | t }}</span>
         </span>
 
         <ion-icon
@@ -60,7 +60,7 @@
 
     <section class="home-page__section">
       <div class="home-page__section-header">
-        <h2 class="home-page__section-title">All Exercises</h2>
+        <h2 class="home-page__section-title">{{ 'home.all_exercises' | t }}</h2>
       </div>
 
       <div class="home-page__filters">
@@ -71,23 +71,23 @@
           [class.home-page__filter--active]="selectedFilter === filter"
           (click)="selectFilter(filter)"
         >
-          {{ filter }}
+          {{ ('home.filters.' + filter.toLowerCase()) | t }}
         </button>
       </div>
 
       @if (isLoading) {
-        <div class="home-page__state">Loading exercises...</div>
+        <div class="home-page__state">{{ 'home.loading' | t }}</div>
       }
 
       @if (hasError) {
         <div class="home-page__state home-page__state--error">
-          Could not load exercises right now.
+          {{ 'home.error' | t }}
         </div>
       }
 
       @if (!isLoading && !hasError && filteredExercises.length === 0) {
         <div class="home-page__state">
-          No exercises found.
+          {{ 'home.empty' | t }}
         </div>
       }
 

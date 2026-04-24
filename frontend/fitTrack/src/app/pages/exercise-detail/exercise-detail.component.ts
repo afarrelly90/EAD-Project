@@ -11,14 +11,16 @@ import {
   timeOutline,
   trashOutline,
 } from 'ionicons/icons';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { I18nService } from 'src/app/services/i18n.service';
 
 @Component({
   selector: 'app-exercise-detail',
   standalone: true,
   templateUrl: './exercise-detail.component.html',
   styleUrls: ['./exercise-detail.component.scss'],
-  imports: [CommonModule, RouterModule, IonContent, IonIcon, IonButton],
+  imports: [CommonModule, RouterModule, IonContent, IonIcon, IonButton, TranslatePipe],
 })
 export class ExerciseDetailComponent implements OnInit {
   exercise: ExerciseDto | null = null;
@@ -35,7 +37,8 @@ export class ExerciseDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private exerciseService: ExerciseService
+    private exerciseService: ExerciseService,
+    private i18nService: I18nService
   ) {
     addIcons({
       createOutline,
@@ -64,23 +67,27 @@ export class ExerciseDetailComponent implements OnInit {
   }
 
   get categoryLabel(): string {
+    return this.categoryKey ? this.i18nService.translate(this.categoryKey) : '';
+  }
+
+  get categoryKey(): string {
     if (!this.exercise) {
       return '';
     }
 
     if (this.exercise.isUpperBody) {
-      return 'Upper Body';
+      return 'exercise.muscle_groups.upper';
     }
 
     if (this.exercise.isLowerBody) {
-      return 'Lower Body';
+      return 'exercise.muscle_groups.lower';
     }
 
     if (this.exercise.isCore) {
-      return 'Core';
+      return 'exercise.muscle_groups.core';
     }
 
-    return 'General Fitness';
+    return 'exercise.muscle_groups.general';
   }
 
   get fallbackImageByCategory(): string {
@@ -104,7 +111,21 @@ export class ExerciseDetailComponent implements OnInit {
   }
 
   get equipmentLabel(): string {
-    return this.exercise?.equipment || 'None';
+    const equipment = this.exercise?.equipment;
+    if (!equipment) {
+      return this.i18nService.translate('exercise.equipment_options.none');
+    }
+
+    const key = `exercise.equipment_options.${equipment
+      .toLowerCase()
+      .replace(/ /g, '_')}`;
+    const translated = this.i18nService.translate(key);
+    return translated === key ? equipment : translated;
+  }
+
+  get difficultyKey(): string {
+    const difficulty = this.exercise?.difficulty?.toLowerCase();
+    return difficulty ? `exercise.difficulty_options.${difficulty}` : '';
   }
 
   get editExerciseUrl(): string {
@@ -133,7 +154,9 @@ export class ExerciseDetailComponent implements OnInit {
     }
 
     const confirmed = window.confirm(
-      `Delete ${this.exercise.title}? This action cannot be undone.`
+      this.i18nService.translate('exercise_detail.delete_confirm', {
+        title: this.exercise.title,
+      })
     );
 
     if (!confirmed) {
@@ -146,7 +169,7 @@ export class ExerciseDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-        window.alert('Could not delete exercise.');
+        window.alert(this.i18nService.translate('exercise_detail.delete_error'));
       },
     });
   }

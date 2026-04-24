@@ -14,6 +14,7 @@ import {
   IonButton,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 import { AuthService } from 'src/app/services/auth';
 
 @Component({
@@ -29,6 +30,7 @@ import { AuthService } from 'src/app/services/auth';
     IonInput,
     IonButton,
     RouterModule,
+    TranslatePipe,
   ],
 })
 export class RegisterComponent implements OnInit {

@@ -23,6 +23,8 @@ import {
   ExerciseService,
   UpdateExerciseDto,
 } from 'src/app/services/exercise';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
+import { I18nService } from 'src/app/services/i18n.service';
 
 type MuscleGroup = 'Core' | 'Upper' | 'Lower' | 'Other';
 
@@ -43,6 +45,7 @@ type MuscleGroup = 'Core' | 'Upper' | 'Lower' | 'Other';
     IonTextarea,
     IonSelect,
     IonSelectOption,
+    TranslatePipe,
   ],
 })
 export class EditExerciseComponent implements OnInit {
@@ -80,7 +83,8 @@ export class EditExerciseComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private exerciseService: ExerciseService
+    private exerciseService: ExerciseService,
+    private i18nService: I18nService
   ) {
     addIcons({
       chevronBackOutline,
@@ -147,7 +151,7 @@ export class EditExerciseComponent implements OnInit {
       error: (error) => {
         console.error(error);
         this.isSaving = false;
-        alert('Could not update exercise.');
+        alert(this.i18nService.translate('edit_exercise.update_error'));
       },
     });
   }

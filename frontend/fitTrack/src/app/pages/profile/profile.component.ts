@@ -30,6 +30,8 @@ import {
   AuthUserProfile,
   UpdateProfileDto,
 } from 'src/app/services/auth';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
+import { I18nService } from 'src/app/services/i18n.service';
 
 @Component({
   selector: 'app-profile',
@@ -46,6 +48,7 @@ import {
     IonInput,
     IonSelect,
     IonSelectOption,
+    TranslatePipe,
   ],
 })
 export class ProfileComponent implements OnInit {
@@ -59,7 +62,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private i18nService: I18nService
   ) {
     addIcons({
       chevronBackOutline,
@@ -100,22 +104,15 @@ export class ProfileComponent implements OnInit {
 
   get weightLabel(): string {
     if (this.user?.weight === null || this.user?.weight === undefined) {
-      return 'Not set';
+      return this.i18nService.translate('common.not_set');
     }
 
-    return `${this.user.weight} kg`;
+    return `${this.user.weight} ${this.i18nService.translate('common.kg')}`;
   }
 
   get languageLabel(): string {
-    if (!this.user?.language || this.user.language === 'en') {
-      return 'English';
-    }
-
-    if (this.user.language === 'it') {
-      return 'Italian';
-    }
-
-    return this.user.language.charAt(0).toUpperCase() + this.user.language.slice(1);
+    const language = this.user?.language || 'en';
+    return this.i18nService.translate(`profile.language_options.${language}`);
   }
 
   goBack(): void {
@@ -160,6 +157,7 @@ export class ProfileComponent implements OnInit {
           token: localStorage.getItem('token') || '',
           user: updatedProfile,
         });
+        this.i18nService.setLanguage(updatedProfile.language || 'en');
         this.isEditing = false;
         this.isSaving = false;
         this.resetFormFromUser();
@@ -167,7 +165,7 @@ export class ProfileComponent implements OnInit {
       error: (error) => {
         console.error(error);
         this.isSaving = false;
-        window.alert('Could not update your profile.');
+        window.alert(this.i18nService.translate('profile.update_error'));
       },
     });
   }
@@ -191,12 +189,14 @@ export class ProfileComponent implements OnInit {
     this.authService.getProfile(storedUser.id).subscribe({
       next: (profile) => {
         this.user = profile;
+        this.i18nService.setLanguage(profile.language || 'en');
         this.isLoading = false;
         this.resetFormFromUser();
       },
       error: (error) => {
         console.error(error);
         this.user = storedUser;
+        this.i18nService.setLanguage(storedUser.language || 'en');
         this.hasError = false;
         this.isLoading = false;
         this.resetFormFromUser();

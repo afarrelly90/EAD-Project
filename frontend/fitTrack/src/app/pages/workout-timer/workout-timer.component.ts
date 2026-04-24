@@ -4,7 +4,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, refreshOutline, timerOutline } from 'ionicons/icons';
+import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { I18nService } from 'src/app/services/i18n.service';
 
 type WorkoutPhase = 'idle' | 'exercise' | 'rest' | 'complete';
 type NumberRange = readonly [min: number, max: number];
@@ -14,7 +16,7 @@ type NumberRange = readonly [min: number, max: number];
   standalone: true,
   templateUrl: './workout-timer.component.html',
   styleUrls: ['./workout-timer.component.scss'],
-  imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon],
+  imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon, TranslatePipe],
 })
 export class WorkoutTimerComponent implements OnInit, OnDestroy {
   readonly minSets = 1;
@@ -55,7 +57,8 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private exerciseService: ExerciseService
+    private exerciseService: ExerciseService,
+    private i18nService: I18nService
   ) {
     addIcons({
       chevronBackOutline,
@@ -90,56 +93,77 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
 
   get timerButtonLabel(): string {
     if (!this.workoutStarted) {
-      return 'Begin Workout';
+      return this.i18nService.translate('workout.button.begin');
     }
 
     switch (this.currentPhase) {
       case 'complete':
-        return 'Workout Complete';
+        return this.i18nService.translate('workout.button.complete');
       case 'exercise':
-        return 'Exercise in progress';
+        return this.i18nService.translate('workout.button.exercise_running');
       case 'rest':
-        return 'Rest in progress';
+        return this.i18nService.translate('workout.button.rest_running');
       default:
-        return 'Workout in progress';
+        return this.i18nService.translate('workout.button.running');
     }
   }
 
   get timerStatusTitle(): string {
     if (!this.workoutStarted) {
-      return 'Set up your workout';
+      return this.i18nService.translate('workout.status.setup_title');
     }
 
     switch (this.currentPhase) {
       case 'complete':
-        return 'All sets complete';
+        return this.i18nService.translate('workout.status.complete_title');
       case 'exercise':
-        return `Exercise set ${this.currentSet} of ${this.plannedSets}`;
+        return this.i18nService.translate('workout.status.exercise_title', {
+          current: this.currentSet,
+          total: this.plannedSets,
+        });
       case 'rest':
-        return `Rest before set ${this.nextSetNumber}`;
+        return this.i18nService.translate('workout.status.rest_title', {
+          next: this.nextSetNumber,
+        });
       default:
-        return `Current set: ${this.currentSet} of ${this.plannedSets}`;
+        return this.i18nService.translate('workout.status.current_title', {
+          current: this.currentSet,
+          total: this.plannedSets,
+        });
     }
   }
 
   get timerStatusMessage(): string {
     if (!this.workoutStarted) {
-      return 'Choose your set count, exercise length, and rest time, then start when you are ready.';
+      return this.i18nService.translate('workout.status.setup_message');
     }
 
     if (this.workoutComplete) {
-      return `You finished ${this.plannedSets} set${this.plannedSets === 1 ? '' : 's'}.`;
+      return this.i18nService.translate('workout.status.complete_message', {
+        count: this.plannedSets,
+        suffix:
+          this.plannedSets === 1
+            ? ''
+            : this.i18nService.currentLanguage === 'it'
+              ? 'e'
+              : 's',
+      });
     }
 
     if (this.isExerciseActive) {
-      return `${this.formatTime(this.secondsRemaining)} left in set ${this.currentSet}.`;
+      return this.i18nService.translate('workout.status.exercise_message', {
+        time: this.formatTime(this.secondsRemaining),
+        current: this.currentSet,
+      });
     }
 
     if (this.isRestActive) {
-      return `${this.formatTime(this.secondsRemaining)} remaining before the next set.`;
+      return this.i18nService.translate('workout.status.rest_message', {
+        time: this.formatTime(this.secondsRemaining),
+      });
     }
 
-    return 'Workout ready.';
+    return this.i18nService.translate('workout.status.ready_message');
   }
 
   get timerDisplayTime(): string {
@@ -155,26 +179,26 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   get countdownLabel(): string {
     switch (this.currentPhase) {
       case 'complete':
-        return 'Workout complete';
+        return this.i18nService.translate('workout.countdown.complete');
       case 'exercise':
-        return 'Exercise countdown';
+        return this.i18nService.translate('workout.countdown.exercise');
       case 'rest':
-        return 'Rest countdown';
+        return this.i18nService.translate('workout.countdown.rest');
       default:
-        return 'Exercise target';
+        return this.i18nService.translate('workout.countdown.target');
     }
   }
 
   get phaseLabel(): string {
     switch (this.currentPhase) {
       case 'complete':
-        return 'Done';
+        return this.i18nService.translate('workout.phase.done');
       case 'exercise':
-        return 'Exercise';
+        return this.i18nService.translate('workout.phase.exercise');
       case 'rest':
-        return 'Rest';
+        return this.i18nService.translate('workout.phase.rest');
       default:
-        return 'Ready';
+        return this.i18nService.translate('workout.phase.ready');
     }
   }
 
@@ -199,7 +223,14 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
       return '';
     }
 
-    return `Enter ${this.minSets}-${this.maxSets} sets, ${this.minExerciseSeconds}-${this.maxExerciseSeconds} exercise seconds, and ${this.minRestSeconds}-${this.maxRestSeconds} rest seconds.`;
+    return this.i18nService.translate('workout.validation_message', {
+      minSets: this.minSets,
+      maxSets: this.maxSets,
+      minExercise: this.minExerciseSeconds,
+      maxExercise: this.maxExerciseSeconds,
+      minRest: this.minRestSeconds,
+      maxRest: this.maxRestSeconds,
+    });
   }
 
   get timerProgressPercent(): number {

@@ -1,14 +1,14 @@
 <ion-content fullscreen class="register-page">
   <div class="register-page__wrapper">
     <div class="register-page__header">
-      <h1 class="register-page__title">Get Started</h1>
-      <p class="register-page__subtitle">Create an account to continue.</p>
+      <h1 class="register-page__title">{{ 'auth.register.title' | t }}</h1>
+      <p class="register-page__subtitle">{{ 'auth.register.subtitle' | t }}</p>
     </div>
 
     <div class="register-page__image-container">
       <img
         src="assets/images/register-fitness.jpg"
-        alt="Workout"
+        [alt]="'auth.register.image_alt' | t"
         class="register-page__image"
       />
     </div>
@@ -21,14 +21,14 @@
       >
         <ion-item lines="none" class="register-page__input">
           <ion-input
-            placeholder="Full Name"
+            [placeholder]="'auth.register.full_name_placeholder' | t"
             formControlName="fullName"
           ></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="register-page__input">
           <ion-input
-            placeholder="Email Address"
+            [placeholder]="'auth.register.email_placeholder' | t"
             formControlName="email"
           ></ion-input>
         </ion-item>
@@ -36,27 +36,25 @@
         <ion-item lines="none" class="register-page__input">
           <ion-input
             type="password"
-            placeholder="Password"
+            [placeholder]="'auth.register.password_placeholder' | t"
             formControlName="password"
           >
           </ion-input>
         </ion-item>
 
         <div class="register-page__terms">
-          By signing up, you agree to our
-          <span class="register-page__terms-link">Terms & Conditions</span>
+          {{ 'auth.register.terms_prefix' | t }}
+          <span class="register-page__terms-link">{{ 'auth.register.terms_link' | t }}</span>
         </div>
 
         <ion-button expand="block" type="submit" class="register-page__button">
-          Sign Up
+          {{ 'auth.register.submit' | t }}
         </ion-button>
       </form>
 
       <div class="register-page__login">
-        <span>Already have an account?</span>
-        <span class="register-page__login-link" routerLink="/login"
-          >Log In</span
-        >
+        <span>{{ 'auth.register.have_account' | t }}</span>
+        <span class="register-page__login-link" routerLink="/login">{{ 'auth.register.login' | t }}</span>
       </div>
     </div>
   </div>

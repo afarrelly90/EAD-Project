@@ -4,13 +4,13 @@
       <button
         type="button"
         class="create-exercise-page__back-button"
-        aria-label="Go back"
+        [attr.aria-label]="'common.back' | t"
         (click)="goBack()"
       >
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
-      <h1 class="create-exercise-page__title">Create New Exercise</h1>
+      <h1 class="create-exercise-page__title">{{ 'create_exercise.title' | t }}</h1>
     </header>
 
     <form
@@ -21,12 +21,12 @@
       <section class="create-exercise-page__card">
         @if (showValidationMessage) {
           <div class="create-exercise-page__message">
-            Please fill in all required fields before saving the exercise.
+            {{ 'create_exercise.validation_message' | t }}
           </div>
         }
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Image Link</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.image_link' | t }}</label>
           <ion-item lines="none" class="create-exercise-page__input">
             <ion-icon
               name="link-outline"
@@ -41,7 +41,7 @@
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Video Link</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.video_link' | t }}</label>
           <ion-item lines="none" class="create-exercise-page__input">
             <ion-icon
               name="link-outline"
@@ -56,22 +56,22 @@
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Name</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.name' | t }}</label>
           <ion-item lines="none" class="create-exercise-page__input">
             <ion-input
               formControlName="title"
-              placeholder="Enter exercise name..."
+              [placeholder]="'create_exercise.name_placeholder' | t"
             ></ion-input>
           </ion-item>
           @if (createExerciseForm.controls.title.touched && createExerciseForm.controls.title.invalid) {
             <p class="create-exercise-page__field-error">
-              Exercise name is required.
+              {{ 'create_exercise.name_required' | t }}
             </p>
           }
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Primary Muscle Group</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.primary_muscle_group' | t }}</label>
           <div class="create-exercise-page__chips">
             @for (group of muscleGroups; track group) {
               <button
@@ -80,24 +80,18 @@
                 [class.create-exercise-page__chip--active]="selectedMuscleGroup === group"
                 (click)="selectMuscleGroup(group)"
               >
-                @if (group === 'Upper') {
-                  Upper Body
-                } @else if (group === 'Lower') {
-                  Lower Body
-                } @else {
-                  {{ group }}
-                }
+                {{ ('exercise.muscle_groups.' + group.toLowerCase()) | t }}
               </button>
             }
           </div>
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Instructions</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.instructions' | t }}</label>
           <ion-item lines="none" class="create-exercise-page__textarea">
             <ion-textarea
               formControlName="description"
-              placeholder="Enter any instructions for the exercise..."
+              [placeholder]="'create_exercise.instructions_placeholder' | t"
               autoGrow="true"
               rows="4"
             ></ion-textarea>
@@ -105,7 +99,7 @@
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Equipment</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.equipment' | t }}</label>
           <ion-item lines="none" class="create-exercise-page__input">
             <ion-select
               formControlName="equipment"
@@ -114,7 +108,7 @@
             >
               @for (option of equipmentOptions; track option) {
                 <ion-select-option [value]="option">
-                  {{ option }}
+                  {{ ('exercise.equipment_options.' + option.toLowerCase().replace(' ', '_')) | t }}
                 </ion-select-option>
               }
             </ion-select>
@@ -123,7 +117,7 @@
 
         <div class="create-exercise-page__metrics">
           <div class="create-exercise-page__field create-exercise-page__field--metric">
-            <label class="create-exercise-page__label">Calories</label>
+            <label class="create-exercise-page__label">{{ 'create_exercise.calories' | t }}</label>
             <ion-item lines="none" class="create-exercise-page__input">
               <ion-input
                 type="number"
@@ -134,7 +128,7 @@
           </div>
 
           <div class="create-exercise-page__field create-exercise-page__field--metric">
-            <label class="create-exercise-page__label">Minutes</label>
+            <label class="create-exercise-page__label">{{ 'create_exercise.minutes' | t }}</label>
             <ion-item lines="none" class="create-exercise-page__input">
               <ion-input
                 type="number"
@@ -146,7 +140,7 @@
         </div>
 
         <div class="create-exercise-page__field">
-          <label class="create-exercise-page__label">Difficulty</label>
+          <label class="create-exercise-page__label">{{ 'create_exercise.difficulty' | t }}</label>
           <div class="create-exercise-page__chips">
             @for (difficulty of difficultyOptions; track difficulty) {
               <button
@@ -155,7 +149,7 @@
                 [class.create-exercise-page__chip--active]="createExerciseForm.value.difficulty === difficulty"
                 (click)="createExerciseForm.patchValue({ difficulty: difficulty })"
               >
-                {{ difficulty }}
+                {{ ('exercise.difficulty_options.' + difficulty.toLowerCase()) | t }}
               </button>
             }
           </div>
@@ -169,7 +163,7 @@
           class="create-exercise-page__submit"
           [disabled]="isSaving"
         >
-          {{ isSaving ? 'Saving...' : 'Save Exercise' }}
+          {{ isSaving ? ('create_exercise.saving' | t) : ('create_exercise.save' | t) }}
         </ion-button>
       </div>
     </form>

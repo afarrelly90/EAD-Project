@@ -136,7 +136,7 @@ describe('HomeComponent', () => {
     expect(component.exercises[0]).toEqual(
       jasmine.objectContaining({
         title: 'Plank',
-        category: 'Core',
+        categoryKey: 'exercise.muscle_groups.core',
         filter: 'Core',
         image: 'assets/images/register-fitness.jpg',
       })
@@ -144,7 +144,7 @@ describe('HomeComponent', () => {
     expect(component.exercises[1]).toEqual(
       jasmine.objectContaining({
         title: 'Push-Ups',
-        category: 'Upper Body',
+        categoryKey: 'exercise.muscle_groups.upper',
         filter: 'Upper',
         image: 'https://example.com/push-ups.jpg',
       })
@@ -152,7 +152,7 @@ describe('HomeComponent', () => {
     expect(component.exercises[2]).toEqual(
       jasmine.objectContaining({
         title: 'Squats',
-        category: 'Lower Body',
+        categoryKey: 'exercise.muscle_groups.lower',
         filter: 'Lower',
         image: 'assets/images/login-fitness.jpg',
       })

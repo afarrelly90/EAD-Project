@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import enTranslations from '../../assets/i18n/en.json';
+import itTranslations from '../../assets/i18n/it.json';
 
 interface TranslationDictionary {
   [key: string]: string | TranslationDictionary;
@@ -11,7 +13,10 @@ interface TranslationDictionary {
 export class I18nService {
   private readonly storageKey = 'language';
   private readonly fallbackLanguage = 'en';
-  private readonly translations = new Map<string, TranslationDictionary>();
+  private readonly translations = new Map<string, TranslationDictionary>([
+    ['en', enTranslations as TranslationDictionary],
+    ['it', itTranslations as TranslationDictionary],
+  ]);
   private readonly currentLanguageSubject = new BehaviorSubject<string>(
     this.fallbackLanguage
   );
@@ -19,11 +24,11 @@ export class I18nService {
   readonly languageChanges = this.currentLanguageSubject.asObservable();
 
   init(): void {
-    void this.use(this.detectInitialLanguage());
+    this.use(this.detectInitialLanguage());
   }
 
   setLanguage(language: string): void {
-    void this.use(language);
+    this.use(language);
   }
 
   get currentLanguage(): string {
@@ -51,11 +56,8 @@ export class I18nService {
     );
   }
 
-  private async use(language: string): Promise<void> {
+  private use(language: string): void {
     const normalizedLanguage = this.normalizeLanguage(language);
-
-    await this.ensureLoaded(this.fallbackLanguage);
-    await this.ensureLoaded(normalizedLanguage);
 
     this.currentLanguageSubject.next(normalizedLanguage);
     localStorage.setItem(this.storageKey, normalizedLanguage);
@@ -89,24 +91,6 @@ export class I18nService {
 
   private normalizeLanguage(language: string): string {
     return language?.toLowerCase().startsWith('it') ? 'it' : 'en';
-  }
-
-  private async ensureLoaded(language: string): Promise<void> {
-    if (this.translations.has(language)) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`assets/i18n/${language}.json`);
-      if (!response.ok) {
-        throw new Error(`Could not load translations for ${language}`);
-      }
-
-      this.translations.set(language, await response.json());
-    } catch (error) {
-      console.error(error);
-      this.translations.set(language, {});
-    }
   }
 
   private resolveKey(
