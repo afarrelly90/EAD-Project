@@ -187,15 +187,26 @@ const waitForTimerPage = async () => {
 
 const startTimer = async () => {
   const primaryButton = await browser.$('[data-testid="timer-primary-button"]');
-  const phasePill = await browser.$('[data-testid="timer-phase-pill"]');
+  const resetButton = await browser.$('[data-testid="timer-reset-button"]');
+  const countdown = await browser.$('[data-testid="timer-countdown"]');
 
   await primaryButton.waitForDisplayed({ timeout: 15000 });
+  const initialCountdown = await countdown.getText();
   await primaryButton.click();
 
   await browser.waitUntil(
     async () => {
-      const phaseText = await phasePill.getText();
-      return phaseText.trim().length > 0 && !/ready/i.test(phaseText);
+      const [primaryDisabled, resetDisabled, currentCountdown] = await Promise.all([
+        primaryButton.getAttribute('disabled'),
+        resetButton.getAttribute('disabled'),
+        countdown.getText(),
+      ]);
+
+      return (
+        primaryDisabled !== null ||
+        resetDisabled === null ||
+        (currentCountdown.trim().length > 0 && currentCountdown !== initialCountdown)
+      );
     },
     {
       timeout: 5000,
