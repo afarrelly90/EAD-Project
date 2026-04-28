@@ -17,8 +17,8 @@ const CHROMEDRIVER_EXECUTABLE = process.env.CHROMEDRIVER_EXECUTABLE || chromedri
 
 
 const testUser = {
-  fullName: `Appium Home User ${Date.now()}`,
-  email: `appium-home-${Date.now()}@example.com`,
+  fullName: `Appium Edit Ex User ${Date.now()}`,
+  email: `appium-edit-ex-${Date.now()}@example.com`,
   password: 'Appium123!',
   language: 'en',
 };
@@ -44,7 +44,7 @@ const browser = await remote({
   },
 });
 
-const ensureHomeUserSession = async () => {
+const ensureUserSession = async () => {
   const registerResponse = await fetch(`${API_BASE_URL}/Auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -54,25 +54,45 @@ const ensureHomeUserSession = async () => {
   if (!registerResponse.ok) {
     const registerMessage = await registerResponse.text();
     if (!(registerResponse.status === 400 && registerMessage.includes('Email already exists'))) {
-      throw new Error(`Failed to create home test user: ${registerResponse.status} ${registerMessage}`);
+      throw new Error(`Failed to create test user: ${registerResponse.status} ${registerMessage}`);
     }
   }
 
   const loginResponse = await fetch(`${API_BASE_URL}/Auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: testUser.email,
-      password: testUser.password,
-    }),
+    body: JSON.stringify({ email: testUser.email, password: testUser.password }),
   });
 
   if (!loginResponse.ok) {
     const loginMessage = await loginResponse.text();
-    throw new Error(`Failed to log in home test user: ${loginResponse.status} ${loginMessage}`);
+    throw new Error(`Failed to log in test user: ${loginResponse.status} ${loginMessage}`);
   }
 
   return loginResponse.json();
+};
+
+const createTestExercise = async (token) => {
+  const response = await fetch(`${API_BASE_URL}/Exercises`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title: `E2E Exercise To Edit ${Date.now()}`,
+      description: 'Test description',
+      calories: 100,
+      durationMinutes: 10,
+      difficulty: 'Beginner'
+    }),
+  });
+
+  if (!response.ok) {
+    const msg = await response.text();
+    throw new Error(`Failed to create test exercise: ${response.status} ${msg}`);
+  }
+  return response.json();
 };
 
 const getWebviewContext = async () => {
@@ -91,18 +111,11 @@ const getCurrentLocation = async () =>
 const waitForWebView = async () => {
   await browser.waitUntil(
     async () => Boolean(await getWebviewContext()),
-    {
-      timeout: 20000,
-      timeoutMsg: 'WEBVIEW context did not become available.',
-    }
+    { timeout: 20000, timeoutMsg: 'WEBVIEW context did not become available.' }
   );
 
   const webviewContext = await getWebviewContext();
-
-  if (!webviewContext) {
-    throw new Error('Could not find a WEBVIEW context.');
-  }
-
+  if (!webviewContext) throw new Error('Could not find a WEBVIEW context.');
   await browser.switchContext(webviewContext);
 };
 
@@ -110,10 +123,7 @@ const waitForAppReady = async () => {
   await browser.waitUntil(
     async () =>
       browser.execute(() => document.readyState === 'complete' && !!document.querySelector('ion-app')),
-    {
-      timeout: 15000,
-      timeoutMsg: 'Ionic app did not mount.',
-    }
+    { timeout: 15000, timeoutMsg: 'Ionic app did not mount.' }
   );
 };
 
@@ -125,89 +135,66 @@ const injectSession = async (session) => {
   }, session);
 };
 
-const navigateToHome = async () => {
-  await browser.execute(() => {
-    if (window.location.pathname === '/home') {
-      return;
-    }
-
-    history.pushState({}, '', '/home');
+const navigateToPath = async (targetPath) => {
+  await browser.execute((p) => {
+    if (window.location.pathname === p) return;
+    history.pushState({}, '', p);
     window.dispatchEvent(new PopStateEvent('popstate'));
-  });
+  }, targetPath);
 
   await browser.waitUntil(
     async () => {
       const location = await getCurrentLocation();
-      return location.pathname === '/home';
+      return location.pathname === targetPath;
     },
-    {
-      timeout: 10000,
-      timeoutMsg: 'Navigation to home route did not start.',
-    }
+    { timeout: 10000, timeoutMsg: `Navigation to ${targetPath} route did not start.` }
   );
 };
 
-const waitForHomePage = async () => {
+const waitForEditExercisePage = async () => {
   await browser.waitUntil(
     async () =>
       browser.execute(() => {
         return (
-          !!document.querySelector('[data-testid="home-title"]') &&
-          !!document.querySelector('[data-testid="home-create-action"]') &&
-          !!document.querySelector('[data-testid="home-exercises-section"]')
+          !!document.querySelector('[data-testid="edit-exercise-title"]') &&
+          !!document.querySelector('[data-testid="edit-exercise-submit"]')
         );
       }),
-    {
-      timeout: 15000,
-      timeoutMsg: 'Home page did not render.',
-    }
+    { timeout: 15000, timeoutMsg: 'Edit Exercise page did not render correctly.' }
   );
 };
 
-const collectFailureContext = async () => {
-  const [url, contexts, location] = await Promise.all([
-    browser.getUrl().catch(() => 'unavailable'),
-    browser.getContexts().catch(() => []),
-    getCurrentLocation().catch(() => ({
-      href: 'unavailable',
-      pathname: 'unavailable',
-      hash: 'unavailable',
-      readyState: 'unavailable',
-    })),
-  ]);
-
-  let readyMarkers = {};
-  try {
-    readyMarkers = await browser.execute(() => ({
-      title: Boolean(document.querySelector('[data-testid="home-title"]')),
-      createAction: Boolean(document.querySelector('[data-testid="home-create-action"]')),
-      exercisesSection: Boolean(document.querySelector('[data-testid="home-exercises-section"]')),
-      pathname: window.location.pathname,
-      hash: window.location.hash,
-      pageTitle: document.title,
-      ionApp: Boolean(document.querySelector('ion-app')),
-    }));
-  } catch {
-    readyMarkers = { inspectable: false };
-  }
-
-  return { url, contexts, location, readyMarkers };
-};
+const testSubmitForm = async () => {
+  await browser.execute(() => {
+    document.querySelector('[data-testid="edit-exercise-submit"]').click();
+  });
+  
+  // Wait for navigation away from edit page or something indicating success
+  // Usually it routes back to /exercises/{id}
+  await browser.waitUntil(
+    async () => {
+      const location = await getCurrentLocation();
+      return location.pathname.startsWith('/exercises/');
+    },
+    { timeout: 10000, timeoutMsg: `Navigation back to exercise details did not occur.` }
+  );
+}
 
 try {
-  const session = await ensureHomeUserSession();
+  const session = await ensureUserSession();
+  const exercise = await createTestExercise(session.token);
+  
   await waitForWebView();
   await waitForAppReady();
   await injectSession(session);
-  await navigateToHome();
-  await waitForHomePage();
+  
+  await navigateToPath(`/exercises/${exercise.id}/edit`);
+  await waitForEditExercisePage();
+  await testSubmitForm();
 
-  console.log(`Home E2E passed for ${testUser.email}`);
+  console.log(`Edit Exercise E2E passed for exercise ${exercise.id}`);
 } catch (error) {
-  const failureContext = await collectFailureContext().catch(() => null);
-  if (failureContext) {
-    console.error('Home E2E failure context:', JSON.stringify(failureContext));
-  }
+  console.error(error);
   throw error;
 } finally {
   await browser.deleteSession();

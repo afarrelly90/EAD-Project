@@ -55,6 +55,7 @@
     "@typescript-eslint/parser": "^8.18.0",
     "appium": "^2.17.1",
     "appium-uiautomator2-driver": "^2.45.1",
+    "chromedriver": "^134.0.5",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",

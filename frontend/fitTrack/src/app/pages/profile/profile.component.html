@@ -18,7 +18,7 @@
 
       <div class="profile-page__hero-copy">
         <p class="profile-page__eyebrow">{{ 'profile.eyebrow' | t }}</p>
-        <h2 class="profile-page__title">{{ user.fullName || user.email }}</h2>
+        <h2 class="profile-page__title" data-testid="profile-title">{{ user.fullName || user.email }}</h2>
         <p class="profile-page__subtitle">
           {{ 'profile.subtitle' | t }}
         </p>
@@ -40,6 +40,7 @@
         <button
           type="button"
           class="profile-page__edit-button"
+          data-testid="profile-edit-button"
           (click)="toggleEditing()"
         >
           <ion-icon [name]="isEditing ? 'close-outline' : 'create-outline'"></ion-icon>
@@ -83,6 +84,7 @@
                 inputmode="decimal"
                 formControlName="weight"
                 [placeholder]="'profile.weight_placeholder' | t"
+                data-testid="profile-weight-input"
               ></ion-input>
             </ion-item>
             <p class="profile-page__help-text">
@@ -93,7 +95,7 @@
           <div class="profile-page__field">
             <label class="profile-page__label">{{ 'common.language' | t }}</label>
             <ion-item lines="none" class="profile-page__input">
-              <ion-select formControlName="language" interface="action-sheet">
+              <ion-select formControlName="language" interface="action-sheet" data-testid="profile-language-select">
                 <ion-select-option value="en">{{ 'profile.language_options.en' | t }}</ion-select-option>
                 <ion-select-option value="it">{{ 'profile.language_options.it' | t }}</ion-select-option>
               </ion-select>
@@ -105,6 +107,7 @@
             type="submit"
             class="profile-page__save-button"
             [disabled]="isSaving"
+            data-testid="profile-save-button"
           >
             <ion-icon name="save-outline" slot="start"></ion-icon>
             {{ isSaving ? ('common.saving' | t) : ('common.save_changes' | t) }}
@@ -119,6 +122,7 @@
           color="medium"
           type="button"
           class="profile-page__logout-button"
+          data-testid="profile-logout-button"
           (click)="logout()"
         >
           <ion-icon name="log-out-outline" slot="start"></ion-icon>

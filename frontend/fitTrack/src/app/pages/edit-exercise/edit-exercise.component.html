@@ -10,7 +10,7 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
 
-      <h1 class="edit-exercise-page__title">{{ 'edit_exercise.title' | t }}</h1>
+      <h1 class="edit-exercise-page__title" data-testid="edit-exercise-title">{{ 'edit_exercise.title' | t }}</h1>
     </header>
 
     @if (isLoading) {
@@ -68,6 +68,7 @@
               <ion-input
                 formControlName="title"
                 [placeholder]="'edit_exercise.name_placeholder' | t"
+                data-testid="edit-exercise-name-input"
               ></ion-input>
             </ion-item>
             @if (editExerciseForm.controls.title.touched && editExerciseForm.controls.title.invalid) {
@@ -169,6 +170,7 @@
             type="submit"
             class="edit-exercise-page__submit"
             [disabled]="isSaving"
+            data-testid="edit-exercise-submit"
           >
             {{ isSaving ? ('edit_exercise.updating' | t) : ('edit_exercise.update' | t) }}
           </ion-button>
