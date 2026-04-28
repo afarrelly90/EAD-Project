@@ -1,4 +1,5 @@
 import { remote } from 'webdriverio';
+import chromedriver from 'chromedriver';
 import { fileURLToPath } from 'node:url';
 import { existsSync, readdirSync } from 'node:fs';
 
@@ -9,14 +10,11 @@ const {
   ANDROID_APP_ACTIVITY = 'io.ionic.starter.MainActivity',
   API_BASE_URL = 'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api',
   CHROMEDRIVER_DIR,
-  CHROMEDRIVER_EXECUTABLE,
 } = process.env;
 
-const defaultChromedriverDir = fileURLToPath(new URL('./chromedrivers/', import.meta.url));
-const resolvedChromedriverDir = CHROMEDRIVER_DIR ?? defaultChromedriverDir;
-const hasLocalChromedriverDir =
-  existsSync(resolvedChromedriverDir) &&
-  readdirSync(resolvedChromedriverDir).some((entry) => !entry.startsWith('.'));
+const CHROMEDRIVER_EXECUTABLE = process.env.CHROMEDRIVER_EXECUTABLE || chromedriver.path;
+
+
 
 const testUser = {
   fullName: `Appium Login User ${Date.now()}`,
@@ -42,9 +40,7 @@ const browser = await remote({
     'appium:waitForWebviewMs': 10000,
     ...(CHROMEDRIVER_EXECUTABLE
       ? { 'appium:chromedriverExecutable': CHROMEDRIVER_EXECUTABLE }
-      : hasLocalChromedriverDir
-        ? { 'appium:chromedriverExecutableDir': resolvedChromedriverDir }
-        : {}),
+      : {}),
   },
 });
 

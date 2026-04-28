@@ -27,7 +27,7 @@
       <div class="exercise-detail-page__sheet-header">
         <div>
           <p class="exercise-detail-page__category">{{ categoryLabel }}</p>
-          <h1 class="exercise-detail-page__title">{{ exercise.title }}</h1>
+          <h1 class="exercise-detail-page__title" data-testid="exercise-detail-title">{{ exercise.title }}</h1>
         </div>
 
         <div class="exercise-detail-page__difficulty">
@@ -63,6 +63,7 @@
           expand="block"
           type="button"
           [routerLink]="workoutUrl"
+          data-testid="exercise-detail-workout-button"
         >
           {{ 'exercise_detail.start_workout' | t }}
         </ion-button>
@@ -111,6 +112,7 @@
           expand="block"
           type="button"
           [href]="editExerciseUrl"
+          data-testid="exercise-detail-update-button"
         >
           <ion-icon name="create-outline" slot="start"></ion-icon>
           {{ 'exercise_detail.update_exercise' | t }}
@@ -122,6 +124,7 @@
           fill="outline"
           color="danger"
           type="button"
+          data-testid="exercise-detail-delete-button"
           (click)="deleteExercise()"
         >
           <ion-icon name="trash-outline" slot="start"></ion-icon>
