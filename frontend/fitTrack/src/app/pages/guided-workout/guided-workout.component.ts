@@ -10,6 +10,7 @@ import {
   timerOutline,
 } from 'ionicons/icons';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
+import { CountdownTimer } from 'src/app/services/countdown-timer';
 import { ExerciseDto, GeneratedWorkoutDto } from 'src/app/services/exercise';
 import { I18nService } from 'src/app/services/i18n.service';
 import { WorkoutPlannerService } from 'src/app/services/workout-planner.service';
@@ -31,10 +32,7 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
   currentExerciseIndex = 0;
   currentSet = 1;
   private currentPhase: GuidedPhase = 'idle';
-  private timerId: ReturnType<typeof setInterval> | null = null;
-  private phaseRemainingMs = 0;
-  private phaseDurationMs = 0;
-  private lastTickAt = 0;
+  private readonly countdownTimer = new CountdownTimer();
 
   constructor(
     private workoutPlannerService: WorkoutPlannerService,
@@ -55,7 +53,7 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
   }
 
   get currentExercise(): ExerciseDto | null {
@@ -75,7 +73,7 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
   }
 
   get secondsRemaining(): number {
-    return Math.ceil(this.phaseRemainingMs / 1000);
+    return this.countdownTimer.secondsRemaining;
   }
 
   get timerDisplayTime(): string {
@@ -91,11 +89,11 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
       return 100;
     }
 
-    if (!this.workoutStarted || this.phaseDurationMs <= 0) {
+    if (!this.workoutStarted || this.countdownTimer.durationMs <= 0) {
       return 0;
     }
 
-    return ((this.phaseDurationMs - this.phaseRemainingMs) / this.phaseDurationMs) * 100;
+    return this.countdownTimer.progressPercent;
   }
 
   get phaseLabel(): string {
@@ -174,15 +172,12 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
   }
 
   resetWorkout(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
     this.workoutStarted = false;
     this.workoutComplete = false;
     this.currentExerciseIndex = 0;
     this.currentSet = 1;
     this.currentPhase = 'idle';
-    this.phaseRemainingMs = 0;
-    this.phaseDurationMs = 0;
-    this.lastTickAt = 0;
   }
 
   private get activePhaseDuration(): number {
@@ -195,30 +190,10 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
 
   private startPhase(phase: Extract<GuidedPhase, 'exercise' | 'rest'>, seconds: number): void {
     this.currentPhase = phase;
-    this.phaseDurationMs = seconds * 1000;
-    this.phaseRemainingMs = this.phaseDurationMs;
-    this.startTicking();
-  }
-
-  private startTicking(): void {
-    this.clearTimer();
-    this.lastTickAt = Date.now();
-
-    this.timerId = setInterval(() => {
-      const now = Date.now();
-      const elapsedMs = Math.max(now - this.lastTickAt, 0);
-      this.lastTickAt = now;
-      this.phaseRemainingMs = Math.max(this.phaseRemainingMs - elapsedMs, 0);
-
-      if (this.phaseRemainingMs === 0) {
-        this.advancePhase();
-      }
-    }, 100);
+    this.countdownTimer.start(seconds, () => this.advancePhase());
   }
 
   private advancePhase(): void {
-    this.clearTimer();
-
     if (!this.workout) {
       return;
     }
@@ -228,6 +203,7 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
       const isLastExercise = this.currentExerciseIndex >= this.workout.exercises.length - 1;
 
       if (isLastSet && isLastExercise) {
+        this.countdownTimer.reset();
         this.currentPhase = 'complete';
         this.workoutComplete = true;
         return;
@@ -246,13 +222,6 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
       }
 
       this.startPhase('exercise', this.workout.exerciseSeconds);
-    }
-  }
-
-  private clearTimer(): void {
-    if (this.timerId !== null) {
-      clearInterval(this.timerId);
-      this.timerId = null;
     }
   }
 
