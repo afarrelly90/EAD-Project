@@ -16,6 +16,7 @@ import {
   ExerciseCardItem,
 } from './components/exercise-card/exercise-card.component';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { AuthService } from 'src/app/services/auth';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 
 type ExerciseFilter = 'All' | 'Core' | 'Upper' | 'Lower';
@@ -51,10 +52,14 @@ export class HomeComponent implements OnInit {
   searchTerm = '';
   isSearchOpen = false;
   exercises: ExerciseListItem[] = [];
+  dailyGoalMinutes = 20;
   isLoading = true;
   hasError = false;
 
-  constructor(private exerciseService: ExerciseService) {
+  constructor(
+    private exerciseService: ExerciseService,
+    private authService: AuthService
+  ) {
     addIcons({
       addOutline,
       chevronForwardOutline,
@@ -67,10 +72,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadExercises();
+    this.loadDailyGoal();
   }
 
   ionViewWillEnter(): void {
     this.loadExercises();
+    this.loadDailyGoal();
   }
 
   get filteredExercises(): ExerciseListItem[] {
@@ -156,6 +163,11 @@ export class HomeComponent implements OnInit {
       filter,
       image: exercise.imageUrl || this.getFallbackImage(filter),
     };
+  }
+
+  private loadDailyGoal(): void {
+    const storedUser = this.authService.getStoredUser();
+    this.dailyGoalMinutes = storedUser?.preferredWorkoutMinutes ?? 20;
   }
 
   private resolveFilter(exercise: ExerciseDto): Exclude<ExerciseFilter, 'All'> {
