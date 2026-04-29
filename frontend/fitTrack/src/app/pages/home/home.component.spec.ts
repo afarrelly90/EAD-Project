@@ -262,14 +262,17 @@ describe('HomeComponent', () => {
   });
 
   it('should filter exercises by favorites', () => {
+    const initialReq = httpMock.expectOne(apiUrl);
+    initialReq.flush([]);
+
     localStorage.setItem('favorite-exercise-ids', JSON.stringify([2, 5]));
 
     const favoritesFixture = TestBed.createComponent(HomeComponent);
     const favoritesComponent = favoritesFixture.componentInstance;
     favoritesFixture.detectChanges();
 
-    const req = httpMock.expectOne(apiUrl);
-    req.flush(mockExercises);
+    const favoritesReq = httpMock.expectOne(apiUrl);
+    favoritesReq.flush(mockExercises);
 
     favoritesComponent.selectFilter('Favorites');
 
