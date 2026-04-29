@@ -100,3 +100,6 @@ APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:
 
 echo "=== Running timer E2E ==="
 APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:timer
+
+echo "=== Running workout builder E2E ==="
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:workout-builder
