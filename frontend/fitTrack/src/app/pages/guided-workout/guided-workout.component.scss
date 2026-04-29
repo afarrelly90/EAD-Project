@@ -1,6 +1,18 @@
 .guided-workout-page {
   --background: linear-gradient(180deg, #e7d7ff 0%, #f4effb 34%, #f8f4fc 100%);
 
+  &--exercise {
+    --background: linear-gradient(180deg, #ffe6d8 0%, #f8e9f4 34%, #f8f4fc 100%);
+  }
+
+  &--rest {
+    --background: linear-gradient(180deg, #dff0ff 0%, #eaf2fb 34%, #f6f7fc 100%);
+  }
+
+  &--complete {
+    --background: linear-gradient(180deg, #dff7e8 0%, #eef8f0 34%, #f7fbf8 100%);
+  }
+
   &__screen {
     min-height: 100%;
     max-width: 620px;
@@ -50,7 +62,8 @@
   }
 
   &__ring-card,
-  &__details {
+  &__details,
+  &__cue-card {
     margin-top: 20px;
     padding: 20px 16px;
     border-radius: 28px;
@@ -71,6 +84,20 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+  }
+
+  &__ring-card {
+    &--exercise {
+      background: rgba(255, 244, 238, 0.88);
+    }
+
+    &--rest {
+      background: rgba(243, 248, 255, 0.88);
+    }
+
+    &--complete {
+      background: rgba(241, 252, 245, 0.9);
+    }
   }
 
   &__ring {
@@ -94,6 +121,28 @@
       font-size: 28px;
       opacity: 0.72;
     }
+
+    &--exercise {
+      background:
+        radial-gradient(circle at center, #ffffff 0 58%, transparent 58%),
+        conic-gradient(#ff8f6c var(--progress), #f5d8cb var(--progress));
+      color: #4a2a1d;
+      animation: guided-pulse 1.4s ease-in-out infinite;
+    }
+
+    &--rest {
+      background:
+        radial-gradient(circle at center, #ffffff 0 58%, transparent 58%),
+        conic-gradient(#6fb7ff var(--progress), #d8eafc var(--progress));
+      color: #23344e;
+    }
+
+    &--complete {
+      background:
+        radial-gradient(circle at center, #ffffff 0 58%, transparent 58%),
+        conic-gradient(#58bb7b var(--progress), #d4f0dd var(--progress));
+      color: #21402d;
+    }
   }
 
   &__countdown {
@@ -112,6 +161,39 @@
     font-weight: 600;
   }
 
+  &__cue-card {
+    border: 1px solid rgba(195, 186, 217, 0.22);
+
+    &--exercise {
+      background: linear-gradient(180deg, rgba(255, 243, 237, 0.94) 0%, rgba(255, 234, 224, 0.88) 100%);
+    }
+
+    &--rest {
+      background: linear-gradient(180deg, rgba(242, 247, 255, 0.94) 0%, rgba(231, 242, 255, 0.88) 100%);
+    }
+
+    &--complete {
+      background: linear-gradient(180deg, rgba(239, 252, 243, 0.94) 0%, rgba(226, 248, 232, 0.88) 100%);
+    }
+  }
+
+  &__cue-eyebrow {
+    margin: 0 0 8px;
+    color: #7d7598;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__cue-message {
+    margin: 0;
+    color: #2b2542;
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 600;
+  }
+
   &__details {
     h2 {
       margin: 0 0 16px;
@@ -120,6 +202,18 @@
       font-weight: 800;
       letter-spacing: -0.03em;
     }
+
+    &--summary {
+      background: rgba(248, 255, 250, 0.88);
+    }
+  }
+
+  &__summary-copy {
+    margin: 0 0 14px;
+    color: #5e6c60;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
   }
 
   &__detail-row {
@@ -144,6 +238,17 @@
       font-size: 14px;
       font-weight: 700;
       text-align: right;
+    }
+  }
+
+  @keyframes guided-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.02);
     }
   }
 

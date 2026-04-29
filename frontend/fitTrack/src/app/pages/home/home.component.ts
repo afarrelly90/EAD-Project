@@ -17,11 +17,13 @@ import {
 } from './components/exercise-card/exercise-card.component';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
 import { AuthService } from 'src/app/services/auth';
+import { FavoritesService } from 'src/app/services/favorites.service';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 
-type ExerciseFilter = 'All' | 'Core' | 'Upper' | 'Lower';
+type ExerciseFilter = 'All' | 'Favorites' | 'Core' | 'Upper' | 'Lower';
+type ExerciseCategoryFilter = 'Core' | 'Upper' | 'Lower';
 type ExerciseListItem = ExerciseCardItem & {
-  filter: Exclude<ExerciseFilter, 'All'>;
+  filter: ExerciseCategoryFilter;
 };
 
 @Component({
@@ -39,7 +41,7 @@ type ExerciseListItem = ExerciseCardItem & {
   ],
 })
 export class HomeComponent implements OnInit {
-  readonly filters: ExerciseFilter[] = ['All', 'Core', 'Upper', 'Lower'];
+  readonly filters: ExerciseFilter[] = ['All', 'Favorites', 'Core', 'Upper', 'Lower'];
   readonly pageSize = 4;
   readonly fallbackImages = {
     core: 'assets/images/register-fitness.jpg',
@@ -58,7 +60,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private exerciseService: ExerciseService,
-    private authService: AuthService
+    private authService: AuthService,
+    private favoritesService: FavoritesService
   ) {
     addIcons({
       addOutline,
@@ -81,11 +84,14 @@ export class HomeComponent implements OnInit {
   }
 
   get filteredExercises(): ExerciseListItem[] {
-    const exercisesByFilter = this.selectedFilter === 'All'
-      ? this.exercises
-      : this.exercises.filter(
-          (exercise) => exercise.filter === this.selectedFilter
-        );
+    const exercisesByFilter =
+      this.selectedFilter === 'All'
+        ? this.exercises
+        : this.selectedFilter === 'Favorites'
+          ? this.exercises.filter((exercise) => exercise.isFavorite)
+          : this.exercises.filter(
+              (exercise) => exercise.filter === this.selectedFilter
+            );
 
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
     if (!normalizedSearchTerm) {
@@ -153,6 +159,13 @@ export class HomeComponent implements OnInit {
     this.currentPage = page;
   }
 
+  onFavoriteToggle(exerciseId: number): void {
+    const isFavorite = this.favoritesService.toggleFavorite(exerciseId);
+    this.exercises = this.exercises.map((exercise) =>
+      exercise.id === exerciseId ? { ...exercise, isFavorite } : exercise
+    );
+  }
+
   private mapExercise(exercise: ExerciseDto): ExerciseListItem {
     const filter = this.resolveFilter(exercise);
 
@@ -162,6 +175,7 @@ export class HomeComponent implements OnInit {
       categoryKey: this.getCategoryKey(filter),
       filter,
       image: exercise.imageUrl || this.getFallbackImage(filter),
+      isFavorite: this.favoritesService.isFavorite(exercise.id),
     };
   }
 
@@ -170,7 +184,7 @@ export class HomeComponent implements OnInit {
     this.dailyGoalMinutes = storedUser?.preferredWorkoutMinutes ?? 20;
   }
 
-  private resolveFilter(exercise: ExerciseDto): Exclude<ExerciseFilter, 'All'> {
+  private resolveFilter(exercise: ExerciseDto): ExerciseCategoryFilter {
     if (exercise.isUpperBody) {
       return 'Upper';
     }
@@ -182,11 +196,11 @@ export class HomeComponent implements OnInit {
     return 'Core';
   }
 
-  private getCategoryKey(filter: Exclude<ExerciseFilter, 'All'>): string {
+  private getCategoryKey(filter: ExerciseCategoryFilter): string {
     return `exercise.muscle_groups.${filter.toLowerCase()}`;
   }
 
-  private getFallbackImage(filter: Exclude<ExerciseFilter, 'All'>): string {
+  private getFallbackImage(filter: ExerciseCategoryFilter): string {
     if (filter === 'Upper') {
       return this.fallbackImages.upper;
     }

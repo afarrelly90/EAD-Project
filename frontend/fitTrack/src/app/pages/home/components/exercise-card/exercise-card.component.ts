@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline } from 'ionicons/icons';
+import { chevronForwardOutline, heart, heartOutline } from 'ionicons/icons';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 
 export interface ExerciseCardItem {
@@ -11,6 +11,7 @@ export interface ExerciseCardItem {
   title: string;
   categoryKey: string;
   image: string;
+  isFavorite: boolean;
 }
 
 @Component({
@@ -22,8 +23,15 @@ export interface ExerciseCardItem {
 })
 export class ExerciseCardComponent {
   @Input({ required: true }) exercise!: ExerciseCardItem;
+  @Output() favoriteToggle = new EventEmitter<number>();
 
   constructor() {
-    addIcons({ chevronForwardOutline });
+    addIcons({ chevronForwardOutline, heart, heartOutline });
+  }
+
+  toggleFavorite(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.favoriteToggle.emit(this.exercise.id);
   }
 }

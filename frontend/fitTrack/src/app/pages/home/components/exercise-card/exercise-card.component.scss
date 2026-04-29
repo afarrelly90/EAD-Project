@@ -5,6 +5,10 @@
   gap: 16px;
   padding: 18px 0;
 
+  &__image-shell {
+    position: relative;
+  }
+
   &__image {
     width: 136px;
     height: 96px;
@@ -37,6 +41,30 @@
     font-weight: 500;
   }
 
+  &__favorite-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #8c7bb0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 20px rgba(45, 39, 68, 0.14);
+
+    ion-icon {
+      font-size: 19px;
+    }
+
+    &--active {
+      background: linear-gradient(180deg, #ff8eb2 0%, #ff6f97 100%);
+      color: #ffffff;
+    }
+  }
+
   &__action {
     width: 56px;
     height: 56px;
@@ -62,6 +90,17 @@
       width: 92px;
       height: 76px;
       border-radius: 18px;
+    }
+
+    &__favorite-button {
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+
+      ion-icon {
+        font-size: 16px;
+      }
     }
 
     &__title {

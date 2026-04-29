@@ -96,6 +96,10 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
     return this.countdownTimer.progressPercent;
   }
 
+  get phaseTheme(): GuidedPhase {
+    return this.currentPhase;
+  }
+
   get phaseLabel(): string {
     switch (this.currentPhase) {
       case 'exercise':
@@ -153,6 +157,57 @@ export class GuidedWorkoutComponent implements OnInit, OnDestroy {
     }
 
     return this.i18nService.translate('guided_workout.status.ready_message');
+  }
+
+  get cueTitle(): string {
+    switch (this.currentPhase) {
+      case 'exercise':
+        return this.i18nService.translate('guided_workout.cues.exercise_title');
+      case 'rest':
+        return this.i18nService.translate('guided_workout.cues.rest_title');
+      case 'complete':
+        return this.i18nService.translate('guided_workout.cues.complete_title');
+      default:
+        return this.i18nService.translate('guided_workout.cues.ready_title');
+    }
+  }
+
+  get cueMessage(): string {
+    switch (this.currentPhase) {
+      case 'exercise':
+        return this.i18nService.translate('guided_workout.cues.exercise_message');
+      case 'rest':
+        return this.i18nService.translate('guided_workout.cues.rest_message');
+      case 'complete':
+        return this.i18nService.translate('guided_workout.cues.complete_message');
+      default:
+        return this.i18nService.translate('guided_workout.cues.ready_message');
+    }
+  }
+
+  get completionSummaryItems(): Array<{ label: string; value: string }> {
+    if (!this.workout) {
+      return [];
+    }
+
+    return [
+      {
+        label: this.i18nService.translate('guided_workout.summary.exercises_completed'),
+        value: `${this.workout.exercises.length}`,
+      },
+      {
+        label: this.i18nService.translate('guided_workout.summary.total_sets'),
+        value: `${this.workout.exercises.length * this.workout.prescribedSets}`,
+      },
+      {
+        label: this.i18nService.translate('guided_workout.summary.total_minutes'),
+        value: `${this.workout.totalMinutes} ${this.i18nService.translate('common.minutes_short')}`,
+      },
+      {
+        label: this.i18nService.translate('guided_workout.summary.total_calories'),
+        value: `${this.workout.totalCalories} ${this.i18nService.translate('common.calories_short')}`,
+      },
+    ];
   }
 
   goBack(): void {

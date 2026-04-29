@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { ExerciseDto } from 'src/app/services/exercise';
 import { AuthService } from 'src/app/services/auth';
+import { FavoritesService } from 'src/app/services/favorites.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -124,6 +125,7 @@ describe('HomeComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: {} },
         { provide: AuthService, useValue: mockAuthService },
+        FavoritesService,
       ]
     }).compileComponents();
 
@@ -135,6 +137,7 @@ describe('HomeComponent', () => {
 
   afterEach(() => {
     httpMock.verify();
+    localStorage.clear();
   });
 
   it('should create', () => {
@@ -256,5 +259,35 @@ describe('HomeComponent', () => {
 
     expect(component.dailyGoalMinutes).toBe(35);
     expect(mockAuthService.getStoredUser).toHaveBeenCalled();
+  });
+
+  it('should filter exercises by favorites', () => {
+    localStorage.setItem('favorite-exercise-ids', JSON.stringify([2, 5]));
+
+    const favoritesFixture = TestBed.createComponent(HomeComponent);
+    const favoritesComponent = favoritesFixture.componentInstance;
+    favoritesFixture.detectChanges();
+
+    const req = httpMock.expectOne(apiUrl);
+    req.flush(mockExercises);
+
+    favoritesComponent.selectFilter('Favorites');
+
+    expect(favoritesComponent.filteredExercises.map((exercise) => exercise.title)).toEqual([
+      'Push-Ups',
+      'Burpees',
+    ]);
+  });
+
+  it('should toggle an exercise favorite state in the list', () => {
+    const req = httpMock.expectOne(apiUrl);
+    req.flush(mockExercises);
+
+    expect(component.exercises.find((exercise) => exercise.id === 2)?.isFavorite).toBeFalse();
+
+    component.onFavoriteToggle(2);
+
+    expect(component.exercises.find((exercise) => exercise.id === 2)?.isFavorite).toBeTrue();
+    expect(JSON.parse(localStorage.getItem('favorite-exercise-ids') || '[]')).toEqual([2]);
   });
 });

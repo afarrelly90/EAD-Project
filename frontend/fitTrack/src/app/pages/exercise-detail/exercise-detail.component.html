@@ -21,6 +21,16 @@
       >
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
+
+      <button
+        type="button"
+        class="exercise-detail-page__favorite-button"
+        [class.exercise-detail-page__favorite-button--active]="isFavorite"
+        [attr.aria-label]="favoriteButtonLabel"
+        (click)="toggleFavorite()"
+      >
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+      </button>
     </div>
 
     <section class="exercise-detail-page__sheet">
@@ -107,6 +117,18 @@
       </div>
 
       <div class="exercise-detail-page__actions">
+        <ion-button
+          class="exercise-detail-page__favorite-action"
+          expand="block"
+          fill="outline"
+          type="button"
+          data-testid="exercise-detail-favorite-button"
+          (click)="toggleFavorite()"
+        >
+          <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+          {{ favoriteButtonLabel }}
+        </ion-button>
+
         <ion-button
           class="exercise-detail-page__update-button"
           expand="block"

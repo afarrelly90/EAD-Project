@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ExerciseDetailComponent } from './exercise-detail.component';
 import { ExerciseService } from 'src/app/services/exercise';
+import { FavoritesService } from 'src/app/services/favorites.service';
 
 describe('ExerciseDetailComponent', () => {
   let component: ExerciseDetailComponent;
@@ -45,6 +46,7 @@ describe('ExerciseDetailComponent', () => {
       imports: [ExerciseDetailComponent],
       providers: [
         ExerciseService,
+        FavoritesService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: Router, useValue: mockRouter },
@@ -67,6 +69,7 @@ describe('ExerciseDetailComponent', () => {
   afterEach(() => {
     httpMock.verify();
     mockRouter.navigate.calls.reset();
+    localStorage.clear();
   });
 
   it('should create', () => {
@@ -77,6 +80,19 @@ describe('ExerciseDetailComponent', () => {
     expect(component.exercise?.title).toBe(exerciseResponse.title);
     expect(component.editExerciseUrl).toBe('/exercises/3/edit');
     expect(component.workoutUrl).toBe('/exercises/3/workout');
+    expect(component.isFavorite).toBeFalse();
+  });
+
+  it('should toggle the favorite state for the loaded exercise', () => {
+    component.toggleFavorite();
+
+    expect(component.isFavorite).toBeTrue();
+    expect(JSON.parse(localStorage.getItem('favorite-exercise-ids') || '[]')).toEqual([3]);
+
+    component.toggleFavorite();
+
+    expect(component.isFavorite).toBeFalse();
+    expect(JSON.parse(localStorage.getItem('favorite-exercise-ids') || '[]')).toEqual([]);
   });
 
   it('should delete the exercise and navigate home', () => {

@@ -13,7 +13,9 @@ import {
 } from 'ionicons/icons';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
+import { FavoritesService } from 'src/app/services/favorites.service';
 import { I18nService } from 'src/app/services/i18n.service';
+import { heart, heartOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-exercise-detail',
@@ -26,6 +28,7 @@ export class ExerciseDetailComponent implements OnInit {
   exercise: ExerciseDto | null = null;
   isLoading = true;
   hasError = false;
+  isFavorite = false;
 
   readonly fallbackImages = {
     core: 'assets/images/register-fitness.jpg',
@@ -38,12 +41,15 @@ export class ExerciseDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private exerciseService: ExerciseService,
+    private favoritesService: FavoritesService,
     private i18nService: I18nService
   ) {
     addIcons({
       createOutline,
       chevronBackOutline,
       flameOutline,
+      heart,
+      heartOutline,
       playCircleOutline,
       timeOutline,
       trashOutline,
@@ -136,6 +142,12 @@ export class ExerciseDetailComponent implements OnInit {
     return this.exercise ? `/exercises/${this.exercise.id}/workout` : '/home';
   }
 
+  get favoriteButtonLabel(): string {
+    return this.isFavorite
+      ? this.i18nService.translate('favorites.remove')
+      : this.i18nService.translate('favorites.add');
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -146,6 +158,14 @@ export class ExerciseDetailComponent implements OnInit {
     }
 
     window.location.href = this.editExerciseUrl;
+  }
+
+  toggleFavorite(): void {
+    if (!this.exercise) {
+      return;
+    }
+
+    this.isFavorite = this.favoritesService.toggleFavorite(this.exercise.id);
   }
 
   deleteExercise(): void {
@@ -188,6 +208,7 @@ export class ExerciseDetailComponent implements OnInit {
     this.exerciseService.getExerciseById(id).subscribe({
       next: (exercise) => {
         this.exercise = exercise;
+        this.isFavorite = this.favoritesService.isFavorite(exercise.id);
         this.isLoading = false;
       },
       error: (error) => {
