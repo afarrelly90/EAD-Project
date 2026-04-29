@@ -136,6 +136,19 @@ describe('ProfileComponent', () => {
     });
   });
 
+  it('should block saving when the profile form is invalid', () => {
+    component.toggleEditing();
+    component.profileForm.patchValue({
+      weight: 7000,
+    });
+
+    component.saveProfile();
+
+    httpMock.expectNone(`${apiUrl}/profile/1`);
+    expect(component.showValidationMessage).toBeTrue();
+    expect(component.isSaving).toBeFalse();
+  });
+
   it('should logout and clear the session', () => {
     component.logout();
 

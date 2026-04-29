@@ -100,4 +100,17 @@ describe('ExerciseDetailComponent', () => {
     expect(mockRouter.navigate).not.toHaveBeenCalledWith(['/home']);
   });
 
+  it('should stay on the page when delete fails', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    spyOn(window, 'alert');
+
+    component.deleteExercise();
+
+    const deleteReq = httpMock.expectOne(`${apiUrl}/3`);
+    deleteReq.flush('Error', { status: 500, statusText: 'Server Error' });
+
+    expect(window.alert).toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalledWith(['/home']);
+  });
+
 });
