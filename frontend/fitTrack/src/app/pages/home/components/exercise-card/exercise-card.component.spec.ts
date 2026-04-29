@@ -14,6 +14,7 @@ describe('ExerciseCardComponent', () => {
     title: 'Mountain Climbers',
     categoryKey: 'exercise.muscle_groups.core',
     image: 'https://example.com/mountain-climbers.jpg',
+    isFavorite: false,
   };
 
   beforeEach(async () => {
@@ -44,5 +45,16 @@ describe('ExerciseCardComponent', () => {
     expect(actionButton.getAttribute('aria-label')).toBe('View exercise');
     expect(routerLink.urlTree).not.toBeNull();
     expect(router.serializeUrl(routerLink.urlTree!)).toBe('/exercises/7');
+  });
+
+  it('should emit the favorite toggle output and stop the original event', () => {
+    const event = jasmine.createSpyObj<Event>('event', ['preventDefault', 'stopPropagation']);
+    spyOn(component.favoriteToggle, 'emit');
+
+    component.toggleFavorite(event);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(event.stopPropagation).toHaveBeenCalled();
+    expect(component.favoriteToggle.emit).toHaveBeenCalledWith(7);
   });
 });
