@@ -34,6 +34,11 @@ jobs:
           distribution: temurin
           java-version: "21"
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
       - name: Enable KVM
         run: |
           sudo tee /etc/udev/rules.d/99-kvm4all.rules >/dev/null <<'EOF'
@@ -46,9 +51,12 @@ jobs:
         working-directory: frontend/fitTrack
         run: npm ci
 
-      - name: Build Ionic app
+      - name: Restore backend dependencies
+        run: dotnet restore backend/fitTrackBackend/fitTrackBackend.csproj
+
+      - name: Build Ionic app for emulator E2E
         working-directory: frontend/fitTrack
-        run: npm run build
+        run: npm run build:e2e
 
       - name: Sync Capacitor Android project
         working-directory: frontend/fitTrack
@@ -57,7 +65,6 @@ jobs:
       # Optional but helps avoid disk issues
       - name: Free disk space
         run: |
-          sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
 
@@ -73,9 +80,11 @@ jobs:
           disable-animations: true
           script: bash frontend/fitTrack/e2e/appium/ci-mobile-e2e.sh
 
-      - name: Upload Appium log
+      - name: Upload mobile E2E logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: appium-log
-          path: /tmp/appium.log
+          name: mobile-e2e-logs
+          path: |
+            /tmp/appium.log
+            /tmp/backend.log
