@@ -34,6 +34,30 @@
     }
   }
 
+  &__favorite-button {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #8c7bb0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 24px rgba(36, 31, 57, 0.12);
+
+    ion-icon {
+      font-size: 22px;
+    }
+
+    &--active {
+      background: linear-gradient(180deg, #ff8eb2 0%, #ff6f97 100%);
+      color: #ffffff;
+    }
+  }
+
   &__sheet {
     margin-top: -28px;
     padding: 22px 16px max(26px, env(safe-area-inset-bottom));
@@ -244,6 +268,17 @@
   }
 
   &__delete-button {
+    --border-radius: 18px;
+    height: 54px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  &__favorite-action {
+    --border-color: rgba(255, 129, 172, 0.38);
+    --color: #8f3e66;
+    --background: rgba(255, 255, 255, 0.82);
     --border-radius: 18px;
     height: 54px;
     font-size: 16px;

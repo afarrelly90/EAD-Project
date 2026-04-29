@@ -1,4 +1,10 @@
-<ion-content fullscreen class="guided-workout-page">
+<ion-content
+  fullscreen
+  class="guided-workout-page"
+  [class.guided-workout-page--exercise]="isExerciseActive"
+  [class.guided-workout-page--rest]="isRestActive"
+  [class.guided-workout-page--complete]="workoutComplete"
+>
   @if (hasError || !workout) {
     <div class="guided-workout-page__state" data-testid="guided-workout-error-state">
       <p>{{ 'guided_workout.error' | t }}</p>
@@ -28,10 +34,10 @@
         <p class="guided-workout-page__message" data-testid="guided-workout-message">{{ statusMessage }}</p>
       </section>
 
-      <section class="guided-workout-page__ring-card">
+      <section class="guided-workout-page__ring-card" [class.guided-workout-page__ring-card--exercise]="isExerciseActive" [class.guided-workout-page__ring-card--rest]="isRestActive" [class.guided-workout-page__ring-card--complete]="workoutComplete">
         <div class="guided-workout-page__phase-pill" data-testid="guided-workout-phase">{{ phaseLabel }}</div>
 
-        <div class="guided-workout-page__ring" [style.--progress]="timerProgressPercent + '%'">
+        <div class="guided-workout-page__ring" [class.guided-workout-page__ring--exercise]="isExerciseActive" [class.guided-workout-page__ring--rest]="isRestActive" [class.guided-workout-page__ring--complete]="workoutComplete" [style.--progress]="timerProgressPercent + '%'">
           <ion-icon name="timer-outline"></ion-icon>
           <div class="guided-workout-page__countdown" data-testid="guided-workout-countdown">{{ timerDisplayTime }}</div>
         </div>
@@ -42,23 +48,44 @@
         </div>
       </section>
 
-      <section class="guided-workout-page__details">
-        <h2 data-testid="guided-workout-status-title">{{ statusTitle }}</h2>
-        <div class="guided-workout-page__detail-row">
-          <span>{{ 'guided_workout.plan_label' | t }}</span>
-          <strong>{{ workout.title }}</strong>
-        </div>
-        <div class="guided-workout-page__detail-row">
-          <span>{{ 'guided_workout.duration_label' | t }}</span>
-          <strong>{{ workout.totalMinutes }} {{ 'common.minutes_short' | t }}</strong>
-        </div>
-        <div class="guided-workout-page__detail-row">
-          <span>{{ 'guided_workout.preset_label' | t }}</span>
-          <strong>
-            {{ 'guided_workout.preset_value' | t:{ sets: workout.prescribedSets, exercise: workout.exerciseSeconds, rest: workout.restSeconds } }}
-          </strong>
-        </div>
+      <section class="guided-workout-page__cue-card" [class.guided-workout-page__cue-card--exercise]="isExerciseActive" [class.guided-workout-page__cue-card--rest]="isRestActive" [class.guided-workout-page__cue-card--complete]="workoutComplete">
+        <p class="guided-workout-page__cue-eyebrow">{{ cueTitle }}</p>
+        <p class="guided-workout-page__cue-message">{{ cueMessage }}</p>
       </section>
+
+      @if (workoutComplete) {
+        <section class="guided-workout-page__details guided-workout-page__details--summary" data-testid="guided-workout-completion-summary">
+          <h2 data-testid="guided-workout-status-title">{{ statusTitle }}</h2>
+          <p class="guided-workout-page__summary-copy">
+            {{ 'guided_workout.summary.subtitle' | t:{ title: workout.title } }}
+          </p>
+
+          @for (item of completionSummaryItems; track item.label) {
+            <div class="guided-workout-page__detail-row">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+          }
+        </section>
+      } @else {
+        <section class="guided-workout-page__details">
+          <h2 data-testid="guided-workout-status-title">{{ statusTitle }}</h2>
+          <div class="guided-workout-page__detail-row">
+            <span>{{ 'guided_workout.plan_label' | t }}</span>
+            <strong>{{ workout.title }}</strong>
+          </div>
+          <div class="guided-workout-page__detail-row">
+            <span>{{ 'guided_workout.duration_label' | t }}</span>
+            <strong>{{ workout.totalMinutes }} {{ 'common.minutes_short' | t }}</strong>
+          </div>
+          <div class="guided-workout-page__detail-row">
+            <span>{{ 'guided_workout.preset_label' | t }}</span>
+            <strong>
+              {{ 'guided_workout.preset_value' | t:{ sets: workout.prescribedSets, exercise: workout.exerciseSeconds, rest: workout.restSeconds } }}
+            </strong>
+          </div>
+        </section>
+      }
 
       <section class="guided-workout-page__actions">
         <ion-button

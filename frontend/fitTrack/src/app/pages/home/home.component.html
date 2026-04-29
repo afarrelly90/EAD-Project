@@ -146,6 +146,7 @@
           <app-exercise-card
             *ngFor="let exercise of paginatedExercises; let isLast = last"
             [exercise]="exercise"
+            (favoriteToggle)="onFavoriteToggle($event)"
             [class.home-page__list-item--last]="isLast"
             class="home-page__list-item"
           ></app-exercise-card>

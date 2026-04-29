@@ -108,4 +108,34 @@ describe('EditExerciseComponent', () => {
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/exercises', 1]);
   });
+
+  it('should block submit when the form is invalid', () => {
+    component.editExerciseForm.patchValue({
+      imageUrl: 'not-a-url',
+    });
+
+    component.onSubmit();
+
+    httpMock.expectNone(`${apiUrl}/1`);
+    expect(component.showValidationMessage).toBeTrue();
+    expect(component.isSaving).toBeFalse();
+  });
+
+  it('should send null equipment when none is selected', () => {
+    component.editExerciseForm.patchValue({
+      equipment: 'None',
+    });
+
+    component.onSubmit();
+
+    const req = httpMock.expectOne(`${apiUrl}/1`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body.equipment).toBeNull();
+    req.flush({
+      ...exerciseResponse,
+      equipment: null,
+    });
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/exercises', 1]);
+  });
 });

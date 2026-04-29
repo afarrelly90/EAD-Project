@@ -69,10 +69,15 @@
     "view_exercise": "Visualizza esercizio",
     "filters": {
       "all": "Tutti",
+      "favorites": "Preferiti",
       "core": "Core",
       "upper": "Parte superiore",
       "lower": "Parte inferiore"
     }
+  },
+  "favorites": {
+    "add": "Aggiungi ai preferiti",
+    "remove": "Rimuovi dai preferiti"
   },
   "profile": {
     "loading": "Caricamento profilo...",
@@ -293,6 +298,23 @@
     },
     "exercise_progress": "Esercizio {{current}} / {{total}}",
     "set_progress": "Serie {{current}} / {{total}}",
+    "cues": {
+      "ready_title": "Preparati",
+      "ready_message": "Controlla il piano generato e avvia quando sei pronto.",
+      "exercise_title": "Spingi in questo round",
+      "exercise_message": "Mantieni una buona tecnica e segui il conto alla rovescia.",
+      "rest_title": "Recupera e riparti",
+      "rest_message": "Usa la pausa per respirare, sciogliere la tensione e prepararti al prossimo sforzo.",
+      "complete_title": "Allenamento terminato",
+      "complete_message": "Ottimo lavoro. Hai completato la sessione guidata."
+    },
+    "summary": {
+      "subtitle": "{{title}} e completato. Ecco un rapido riepilogo di cio che hai concluso.",
+      "exercises_completed": "Esercizi completati",
+      "total_sets": "Round totali",
+      "total_minutes": "Tempo allenamento",
+      "total_calories": "Calorie stimate"
+    },
     "plan_label": "Piano generato",
     "duration_label": "Durata allenamento",
     "preset_label": "Preset timer",

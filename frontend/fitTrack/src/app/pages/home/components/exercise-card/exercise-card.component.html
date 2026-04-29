@@ -1,9 +1,21 @@
 <article class="exercise-card" [routerLink]="['/exercises', exercise.id]">
-  <img
-    [src]="exercise.image"
-    [alt]="exercise.title"
-    class="exercise-card__image"
-  />
+  <div class="exercise-card__image-shell">
+    <img
+      [src]="exercise.image"
+      [alt]="exercise.title"
+      class="exercise-card__image"
+    />
+
+    <button
+      type="button"
+      class="exercise-card__favorite-button"
+      [class.exercise-card__favorite-button--active]="exercise.isFavorite"
+      [attr.aria-label]="exercise.isFavorite ? ('favorites.remove' | t) : ('favorites.add' | t)"
+      (click)="toggleFavorite($event)"
+    >
+      <ion-icon [name]="exercise.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+    </button>
+  </div>
 
   <div class="exercise-card__content">
     <h3 class="exercise-card__title">{{ exercise.title }}</h3>

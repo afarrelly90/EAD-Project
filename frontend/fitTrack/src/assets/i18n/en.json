@@ -69,10 +69,15 @@
     "view_exercise": "View exercise",
     "filters": {
       "all": "All",
+      "favorites": "Favorites",
       "core": "Core",
       "upper": "Upper Body",
       "lower": "Lower Body"
     }
+  },
+  "favorites": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
   },
   "profile": {
     "loading": "Loading profile...",
@@ -293,6 +298,23 @@
     },
     "exercise_progress": "Exercise {{current}} / {{total}}",
     "set_progress": "Set {{current}} / {{total}}",
+    "cues": {
+      "ready_title": "Get set",
+      "ready_message": "Review the generated plan and start when you feel ready.",
+      "exercise_title": "Push this round",
+      "exercise_message": "Keep your form steady and stay with the countdown.",
+      "rest_title": "Recover and reset",
+      "rest_message": "Use the break to breathe, shake out the tension, and prepare for the next effort.",
+      "complete_title": "Workout finished",
+      "complete_message": "Nice work. You have completed the guided session."
+    },
+    "summary": {
+      "subtitle": "{{title}} is complete. Here is a quick recap of what you finished.",
+      "exercises_completed": "Exercises completed",
+      "total_sets": "Total rounds",
+      "total_minutes": "Workout time",
+      "total_calories": "Estimated calories"
+    },
     "plan_label": "Generated plan",
     "duration_label": "Workout duration",
     "preset_label": "Timer preset",
