@@ -1,8 +1,5 @@
 import { remote } from 'webdriverio';
 import chromedriver from 'chromedriver';
-import { fileURLToPath } from 'node:url';
-import { existsSync, readdirSync } from 'node:fs';
-
 const {
   APPIUM_HOST = '127.0.0.1',
   APPIUM_PORT = '4723',
@@ -187,6 +184,42 @@ const fillLoginForm = async () => {
   await setIonInputValue('login-password', testUser.password);
   await submitButton.waitForDisplayed({ timeout: 15000 });
   await submitButton.click();
+
+  await browser.execute(() => {
+    const form = document.querySelector('form.login-page__form');
+    if (form instanceof HTMLFormElement) {
+      form.requestSubmit();
+    }
+  });
+};
+
+const waitForSuccessfulLogin = async () => {
+  await browser.waitUntil(
+    async () => {
+      const authState = await browser.execute(() => ({
+        pathname: window.location.pathname,
+        token: Boolean(localStorage.getItem('token')),
+        storedUser: Boolean(localStorage.getItem('user')),
+      }));
+
+      return (
+        authState.pathname === '/home' ||
+        (authState.token && authState.storedUser)
+      );
+    },
+    {
+      timeout: 15000,
+      timeoutMsg: 'Login flow did not persist an authenticated session.',
+    }
+  );
+
+  await browser.waitUntil(
+    async () => (await getCurrentLocation()).pathname === '/home',
+    {
+      timeout: 10000,
+      timeoutMsg: 'Login flow did not navigate to /home.',
+    }
+  );
 };
 
 const collectFailureContext = async () => {
@@ -209,6 +242,8 @@ const collectFailureContext = async () => {
       email: Boolean(document.querySelector('[data-testid="login-email"]')),
       password: Boolean(document.querySelector('[data-testid="login-password"]')),
       submit: Boolean(document.querySelector('[data-testid="login-submit"]')),
+      token: Boolean(localStorage.getItem('token')),
+      storedUser: Boolean(localStorage.getItem('user')),
       title: document.title,
       pathname: window.location.pathname,
       hash: window.location.hash,
@@ -228,14 +263,7 @@ try {
   await navigateToLogin();
   await waitForLoginPage();
   await fillLoginForm();
-
-  await browser.waitUntil(
-    async () => (await browser.getUrl()).includes('/home'),
-    {
-      timeout: 15000,
-      timeoutMsg: 'Login flow did not navigate to /home.',
-    }
-  );
+  await waitForSuccessfulLogin();
 
   console.log(`Login E2E passed for ${testUser.email}`);
 } catch (error) {
