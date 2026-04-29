@@ -279,10 +279,7 @@ export class ProfileComponent implements OnInit {
     this.authService.updateProfile(this.user.id, payload).subscribe({
       next: (updatedProfile) => {
         this.user = updatedProfile;
-        this.authService.storeSession({
-          token: localStorage.getItem('token') || '',
-          user: updatedProfile,
-        });
+        this.authService.updateStoredUser(updatedProfile);
         this.i18nService.setLanguage(updatedProfile.language || 'en');
         this.isEditing = false;
         this.isSaving = false;
