@@ -7,17 +7,18 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ExerciseDetailComponent } from './exercise-detail.component';
-import { ExerciseService } from 'src/app/services/exercise';
+import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
 import { FavoritesService } from 'src/app/services/favorites.service';
 
 describe('ExerciseDetailComponent', () => {
   let component: ExerciseDetailComponent;
   let fixture: ComponentFixture<ExerciseDetailComponent>;
   let httpMock: HttpTestingController;
+  let routeId = '3';
 
   const apiUrl =
     'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Exercises';
-  const exerciseResponse = {
+  const exerciseResponse: ExerciseDto = {
     id: 3,
     title: 'Goblet Squats',
     description: 'Lower-body compound exercise',
@@ -41,7 +42,7 @@ describe('ExerciseDetailComponent', () => {
     },
   };
 
-  beforeEach(async () => {
+  const createComponent = async (): Promise<void> => {
     await TestBed.configureTestingModule({
       imports: [ExerciseDetailComponent],
       providers: [
@@ -52,7 +53,13 @@ describe('ExerciseDetailComponent', () => {
         { provide: Router, useValue: mockRouter },
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: new Map([['id', '3']]) } },
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get: (key: string) => (key === 'id' ? routeId : null),
+              },
+            },
+          },
         },
       ],
     }).compileComponents();
@@ -61,23 +68,34 @@ describe('ExerciseDetailComponent', () => {
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-
-    const req = httpMock.expectOne(`${apiUrl}/3`);
-    req.flush(exerciseResponse);
-  });
+  };
 
   afterEach(() => {
-    httpMock.verify();
+    if (httpMock) {
+      httpMock.verify();
+    }
     mockRouter.navigate.calls.reset();
     localStorage.clear();
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    await createComponent();
+
+    const req = httpMock.expectOne(`${apiUrl}/3`);
+    req.flush(exerciseResponse);
+
     expect(component).toBeTruthy();
   });
 
-  it('should load the exercise and expose the edit url', () => {
-    expect(component.exercise?.title).toBe(exerciseResponse.title);
+  it('should load the exercise and expose the edit and workout urls', async () => {
+    await createComponent();
+
+    const req = httpMock.expectOne(`${apiUrl}/3`);
+    req.flush(exerciseResponse);
+
+    expect(component.exercise).toEqual(exerciseResponse);
+    expect(component.isLoading).toBeFalse();
+    expect(component.hasError).toBeFalse();
     expect(component.editExerciseUrl).toBe('/exercises/3/edit');
     expect(component.workoutUrl).toBe('/exercises/3/workout');
     expect(component.isFavorite).toBeFalse();
@@ -107,7 +125,12 @@ describe('ExerciseDetailComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
   });
 
-  it('should not delete when the confirmation is cancelled', () => {
+  it('should not delete when the confirmation is cancelled', async () => {
+    await createComponent();
+
+    const req = httpMock.expectOne(`${apiUrl}/3`);
+    req.flush(exerciseResponse);
+
     spyOn(window, 'confirm').and.returnValue(false);
 
     component.deleteExercise();

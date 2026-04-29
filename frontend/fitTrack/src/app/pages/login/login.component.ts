@@ -30,6 +30,7 @@ import { I18nService } from 'src/app/services/i18n.service';
   ]
 })
 export class LoginComponent implements OnInit {
+  private readonly minPasswordLength = 8;
 
   loginForm!: FormGroup;
 
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(this.minPasswordLength)]]
     });
   }
 

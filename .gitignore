@@ -69,6 +69,8 @@ bazel-out/
 
 # Testing
 coverage/
+backend/fitTrackBackend.Tests/CoverageReport/
+backend/fitTrackBackend.Tests/TestResults/
 frontend/fitTrack/e2e/appium/chromedrivers/
 
 # Environment Variables

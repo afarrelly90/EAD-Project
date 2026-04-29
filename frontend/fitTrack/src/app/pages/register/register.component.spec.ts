@@ -59,7 +59,7 @@ describe('RegisterComponent', () => {
     const formData = {
       fullName: 'Marco',
       email: 'test@test.com',
-      password: '123456',
+      password: '12345678',
       language: 'en',
     };
 
@@ -84,7 +84,7 @@ describe('RegisterComponent', () => {
     const formData = {
       fullName: 'Marco',
       email: 'test@test.com',
-      password: '123456',
+      password: '12345678',
       language: 'en',
     };
 
@@ -98,5 +98,18 @@ describe('RegisterComponent', () => {
     req.flush('Error', { status: 400, statusText: 'Bad Request' });
 
     expect(window.alert).toHaveBeenCalled();
+  });
+
+  it('should reject invalid email and short passwords on the form', () => {
+    component.registerForm.setValue({
+      fullName: 'Marco',
+      email: 'bad-email',
+      password: '1234567',
+      language: 'en',
+    });
+
+    expect(component.registerForm.invalid).toBeTrue();
+    expect(component.registerForm.get('email')?.errors?.['email']).toBeTruthy();
+    expect(component.registerForm.get('password')?.errors?.['minlength']).toBeTruthy();
   });
 });

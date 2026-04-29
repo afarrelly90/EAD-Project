@@ -33,7 +33,7 @@ describe('AuthService', () => {
   });
 
   it('should call register API', () => {
-    const mockData = { email: 'test@test.com', password: '123456' };
+    const mockData = { email: 'test@test.com', password: '12345678' };
 
     service.register(mockData).subscribe(response => {
       expect(response).toBeTruthy();
@@ -47,7 +47,7 @@ describe('AuthService', () => {
   });
 
   it('should call login API', () => {
-    const mockData = { email: 'test@test.com', password: '123456' };
+    const mockData = { email: 'test@test.com', password: '12345678' };
     const mockResponse = {
       token: 'fake-jwt-token',
       user: {
@@ -105,5 +105,52 @@ describe('AuthService', () => {
 
     expect(localStorage.getItem('token')).toBeNull();
     expect(localStorage.getItem('user')).toBeNull();
+  });
+
+  it('should clear the session when stored user data is invalid', () => {
+    localStorage.setItem('token', 'fake-jwt-token');
+    localStorage.setItem('user', '{"id":"bad"}');
+    localStorage.setItem('language', 'en');
+
+    expect(service.getStoredUser()).toBeNull();
+    expect(localStorage.getItem('token')).toBeNull();
+    expect(localStorage.getItem('user')).toBeNull();
+    expect(localStorage.getItem('language')).toBeNull();
+  });
+
+  it('should update only the stored user when a valid session exists', () => {
+    const response = {
+      token: 'fake-jwt-token',
+      user: {
+        id: 1,
+        fullName: 'Test User',
+        email: 'test@test.com',
+        weight: 72,
+        language: 'en',
+        preferredDifficulty: 'Intermediate',
+        preferredMuscleGroup: 'Lower',
+        preferredWorkoutMinutes: 30,
+        preferredEquipment: 'Bench',
+        defaultSets: 4,
+        defaultExerciseSeconds: 50,
+        defaultRestSeconds: 75,
+      },
+    };
+
+    service.storeSession(response);
+
+    service.updateStoredUser({
+      ...response.user,
+      language: 'it',
+      preferredDifficulty: 'Advanced',
+    });
+
+    expect(localStorage.getItem('token')).toBe('fake-jwt-token');
+    expect(service.getStoredUser()).toEqual({
+      ...response.user,
+      language: 'it',
+      preferredDifficulty: 'Advanced',
+    });
+    expect(localStorage.getItem('language')).toBe('it');
   });
 });

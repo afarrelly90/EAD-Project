@@ -34,6 +34,8 @@ import { AuthService } from 'src/app/services/auth';
   ],
 })
 export class RegisterComponent implements OnInit {
+  private readonly minPasswordLength = 8;
+
   registerForm!: FormGroup;
 
   constructor(
@@ -46,7 +48,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(this.minPasswordLength)]],
       language: ['en']
     });
   }

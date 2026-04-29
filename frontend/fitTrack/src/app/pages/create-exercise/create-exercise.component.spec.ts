@@ -82,6 +82,31 @@ describe('CreateExerciseComponent', () => {
     expect(component.createExerciseForm.controls.title.touched).toBeTrue();
   });
 
+  it('should expose translated field errors for invalid inputs', () => {
+    component.createExerciseForm.patchValue({
+      title: '',
+      imageUrl: 'ftp://example.com/image.jpg',
+      calories: 0,
+      durationMinutes: 500,
+    });
+
+    component.createExerciseForm.controls.title.markAsTouched();
+    component.createExerciseForm.controls.imageUrl.markAsTouched();
+    component.createExerciseForm.controls.calories.markAsTouched();
+    component.createExerciseForm.controls.durationMinutes.markAsTouched();
+
+    expect(component.getFieldError('title')).toBe('Exercise name is required.');
+    expect(component.getFieldError('imageUrl')).toBe(
+      'Enter a full link starting with http:// or https://.'
+    );
+    expect(component.getFieldError('calories')).toBe(
+      'Calories must be between 1 and 2000.'
+    );
+    expect(component.getFieldError('durationMinutes')).toBe(
+      'Minutes must be between 1 and 180.'
+    );
+  });
+
   it('should submit the exercise and navigate on success', () => {
     component.selectMuscleGroup('Upper');
     component.createExerciseForm.patchValue({
@@ -134,6 +159,53 @@ describe('CreateExerciseComponent', () => {
 
     expect(component.isSaving).toBeFalse();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
+  });
+
+  it('should trim optional fields to null when they contain only whitespace', () => {
+    component.selectMuscleGroup('Lower');
+    component.createExerciseForm.patchValue({
+      imageUrl: '',
+      videoLink: '',
+      title: ' Lunges ',
+      description: '   ',
+      equipment: 'None',
+      calories: 70,
+      durationMinutes: 11,
+      difficulty: 'Intermediate',
+    });
+
+    component.onSubmit();
+
+    const req = httpMock.expectOne(apiUrl);
+    expect(req.request.body).toEqual({
+      title: 'Lunges',
+      description: null,
+      videoLink: null,
+      imageUrl: null,
+      calories: 70,
+      isCore: false,
+      isUpperBody: false,
+      isLowerBody: true,
+      difficulty: 'Intermediate',
+      durationMinutes: 11,
+      equipment: null,
+    });
+
+    req.flush({
+      id: 4,
+      title: 'Lunges',
+      description: null,
+      videoLink: null,
+      imageUrl: null,
+      calories: 70,
+      isCore: false,
+      isUpperBody: false,
+      isLowerBody: true,
+      difficulty: 'Intermediate',
+      durationMinutes: 11,
+      equipment: null,
+      createdAtUtc: '2026-04-15T10:00:00Z',
+    });
   });
 
   it('should send null equipment when None is selected', () => {
@@ -224,5 +296,20 @@ describe('CreateExerciseComponent', () => {
     expect(component.isSaving).toBeFalse();
     expect(window.alert).toHaveBeenCalledWith('Could not save exercise.');
     expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should disable submission while saving', () => {
+    component.createExerciseForm.patchValue({
+      title: 'Crunches',
+      calories: 55,
+      durationMinutes: 9,
+      difficulty: 'Beginner',
+    });
+
+    expect(component.canSubmit).toBeTrue();
+
+    component.isSaving = true;
+
+    expect(component.canSubmit).toBeFalse();
   });
 });
