@@ -3,17 +3,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-REPO_DIR="$(cd "${PROJECT_DIR}/../.." && pwd)"
 
 cd "${PROJECT_DIR}"
 
 sleep 10
-
-echo "=== Starting local backend ==="
-ASPNETCORE_ENVIRONMENT=Development \
-ASPNETCORE_URLS=http://0.0.0.0:5240 \
-dotnet run --no-restore --project "${REPO_DIR}/backend/fitTrackBackend/fitTrackBackend.csproj" > /tmp/backend.log 2>&1 &
-BACKEND_PID=$!
 
 echo "=== Connected devices ==="
 adb devices
@@ -80,23 +73,9 @@ npx appium --port 4725 --allow-insecure chromedriver_autodownload > /tmp/appium.
 APPIUM_PID=$!
 
 cleanup() {
-  kill "${BACKEND_PID}" >/dev/null 2>&1 || true
   kill "${APPIUM_PID}" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
-
-echo "=== Waiting for backend ==="
-BACKEND_WAIT_SECONDS=60
-BACKEND_WAIT_ELAPSED=0
-until curl -fsS http://localhost:5240/swagger/index.html >/dev/null; do
-  BACKEND_WAIT_ELAPSED=$((BACKEND_WAIT_ELAPSED + 2))
-  if [ "${BACKEND_WAIT_ELAPSED}" -ge "${BACKEND_WAIT_SECONDS}" ]; then
-    echo "Backend did not become ready within ${BACKEND_WAIT_SECONDS} seconds"
-    cat /tmp/backend.log || true
-    exit 1
-  fi
-  sleep 2
-done
 
 echo "=== Waiting for Appium ==="
 APPium_WAIT_SECONDS=60
@@ -111,16 +90,16 @@ until curl -fsS http://localhost:4725/status | grep -q '"ready":true'; do
 done
 
 echo "=== Running login E2E ==="
-APPIUM_PORT=4725 API_BASE_URL=http://localhost:5240/api CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:login
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:login
 
 echo "=== Running register E2E ==="
-APPIUM_PORT=4725 API_BASE_URL=http://localhost:5240/api CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:register
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:register
 
 echo "=== Running home E2E ==="
-APPIUM_PORT=4725 API_BASE_URL=http://localhost:5240/api CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:home
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:home
 
 echo "=== Running timer E2E ==="
-APPIUM_PORT=4725 API_BASE_URL=http://localhost:5240/api CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:timer
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:timer
 
 echo "=== Running workout builder E2E ==="
-APPIUM_PORT=4725 API_BASE_URL=http://localhost:5240/api CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:workout-builder
+APPIUM_PORT=4725 CHROMEDRIVER_EXECUTABLE="${CHROMEDRIVER_BIN}" npm run test:e2e:workout-builder
