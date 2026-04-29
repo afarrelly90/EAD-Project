@@ -37,6 +37,31 @@
       </div>
     }
 
+    <section class="home-page__daily-goal" data-testid="home-daily-goal">
+      <div class="home-page__daily-goal-card">
+        <div class="home-page__daily-goal-copy">
+          <span class="home-page__daily-goal-eyebrow">
+            {{ 'home.daily_goal_title' | t }}
+          </span>
+          <strong class="home-page__daily-goal-value">
+            {{ dailyGoalMinutes }} {{ 'common.minutes_short' | t }}
+          </strong>
+          <p class="home-page__daily-goal-description">
+            {{ 'home.daily_goal_description' | t:{minutes: dailyGoalMinutes} }}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="home-page__daily-goal-button"
+          routerLink="/workouts/build"
+        >
+          {{ 'home.daily_goal_button' | t }}
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+    </section>
+
     <section class="home-page__create-card" data-testid="home-create-card">
       <button
         type="button"

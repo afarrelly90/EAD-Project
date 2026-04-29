@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { HomeComponent } from './home.component';
 import { ExerciseDto } from 'src/app/services/exercise';
+import { AuthService } from 'src/app/services/auth';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -20,6 +21,22 @@ describe('HomeComponent', () => {
   };
   const apiUrl =
     'https://fittrack-api-dga8g5dfabbyf4fv.francecentral-01.azurewebsites.net/api/Exercises';
+  const mockAuthService = {
+    getStoredUser: jasmine.createSpy('getStoredUser').and.returnValue({
+      id: 1,
+      fullName: 'Test User',
+      email: 'test@example.com',
+      weight: null,
+      language: 'en',
+      preferredDifficulty: 'Beginner',
+      preferredMuscleGroup: 'Core',
+      preferredWorkoutMinutes: 35,
+      preferredEquipment: null,
+      defaultSets: 3,
+      defaultExerciseSeconds: 45,
+      defaultRestSeconds: 60,
+    }),
+  };
   const mockExercises: ExerciseDto[] = [
     {
       id: 1,
@@ -106,6 +123,7 @@ describe('HomeComponent', () => {
         provideHttpClientTesting(),
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: {} },
+        { provide: AuthService, useValue: mockAuthService },
       ]
     }).compileComponents();
 
@@ -230,5 +248,13 @@ describe('HomeComponent', () => {
     expect(component.hasError).toBeTrue();
     expect(component.exercises).toEqual([]);
     expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should load the daily goal from profile preferences', () => {
+    const req = httpMock.expectOne(apiUrl);
+    req.flush(mockExercises);
+
+    expect(component.dailyGoalMinutes).toBe(35);
+    expect(mockAuthService.getStoredUser).toHaveBeenCalled();
   });
 });
