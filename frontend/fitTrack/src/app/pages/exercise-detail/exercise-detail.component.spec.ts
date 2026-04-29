@@ -95,6 +95,66 @@ describe('ExerciseDetailComponent', () => {
     expect(JSON.parse(localStorage.getItem('favorite-exercise-ids') || '[]')).toEqual([]);
   });
 
+  it('should expose the translated labels and fallback assets for the loaded exercise', () => {
+    expect(component.heroImage).toBe(exerciseResponse.imageUrl as string);
+    expect(component.categoryKey).toBe('exercise.muscle_groups.lower');
+    expect(component.categoryLabel).toBe('Lower Body');
+    expect(component.equipmentLabel).toBe('Dumbbell');
+    expect(component.difficultyKey).toBe('exercise.difficulty_options.intermediate');
+    expect(component.favoriteButtonLabel).toBe('Add to favorites');
+  });
+
+  it('should fall back to category imagery and none-equipment text when exercise media is missing', () => {
+    component.exercise = {
+      ...exerciseResponse,
+      imageUrl: null,
+      equipment: null,
+      isLowerBody: false,
+      isCore: true,
+    };
+
+    expect(component.heroImage).toBe('assets/images/register-fitness.jpg');
+    expect(component.fallbackImageByCategory).toBe('assets/images/register-fitness.jpg');
+    expect(component.categoryKey).toBe('exercise.muscle_groups.core');
+    expect(component.equipmentLabel).toBe('None');
+  });
+
+  it('should fall back to the raw equipment value when no translation exists', () => {
+    component.exercise = {
+      ...exerciseResponse,
+      equipment: 'Sandbag',
+    };
+
+    expect(component.equipmentLabel).toBe('Sandbag');
+  });
+
+  it('should return safe defaults when no exercise is loaded', () => {
+    component.exercise = null;
+
+    expect(component.heroImage).toBe('assets/images/register-fitness.jpg');
+    expect(component.categoryKey).toBe('');
+    expect(component.categoryLabel).toBe('');
+    expect(component.editExerciseUrl).toBe('/home');
+    expect(component.workoutUrl).toBe('/home');
+  });
+
+  it('should navigate home when goBack is called', () => {
+    component.goBack();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
+  });
+
+  it('should do nothing when trying to edit or favorite without a loaded exercise', () => {
+    component.exercise = null;
+    const originalHref = window.location.href;
+
+    component.editExercise();
+    component.toggleFavorite();
+
+    expect(component.isFavorite).toBeFalse();
+    expect(window.location.href).toBe(originalHref);
+  });
+
   it('should delete the exercise and navigate home', () => {
     spyOn(window, 'confirm').and.returnValue(true);
 
@@ -127,5 +187,18 @@ describe('ExerciseDetailComponent', () => {
 
     expect(window.alert).toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalledWith(['/home']);
+  });
+
+  it('should show an error state when the route id is invalid', async () => {
+    const route = TestBed.inject(ActivatedRoute) as unknown as {
+      snapshot: { paramMap: Map<string, string> };
+    };
+    route.snapshot.paramMap = new Map([['id', '0']]);
+
+    component.ionViewWillEnter();
+
+    httpMock.expectNone(`${apiUrl}/0`);
+    expect(component.hasError).toBeTrue();
+    expect(component.isLoading).toBeFalse();
   });
 });

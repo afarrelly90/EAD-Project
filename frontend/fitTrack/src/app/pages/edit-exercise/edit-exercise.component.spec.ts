@@ -77,6 +77,23 @@ describe('EditExerciseComponent', () => {
     expect(component.editExerciseForm.value.equipment).toBe('Dumbbell');
   });
 
+  it('should allow the selected muscle group to be changed manually', () => {
+    component.selectMuscleGroup('Lower');
+
+    expect(component.selectedMuscleGroup).toBe('Lower');
+  });
+
+  it('should expose the submit state from validity and saving status', () => {
+    expect(component.canSubmit).toBeTrue();
+
+    component.isSaving = true;
+    expect(component.canSubmit).toBeFalse();
+
+    component.isSaving = false;
+    component.editExerciseForm.patchValue({ imageUrl: 'bad-link' });
+    expect(component.canSubmit).toBeFalse();
+  });
+
   it('should submit the updated exercise and navigate back to detail', () => {
     component.editExerciseForm.patchValue({
       title: 'Push-Ups Plus',
@@ -121,6 +138,34 @@ describe('EditExerciseComponent', () => {
     expect(component.isSaving).toBeFalse();
   });
 
+  it('should block submit when there is no exercise id even if the form is valid', () => {
+    component.exerciseId = 0;
+
+    component.onSubmit();
+
+    httpMock.expectNone(`${apiUrl}/0`);
+    expect(component.showValidationMessage).toBeTrue();
+  });
+
+  it('should show translated field errors for invalid controls', () => {
+    component.editExerciseForm.patchValue({
+      title: '',
+      imageUrl: 'bad-link',
+      calories: 0,
+      durationMinutes: 999,
+    });
+
+    component.editExerciseForm.get('title')?.markAsTouched();
+    component.editExerciseForm.get('imageUrl')?.markAsTouched();
+    component.editExerciseForm.get('calories')?.markAsTouched();
+    component.editExerciseForm.get('durationMinutes')?.markAsTouched();
+
+    expect(component.getFieldError('title')).toBe('Exercise name is required.');
+    expect(component.getFieldError('imageUrl')).toContain('http:// or https://');
+    expect(component.getFieldError('calories')).toContain('Calories must be between');
+    expect(component.getFieldError('durationMinutes')).toContain('Minutes must be between');
+  });
+
   it('should send null equipment when none is selected', () => {
     component.editExerciseForm.patchValue({
       equipment: 'None',
@@ -137,5 +182,86 @@ describe('EditExerciseComponent', () => {
     });
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/exercises', 1]);
+  });
+
+  it('should map lower, core, and other muscle groups when patching exercise data', () => {
+    (component as any).patchForm({
+      ...exerciseResponse,
+      isUpperBody: false,
+      isLowerBody: true,
+      isCore: false,
+    });
+    expect(component.selectedMuscleGroup).toBe('Lower');
+
+    (component as any).patchForm({
+      ...exerciseResponse,
+      isUpperBody: false,
+      isLowerBody: false,
+      isCore: true,
+    });
+    expect(component.selectedMuscleGroup).toBe('Core');
+
+    (component as any).patchForm({
+      ...exerciseResponse,
+      isUpperBody: false,
+      isLowerBody: false,
+      isCore: false,
+    });
+    expect(component.selectedMuscleGroup).toBe('Other');
+  });
+
+  it('should show an alert when updating the exercise fails', () => {
+    spyOn(window, 'alert');
+
+    component.onSubmit();
+
+    const req = httpMock.expectOne(`${apiUrl}/1`);
+    req.flush('Error', { status: 500, statusText: 'Server Error' });
+
+    expect(window.alert).toHaveBeenCalledWith('Could not update exercise.');
+    expect(component.isSaving).toBeFalse();
+  });
+
+  it('should navigate back to the exercise detail page when an id is present', () => {
+    component.goBack();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/exercises', 1]);
+  });
+
+  it('should navigate home when going back without an exercise id', () => {
+    component.exerciseId = 0;
+
+    component.goBack();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
+  });
+
+  it('should expose an error state when the route id is invalid', () => {
+    const route = TestBed.inject(ActivatedRoute) as unknown as {
+      snapshot: { paramMap: Map<string, string> };
+    };
+    route.snapshot.paramMap = new Map([['id', '0']]);
+
+    component.ionViewWillEnter();
+
+    httpMock.expectNone(`${apiUrl}/0`);
+    expect(component.hasError).toBeTrue();
+    expect(component.isLoading).toBeFalse();
+  });
+
+  it('should expose an error state when loading the exercise fails', () => {
+    component.ionViewWillEnter();
+
+    const req = httpMock.expectOne(`${apiUrl}/1`);
+    req.flush('Error', { status: 404, statusText: 'Not Found' });
+
+    expect(component.exercise).toBeNull();
+    expect(component.hasError).toBeTrue();
+    expect(component.isLoading).toBeFalse();
+  });
+
+  it('should return empty errors for untouched or unsupported controls', () => {
+    expect(component.getFieldError('videoLink')).toBe('');
+    expect(component.getFieldError('difficulty')).toBe('');
   });
 });
