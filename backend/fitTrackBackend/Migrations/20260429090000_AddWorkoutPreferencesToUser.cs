@@ -1,9 +1,13 @@
+using FitTrackApi.Data;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace fitTrack.Migrations
 {
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20260429090000_AddWorkoutPreferencesToUser")]
     public partial class AddWorkoutPreferencesToUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

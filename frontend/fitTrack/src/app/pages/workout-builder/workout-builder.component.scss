@@ -1,16 +1,16 @@
 .workout-builder-page {
-  --background: linear-gradient(180deg, #1e2039 0%, #f5f1e8 28%, #f8f5ef 100%);
+  --background: linear-gradient(180deg, #e7d7ff 0%, #ecdfff 34%, #a884fd 100%);
 
   &__screen {
     min-height: 100%;
-    max-width: 640px;
+    max-width: 620px;
     margin: 0 auto;
     padding: max(18px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
   }
 
   &__hero {
     position: relative;
-    padding: 76px 0 18px;
+    padding: 76px 0 20px;
   }
 
   &__back-button {
@@ -19,26 +19,27 @@
     left: 0;
     width: 44px;
     height: 44px;
-    border: 0;
+    border: 1px solid rgba(110, 97, 143, 0.12);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92);
-    color: #1f2238;
+    background: rgba(255, 255, 255, 0.72);
+    color: #2d2744;
     display: grid;
     place-items: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   &__eyebrow {
     margin: 0 0 8px;
-    color: #cfd5ea;
+    color: #8a84a4;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   &__title {
     margin: 0;
-    color: #ffffff;
+    color: #211c36;
     font-size: clamp(30px, 8vw, 40px);
     line-height: 1.05;
     font-weight: 800;
@@ -47,7 +48,7 @@
 
   &__subtitle {
     margin: 12px 0 0;
-    color: rgba(255, 255, 255, 0.74);
+    color: #544d70;
     font-size: 15px;
     line-height: 1.6;
     max-width: 460px;
@@ -57,8 +58,10 @@
   &__preview {
     padding: 20px 16px;
     border-radius: 28px;
-    background: rgba(255, 255, 255, 0.84);
-    box-shadow: 0 18px 32px rgba(29, 33, 58, 0.08);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 18px 32px rgba(36, 31, 57, 0.08);
   }
 
   &__preview {
@@ -76,16 +79,16 @@
 
   &__section-label {
     margin: 0 0 6px;
-    color: #8f866f;
-    font-size: 12px;
-    font-weight: 700;
+    color: #8a84a4;
+    font-size: 13px;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   &__section-title {
     margin: 0;
-    color: #1f2238;
+    color: #211c36;
     font-size: 24px;
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -95,13 +98,13 @@
     border: 0;
     border-radius: 999px;
     padding: 10px 14px;
-    background: #e9e2d4;
-    color: #403a29;
+    background: #eee7f7;
+    color: #716887;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &__field-grid {
@@ -117,42 +120,49 @@
     span {
       display: block;
       margin-bottom: 8px;
-      color: #2e324c;
+      color: #2b2542;
       font-size: 14px;
       font-weight: 600;
     }
   }
 
   &__input {
-    --background: #f6f1e7;
-    --color: #1f2238;
-    --placeholder-color: #8f866f;
+    --background: #f6f1fb;
+    --color: #2b2542;
+    --placeholder-color: #a49dbb;
     --border-radius: 18px;
     --padding-start: 10px;
-    border: 1px solid rgba(183, 171, 142, 0.26);
+    border: 1px solid rgba(188, 178, 214, 0.34);
     border-radius: 18px;
 
-    color: #1f2238;
+    color: #2b2542;
 
     ion-input,
     ion-select {
-      --color: #1f2238;
-      --placeholder-color: #8f866f;
-      color: #1f2238;
+      --color: #2b2542;
+      --placeholder-color: #a49dbb;
+      color: #2b2542;
     }
   }
 
   &__error {
     margin: 0 0 14px;
-    color: #b24857;
+    color: #9d496a;
     font-size: 14px;
     font-weight: 600;
   }
 
   &__validation {
     margin: 0 0 14px;
-    color: #7a6030;
+    color: #6f688c;
     font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__field-error {
+    margin: 8px 2px 0;
+    color: #9d496a;
+    font-size: 12px;
     font-weight: 600;
   }
 
@@ -165,18 +175,18 @@
   &__stat {
     padding: 14px;
     border-radius: 20px;
-    background: #f6f1e7;
+    background: #f6f1fb;
 
     span {
       display: block;
-      color: #8f866f;
+      color: #8a84a4;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       margin-bottom: 8px;
     }
 
     strong {
-      color: #1f2238;
+      color: #2b2542;
       font-size: 17px;
       line-height: 1.3;
     }
@@ -184,7 +194,7 @@
 
   &__preset {
     margin: 18px 0 0;
-    color: #59523d;
+    color: #6f688c;
     font-size: 14px;
     font-weight: 600;
   }
@@ -201,7 +211,7 @@
     align-items: flex-start;
     padding: 14px;
     border-radius: 20px;
-    background: #f7f4ec;
+    background: #f8f5fc;
   }
 
   &__exercise-index {
@@ -209,7 +219,7 @@
     height: 34px;
     flex: 0 0 34px;
     border-radius: 50%;
-    background: #1f2238;
+    background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
     color: #ffffff;
     display: grid;
     place-items: center;
@@ -217,26 +227,49 @@
   }
 
   &__exercise-copy {
+
     h3,
     p {
       margin: 0;
     }
 
     h3 {
-      color: #1f2238;
+      color: #2b2542;
       font-size: 16px;
       font-weight: 700;
       margin-bottom: 6px;
     }
 
     p {
-      color: #635d49;
+      color: #6f688c;
       font-size: 13px;
       line-height: 1.5;
     }
   }
 
+  &__primary-button {
+    --background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    --background-activated: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    --background-hover: linear-gradient(180deg, #3a3354 0%, #2d2744 100%);
+    --border-radius: 18px;
+    --box-shadow: 0 14px 28px rgba(36, 31, 57, 0.18);
+    --color: #ffffff;
+    height: 54px;
+    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
+
+    &[disabled] {
+      --background: linear-gradient(180deg, #b6afca 0%, #a7a0bc 100%);
+      --background-activated: linear-gradient(180deg, #b6afca 0%, #a7a0bc 100%);
+      --box-shadow: none;
+      --color: rgba(255, 255, 255, 0.92);
+    }
+  }
+
   @media (max-width: 520px) {
+
     &__field-grid,
     &__stats {
       grid-template-columns: 1fr;
@@ -250,6 +283,13 @@
     &__pill-button {
       width: 100%;
       justify-content: center;
+    }
+  }
+
+  @media (min-width: 700px) {
+    &__screen {
+      max-width: 720px;
+      padding-inline: 24px;
     }
   }
 }

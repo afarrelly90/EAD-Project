@@ -1,8 +1,15 @@
 <ion-content fullscreen class="guided-workout-page">
   @if (hasError || !workout) {
-    <div class="guided-workout-page__state">
+    <div class="guided-workout-page__state" data-testid="guided-workout-error-state">
       <p>{{ 'guided_workout.error' | t }}</p>
-      <ion-button type="button" (click)="goBack()">{{ 'guided_workout.return_to_builder' | t }}</ion-button>
+      <ion-button
+        type="button"
+        class="guided-workout-page__primary-button"
+        data-testid="guided-workout-return-button"
+        (click)="goBack()"
+      >
+        {{ 'guided_workout.return_to_builder' | t }}
+      </ion-button>
     </div>
   } @else {
     <div class="guided-workout-page__screen">
@@ -17,16 +24,16 @@
 
       <section class="guided-workout-page__hero">
         <p class="guided-workout-page__eyebrow">{{ 'guided_workout.eyebrow' | t }}</p>
-        <h1 class="guided-workout-page__title">{{ currentExercise?.title || workout.title }}</h1>
-        <p class="guided-workout-page__message">{{ statusMessage }}</p>
+        <h1 class="guided-workout-page__title" data-testid="guided-workout-title">{{ currentExercise?.title || workout.title }}</h1>
+        <p class="guided-workout-page__message" data-testid="guided-workout-message">{{ statusMessage }}</p>
       </section>
 
       <section class="guided-workout-page__ring-card">
-        <div class="guided-workout-page__phase-pill">{{ phaseLabel }}</div>
+        <div class="guided-workout-page__phase-pill" data-testid="guided-workout-phase">{{ phaseLabel }}</div>
 
         <div class="guided-workout-page__ring" [style.--progress]="timerProgressPercent + '%'">
           <ion-icon name="timer-outline"></ion-icon>
-          <div class="guided-workout-page__countdown">{{ timerDisplayTime }}</div>
+          <div class="guided-workout-page__countdown" data-testid="guided-workout-countdown">{{ timerDisplayTime }}</div>
         </div>
 
         <div class="guided-workout-page__summary">
@@ -36,7 +43,7 @@
       </section>
 
       <section class="guided-workout-page__details">
-        <h2>{{ statusTitle }}</h2>
+        <h2 data-testid="guided-workout-status-title">{{ statusTitle }}</h2>
         <div class="guided-workout-page__detail-row">
           <span>{{ 'guided_workout.plan_label' | t }}</span>
           <strong>{{ workout.title }}</strong>
@@ -57,6 +64,8 @@
         <ion-button
           expand="block"
           type="button"
+          class="guided-workout-page__primary-button"
+          data-testid="guided-workout-start-button"
           [disabled]="workoutStarted"
           (click)="startWorkout()"
         >
@@ -68,6 +77,8 @@
           expand="block"
           fill="outline"
           type="button"
+          class="guided-workout-page__secondary-button"
+          data-testid="guided-workout-reset-button"
           [disabled]="!workoutStarted && !workoutComplete"
           (click)="resetWorkout()"
         >

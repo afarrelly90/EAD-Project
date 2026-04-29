@@ -79,6 +79,7 @@
     "section_label": "Account details",
     "section_title": "Your information",
     "edit_profile": "Edit Profile",
+    "validation_message": "Enter realistic values before saving your profile.",
     "weight_placeholder": "Enter your weight (kg)",
     "weight_help": "Leave this blank if you do not want to set a weight yet.",
     "language_options": {
@@ -94,11 +95,18 @@
     "default_rest_seconds": "Rest seconds",
     "timer_preset": "Timer preset",
     "timer_preset_value": "{{sets}} sets · {{exercise}}s work · {{rest}}s rest",
-    "update_error": "Could not update your profile."
+    "update_error": "Could not update your profile.",
+    "field_errors": {
+      "weight": "Weight must be between {{min}} and {{max}} kg.",
+      "workout_minutes": "Workout length must be between {{min}} and {{max}} minutes.",
+      "default_sets": "Default sets must be between {{min}} and {{max}}.",
+      "default_exercise_seconds": "Exercise seconds must be between {{min}} and {{max}}.",
+      "default_rest_seconds": "Rest seconds must be between {{min}} and {{max}}."
+    }
   },
   "builder": {
     "eyebrow": "Workout Builder",
-    "title": "Generate a custom session",
+    "title": "Build My Workout",
     "subtitle": "Use your saved preferences or tweak the settings to build a guided workout from the exercises already in your library.",
     "form_label": "Preferences",
     "form_title": "Plan settings",
@@ -117,6 +125,10 @@
       "equipment": "Equipment",
       "target_minutes": "Target minutes",
       "max_exercises": "Max exercises"
+    },
+    "field_errors": {
+      "target_minutes": "Choose between {{min}} and {{max}} minutes.",
+      "max_exercises": "Choose between {{min}} and {{max}} exercises."
     },
     "summary": {
       "total_minutes": "Total time",
@@ -154,12 +166,15 @@
     "name": "Name",
     "name_placeholder": "Enter exercise name...",
     "name_required": "Exercise name is required.",
+    "link_invalid": "Enter a full link starting with http:// or https://.",
     "primary_muscle_group": "Primary Muscle Group",
     "instructions": "Instructions",
     "instructions_placeholder": "Enter any instructions for the exercise...",
     "equipment": "Equipment",
     "calories": "Calories",
+    "calories_invalid": "Calories must be between {{min}} and {{max}}.",
     "minutes": "Minutes",
+    "minutes_invalid": "Minutes must be between {{min}} and {{max}}.",
     "difficulty": "Difficulty",
     "saving": "Saving...",
     "save": "Save Exercise",
@@ -175,12 +190,15 @@
     "name": "Name",
     "name_placeholder": "Enter exercise name...",
     "name_required": "Exercise name is required.",
+    "link_invalid": "Enter a full link starting with http:// or https://.",
     "primary_muscle_group": "Primary Muscle Group",
     "instructions": "Instructions",
     "instructions_placeholder": "Enter any instructions for the exercise...",
     "equipment": "Equipment",
     "calories": "Calories",
+    "calories_invalid": "Calories must be between {{min}} and {{max}}.",
     "minutes": "Minutes",
+    "minutes_invalid": "Minutes must be between {{min}} and {{max}}.",
     "difficulty": "Difficulty",
     "updating": "Updating...",
     "update": "Update Exercise",

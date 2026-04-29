@@ -80,7 +80,7 @@ describe('ProfileComponent', () => {
     component.toggleEditing();
     component.profileForm.setValue({
       weight: 75.4,
-      language: 'pt',
+      language: 'it',
       preferredDifficulty: 'Advanced',
       preferredMuscleGroup: 'Upper',
       preferredWorkoutMinutes: 35,
@@ -96,7 +96,7 @@ describe('ProfileComponent', () => {
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual({
       weight: 75.4,
-      language: 'pt',
+      language: 'it',
       preferredDifficulty: 'Advanced',
       preferredMuscleGroup: 'Upper',
       preferredWorkoutMinutes: 35,

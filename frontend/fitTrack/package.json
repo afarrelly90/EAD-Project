@@ -14,7 +14,8 @@
     "test:e2e:login": "node e2e/appium/login.e2e.mjs",
     "test:e2e:register": "node e2e/appium/register.e2e.mjs",
     "test:e2e:timer": "node e2e/appium/timer.e2e.mjs",
-    "test:e2e:all": "npm run test:e2e:login && npm run test:e2e:register && npm run test:e2e:home && npm run test:e2e:timer"
+    "test:e2e:workout-builder": "node e2e/appium/workout-builder.e2e.mjs",
+    "test:e2e:all": "npm run test:e2e:login && npm run test:e2e:register && npm run test:e2e:home && npm run test:e2e:timer && npm run test:e2e:workout-builder"
   },
   "private": true,
   "dependencies": {

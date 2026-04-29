@@ -52,6 +52,18 @@ import { I18nService } from 'src/app/services/i18n.service';
   ],
 })
 export class ProfileComponent implements OnInit {
+  readonly profileLimits = {
+    minWeight: 20,
+    maxWeight: 400,
+    minWorkoutMinutes: 5,
+    maxWorkoutMinutes: 180,
+    minSets: 1,
+    maxSets: 10,
+    minExerciseSeconds: 5,
+    maxExerciseSeconds: 3600,
+    minRestSeconds: 5,
+    maxRestSeconds: 600,
+  };
   readonly difficultyOptions = ['Beginner', 'Intermediate', 'Advanced'];
   readonly muscleGroupOptions = ['Core', 'Upper', 'Lower', 'Other'];
   readonly equipmentOptions = [
@@ -69,6 +81,7 @@ export class ProfileComponent implements OnInit {
   hasError = false;
   isEditing = false;
   isSaving = false;
+  showValidationMessage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -88,15 +101,49 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({
-      weight: [null, [Validators.min(0)]],
+      weight: [
+        null,
+        [
+          Validators.min(this.profileLimits.minWeight),
+          Validators.max(this.profileLimits.maxWeight),
+        ],
+      ],
       language: ['en', [Validators.required]],
       preferredDifficulty: ['Beginner', [Validators.required]],
       preferredMuscleGroup: ['Core', [Validators.required]],
-      preferredWorkoutMinutes: [20, [Validators.required, Validators.min(5), Validators.max(180)]],
+      preferredWorkoutMinutes: [
+        20,
+        [
+          Validators.required,
+          Validators.min(this.profileLimits.minWorkoutMinutes),
+          Validators.max(this.profileLimits.maxWorkoutMinutes),
+        ],
+      ],
       preferredEquipment: ['None'],
-      defaultSets: [3, [Validators.required, Validators.min(1), Validators.max(10)]],
-      defaultExerciseSeconds: [45, [Validators.required, Validators.min(5), Validators.max(3600)]],
-      defaultRestSeconds: [60, [Validators.required, Validators.min(5), Validators.max(600)]],
+      defaultSets: [
+        3,
+        [
+          Validators.required,
+          Validators.min(this.profileLimits.minSets),
+          Validators.max(this.profileLimits.maxSets),
+        ],
+      ],
+      defaultExerciseSeconds: [
+        45,
+        [
+          Validators.required,
+          Validators.min(this.profileLimits.minExerciseSeconds),
+          Validators.max(this.profileLimits.maxExerciseSeconds),
+        ],
+      ],
+      defaultRestSeconds: [
+        60,
+        [
+          Validators.required,
+          Validators.min(this.profileLimits.minRestSeconds),
+          Validators.max(this.profileLimits.maxRestSeconds),
+        ],
+      ],
     });
 
     this.loadProfile();
@@ -168,6 +215,10 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  get canSaveProfile(): boolean {
+    return !this.isSaving && this.profileForm.valid;
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -178,6 +229,7 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isEditing = !this.isEditing;
+    this.showValidationMessage = false;
 
     if (this.isEditing) {
       this.profileForm.patchValue({
@@ -199,6 +251,8 @@ export class ProfileComponent implements OnInit {
 
   saveProfile(): void {
     if (!this.user || this.profileForm.invalid) {
+      this.showValidationMessage = true;
+      this.profileForm.markAllAsTouched();
       return;
     }
 
@@ -221,6 +275,7 @@ export class ProfileComponent implements OnInit {
     };
 
     this.isSaving = true;
+    this.showValidationMessage = false;
     this.authService.updateProfile(this.user.id, payload).subscribe({
       next: (updatedProfile) => {
         this.user = updatedProfile;
@@ -231,6 +286,7 @@ export class ProfileComponent implements OnInit {
         this.i18nService.setLanguage(updatedProfile.language || 'en');
         this.isEditing = false;
         this.isSaving = false;
+        this.showValidationMessage = false;
         this.resetFormFromUser();
       },
       error: (error) => {
@@ -244,6 +300,62 @@ export class ProfileComponent implements OnInit {
   logout(): void {
     this.authService.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  getFieldError(controlName: string): string {
+    const control = this.profileForm.get(controlName);
+    if (!control?.touched || !control.errors) {
+      return '';
+    }
+
+    if (controlName === 'weight' && (control.errors['min'] || control.errors['max'])) {
+      return this.i18nService.translate('profile.field_errors.weight', {
+        min: this.profileLimits.minWeight,
+        max: this.profileLimits.maxWeight,
+      });
+    }
+
+    if (
+      controlName === 'preferredWorkoutMinutes' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('profile.field_errors.workout_minutes', {
+        min: this.profileLimits.minWorkoutMinutes,
+        max: this.profileLimits.maxWorkoutMinutes,
+      });
+    }
+
+    if (
+      controlName === 'defaultSets' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('profile.field_errors.default_sets', {
+        min: this.profileLimits.minSets,
+        max: this.profileLimits.maxSets,
+      });
+    }
+
+    if (
+      controlName === 'defaultExerciseSeconds' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('profile.field_errors.default_exercise_seconds', {
+        min: this.profileLimits.minExerciseSeconds,
+        max: this.profileLimits.maxExerciseSeconds,
+      });
+    }
+
+    if (
+      controlName === 'defaultRestSeconds' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('profile.field_errors.default_rest_seconds', {
+        min: this.profileLimits.minRestSeconds,
+        max: this.profileLimits.maxRestSeconds,
+      });
+    }
+
+    return '';
   }
 
   private loadProfile(): void {
@@ -291,5 +403,6 @@ export class ProfileComponent implements OnInit {
       defaultExerciseSeconds: this.user.defaultExerciseSeconds || 45,
       defaultRestSeconds: this.user.defaultRestSeconds || 60,
     });
+    this.showValidationMessage = false;
   }
 }

@@ -38,6 +38,11 @@
               placeholder="https://example.com/image.jpg"
             ></ion-input>
           </ion-item>
+          @if (getFieldError('imageUrl')) {
+            <p class="create-exercise-page__field-error">
+              {{ getFieldError('imageUrl') }}
+            </p>
+          }
         </div>
 
         <div class="create-exercise-page__field">
@@ -53,6 +58,11 @@
               placeholder="https://example.com/video"
             ></ion-input>
           </ion-item>
+          @if (getFieldError('videoLink')) {
+            <p class="create-exercise-page__field-error">
+              {{ getFieldError('videoLink') }}
+            </p>
+          }
         </div>
 
         <div class="create-exercise-page__field">
@@ -63,9 +73,9 @@
               [placeholder]="'create_exercise.name_placeholder' | t"
             ></ion-input>
           </ion-item>
-          @if (createExerciseForm.controls.title.touched && createExerciseForm.controls.title.invalid) {
+          @if (getFieldError('title')) {
             <p class="create-exercise-page__field-error">
-              {{ 'create_exercise.name_required' | t }}
+              {{ getFieldError('title') }}
             </p>
           }
         </div>
@@ -122,9 +132,17 @@
               <ion-input
                 type="number"
                 formControlName="calories"
+                inputmode="numeric"
+                min="1"
+                max="2000"
                 placeholder="50"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('calories')) {
+              <p class="create-exercise-page__field-error">
+                {{ getFieldError('calories') }}
+              </p>
+            }
           </div>
 
           <div class="create-exercise-page__field create-exercise-page__field--metric">
@@ -133,9 +151,17 @@
               <ion-input
                 type="number"
                 formControlName="durationMinutes"
+                inputmode="numeric"
+                min="1"
+                max="180"
                 placeholder="10"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('durationMinutes')) {
+              <p class="create-exercise-page__field-error">
+                {{ getFieldError('durationMinutes') }}
+              </p>
+            }
           </div>
         </div>
 
@@ -161,7 +187,7 @@
           expand="block"
           type="submit"
           class="create-exercise-page__submit"
-          [disabled]="isSaving"
+          [disabled]="!canSubmit"
         >
           {{ isSaving ? ('create_exercise.saving' | t) : ('create_exercise.save' | t) }}
         </ion-button>

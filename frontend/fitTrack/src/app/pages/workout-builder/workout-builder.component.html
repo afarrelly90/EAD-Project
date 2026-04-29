@@ -12,7 +12,7 @@
 
       <div class="workout-builder-page__hero-copy">
         <p class="workout-builder-page__eyebrow">{{ 'builder.eyebrow' | t }}</p>
-        <h1 class="workout-builder-page__title">{{ 'builder.title' | t }}</h1>
+        <h1 class="workout-builder-page__title" data-testid="builder-title">{{ 'builder.title' | t }}</h1>
         <p class="workout-builder-page__subtitle">{{ 'builder.subtitle' | t }}</p>
       </div>
     </header>
@@ -27,6 +27,7 @@
         <button
           type="button"
           class="workout-builder-page__pill-button"
+          data-testid="builder-use-profile-button"
           [disabled]="isLoadingProfile"
           (click)="applySavedPreferences()"
         >
@@ -75,27 +76,54 @@
           <label class="workout-builder-page__field">
             <span>{{ 'builder.fields.target_minutes' | t }}</span>
             <ion-item lines="none" class="workout-builder-page__input">
-              <ion-input type="number" inputmode="numeric" formControlName="targetMinutes"></ion-input>
+              <ion-input
+                type="number"
+                inputmode="numeric"
+                min="5"
+                max="180"
+                data-testid="builder-target-minutes-input"
+                formControlName="targetMinutes"
+              ></ion-input>
             </ion-item>
+            @if (getFieldError('targetMinutes')) {
+              <p class="workout-builder-page__field-error">{{ getFieldError('targetMinutes') }}</p>
+            }
           </label>
         </div>
 
         <label class="workout-builder-page__field">
           <span>{{ 'builder.fields.max_exercises' | t }}</span>
           <ion-item lines="none" class="workout-builder-page__input">
-            <ion-input type="number" inputmode="numeric" formControlName="maxExercises"></ion-input>
+            <ion-input
+              type="number"
+              inputmode="numeric"
+              min="1"
+              max="8"
+              data-testid="builder-max-exercises-input"
+              formControlName="maxExercises"
+            ></ion-input>
           </ion-item>
+          @if (getFieldError('maxExercises')) {
+            <p class="workout-builder-page__field-error">{{ getFieldError('maxExercises') }}</p>
+          }
         </label>
 
         @if (hasError) {
-          <p class="workout-builder-page__error">{{ 'builder.error' | t }}</p>
+          <p class="workout-builder-page__error">{{ errorMessage || ('builder.error' | t) }}</p>
         }
 
         @if (showValidationMessage) {
           <p class="workout-builder-page__validation">{{ 'builder.validation' | t }}</p>
         }
 
-        <ion-button expand="block" type="button" [disabled]="!canGenerateWorkout" (click)="generateWorkout()">
+        <ion-button
+          expand="block"
+          type="button"
+          data-testid="builder-generate-button"
+          class="workout-builder-page__primary-button"
+          [disabled]="!canGenerateWorkout"
+          (click)="generateWorkout()"
+        >
           <ion-icon name="sparkles-outline" slot="start"></ion-icon>
           {{ isGenerating ? ('builder.generating' | t) : ('builder.generate' | t) }}
         </ion-button>
@@ -103,14 +131,19 @@
     </section>
 
     @if (generatedWorkout) {
-      <section class="workout-builder-page__preview">
+      <section class="workout-builder-page__preview" data-testid="builder-preview">
         <div class="workout-builder-page__preview-header">
           <div>
             <p class="workout-builder-page__section-label">{{ 'builder.preview_label' | t }}</p>
             <h2 class="workout-builder-page__section-title">{{ generatedWorkout.title }}</h2>
           </div>
 
-          <button type="button" class="workout-builder-page__pill-button" (click)="clearWorkout()">
+          <button
+            type="button"
+            class="workout-builder-page__pill-button"
+            data-testid="builder-clear-button"
+            (click)="clearWorkout()"
+          >
             {{ 'builder.clear' | t }}
           </button>
         </div>
@@ -138,6 +171,7 @@
           <article
             *ngFor="let exercise of generatedWorkout.exercises; let index = index; trackBy: trackByExerciseId"
             class="workout-builder-page__exercise-card"
+            data-testid="builder-exercise-card"
           >
             <div class="workout-builder-page__exercise-index">{{ index + 1 }}</div>
             <div class="workout-builder-page__exercise-copy">
@@ -148,7 +182,13 @@
           </article>
         </div>
 
-        <ion-button expand="block" type="button" (click)="startGuidedWorkout()">
+        <ion-button
+          expand="block"
+          type="button"
+          data-testid="builder-start-guided-button"
+          class="workout-builder-page__primary-button"
+          (click)="startGuidedWorkout()"
+        >
           <ion-icon name="play-circle-outline" slot="start"></ion-icon>
           {{ 'builder.start_guided' | t }}
         </ion-button>

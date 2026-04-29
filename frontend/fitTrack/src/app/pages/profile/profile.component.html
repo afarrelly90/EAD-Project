@@ -103,6 +103,12 @@
           (ngSubmit)="saveProfile()"
           class="profile-page__form"
         >
+          @if (showValidationMessage) {
+            <p class="profile-page__field-error">
+              {{ 'profile.validation_message' | t }}
+            </p>
+          }
+
           <div class="profile-page__field">
             <label class="profile-page__label">{{ 'common.weight' | t }}</label>
             <ion-item lines="none" class="profile-page__input">
@@ -110,10 +116,15 @@
                 type="number"
                 inputmode="decimal"
                 formControlName="weight"
+                min="20"
+                max="400"
                 [placeholder]="'profile.weight_placeholder' | t"
                 data-testid="profile-weight-input"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('weight')) {
+              <p class="profile-page__field-error">{{ getFieldError('weight') }}</p>
+            }
             <p class="profile-page__help-text">
               {{ 'profile.weight_help' | t }}
             </p>
@@ -161,8 +172,13 @@
                   type="number"
                   formControlName="preferredWorkoutMinutes"
                   inputmode="numeric"
+                  min="5"
+                  max="180"
                 ></ion-input>
               </ion-item>
+              @if (getFieldError('preferredWorkoutMinutes')) {
+                <p class="profile-page__field-error">{{ getFieldError('preferredWorkoutMinutes') }}</p>
+              }
             </div>
 
             <div class="profile-page__field">
@@ -185,8 +201,13 @@
                   type="number"
                   formControlName="defaultSets"
                   inputmode="numeric"
+                  min="1"
+                  max="10"
                 ></ion-input>
               </ion-item>
+              @if (getFieldError('defaultSets')) {
+                <p class="profile-page__field-error">{{ getFieldError('defaultSets') }}</p>
+              }
             </div>
 
             <div class="profile-page__field">
@@ -196,8 +217,13 @@
                   type="number"
                   formControlName="defaultExerciseSeconds"
                   inputmode="numeric"
+                  min="5"
+                  max="3600"
                 ></ion-input>
               </ion-item>
+              @if (getFieldError('defaultExerciseSeconds')) {
+                <p class="profile-page__field-error">{{ getFieldError('defaultExerciseSeconds') }}</p>
+              }
             </div>
           </div>
 
@@ -208,15 +234,20 @@
                 type="number"
                 formControlName="defaultRestSeconds"
                 inputmode="numeric"
+                min="5"
+                max="600"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('defaultRestSeconds')) {
+              <p class="profile-page__field-error">{{ getFieldError('defaultRestSeconds') }}</p>
+            }
           </div>
 
           <ion-button
             expand="block"
             type="submit"
             class="profile-page__save-button"
-            [disabled]="isSaving"
+            [disabled]="!canSaveProfile"
             data-testid="profile-save-button"
           >
             <ion-icon name="save-outline" slot="start"></ion-icon>

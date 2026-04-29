@@ -48,6 +48,12 @@ import { WorkoutPlannerService } from 'src/app/services/workout-planner.service'
   ],
 })
 export class WorkoutBuilderComponent implements OnInit {
+  readonly workoutLimits = {
+    minTargetMinutes: 5,
+    maxTargetMinutes: 180,
+    minExercises: 1,
+    maxExercises: 8,
+  };
   readonly difficultyOptions = ['Beginner', 'Intermediate', 'Advanced'];
   readonly muscleGroupOptions = ['Core', 'Upper', 'Lower', 'Other'];
   readonly equipmentOptions = [
@@ -64,14 +70,29 @@ export class WorkoutBuilderComponent implements OnInit {
   isLoadingProfile = true;
   isGenerating = false;
   hasError = false;
+  errorMessage = '';
   showValidationMessage = false;
 
   builderForm = this.fb.group({
     difficulty: ['Beginner', [Validators.required]],
     muscleGroup: ['Core', [Validators.required]],
     equipment: ['None'],
-    targetMinutes: [20, [Validators.required, Validators.min(5), Validators.max(180)]],
-    maxExercises: [4, [Validators.required, Validators.min(1), Validators.max(8)]],
+    targetMinutes: [
+      20,
+      [
+        Validators.required,
+        Validators.min(this.workoutLimits.minTargetMinutes),
+        Validators.max(this.workoutLimits.maxTargetMinutes),
+      ],
+    ],
+    maxExercises: [
+      4,
+      [
+        Validators.required,
+        Validators.min(this.workoutLimits.minExercises),
+        Validators.max(this.workoutLimits.maxExercises),
+      ],
+    ],
   });
 
   constructor(
@@ -111,6 +132,35 @@ export class WorkoutBuilderComponent implements OnInit {
     return !this.isLoadingProfile && !this.isGenerating && !!this.user && this.builderForm.valid;
   }
 
+  getFieldError(controlName: string): string {
+    const control = this.builderForm.get(controlName);
+    if (!control?.touched || !control.errors) {
+      return '';
+    }
+
+    if (
+      controlName === 'targetMinutes' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('builder.field_errors.target_minutes', {
+        min: this.workoutLimits.minTargetMinutes,
+        max: this.workoutLimits.maxTargetMinutes,
+      });
+    }
+
+    if (
+      controlName === 'maxExercises' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('builder.field_errors.max_exercises', {
+        min: this.workoutLimits.minExercises,
+        max: this.workoutLimits.maxExercises,
+      });
+    }
+
+    return '';
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -139,6 +189,7 @@ export class WorkoutBuilderComponent implements OnInit {
     const formValue = this.builderForm.getRawValue();
     this.isGenerating = true;
     this.hasError = false;
+    this.errorMessage = '';
     this.showValidationMessage = false;
 
     this.exerciseService.generateWorkout({
@@ -160,6 +211,11 @@ export class WorkoutBuilderComponent implements OnInit {
       error: (error) => {
         console.error(error);
         this.hasError = true;
+        this.errorMessage =
+          error?.error?.message ||
+          error?.error?.title ||
+          error?.message ||
+          '';
         this.generatedWorkout = null;
         this.isGenerating = false;
       },

@@ -79,6 +79,7 @@
     "section_label": "Dettagli account",
     "section_title": "Le tue informazioni",
     "edit_profile": "Modifica profilo",
+    "validation_message": "Inserisci valori realistici prima di salvare il profilo.",
     "weight_placeholder": "Inserisci il tuo peso (kg)",
     "weight_help": "Lascia vuoto se non vuoi ancora impostare un peso.",
     "language_options": {
@@ -94,7 +95,14 @@
     "default_rest_seconds": "Secondi recupero",
     "timer_preset": "Preset timer",
     "timer_preset_value": "{{sets}} serie · {{exercise}}s lavoro · {{rest}}s recupero",
-    "update_error": "Impossibile aggiornare il tuo profilo."
+    "update_error": "Impossibile aggiornare il tuo profilo.",
+    "field_errors": {
+      "weight": "Il peso deve essere tra {{min}} e {{max}} kg.",
+      "workout_minutes": "La durata dell'allenamento deve essere tra {{min}} e {{max}} minuti.",
+      "default_sets": "Le serie predefinite devono essere tra {{min}} e {{max}}.",
+      "default_exercise_seconds": "I secondi di esercizio devono essere tra {{min}} e {{max}}.",
+      "default_rest_seconds": "I secondi di recupero devono essere tra {{min}} e {{max}}."
+    }
   },
   "builder": {
     "eyebrow": "Creatore allenamento",
@@ -117,6 +125,10 @@
       "equipment": "Attrezzatura",
       "target_minutes": "Minuti obiettivo",
       "max_exercises": "Numero massimo esercizi"
+    },
+    "field_errors": {
+      "target_minutes": "Scegli tra {{min}} e {{max}} minuti.",
+      "max_exercises": "Scegli tra {{min}} e {{max}} esercizi."
     },
     "summary": {
       "total_minutes": "Tempo totale",
@@ -154,12 +166,15 @@
     "name": "Nome",
     "name_placeholder": "Inserisci il nome dell'esercizio...",
     "name_required": "Il nome dell'esercizio e obbligatorio.",
+    "link_invalid": "Inserisci un link completo che inizi con http:// o https://.",
     "primary_muscle_group": "Gruppo muscolare principale",
     "instructions": "Istruzioni",
     "instructions_placeholder": "Inserisci le istruzioni per l'esercizio...",
     "equipment": "Attrezzatura",
     "calories": "Calorie",
+    "calories_invalid": "Le calorie devono essere tra {{min}} e {{max}}.",
     "minutes": "Minuti",
+    "minutes_invalid": "I minuti devono essere tra {{min}} e {{max}}.",
     "difficulty": "Difficolta",
     "saving": "Salvataggio...",
     "save": "Salva esercizio",
@@ -175,12 +190,15 @@
     "name": "Nome",
     "name_placeholder": "Inserisci il nome dell'esercizio...",
     "name_required": "Il nome dell'esercizio e obbligatorio.",
+    "link_invalid": "Inserisci un link completo che inizi con http:// o https://.",
     "primary_muscle_group": "Gruppo muscolare principale",
     "instructions": "Istruzioni",
     "instructions_placeholder": "Inserisci le istruzioni per l'esercizio...",
     "equipment": "Attrezzatura",
     "calories": "Calorie",
+    "calories_invalid": "Le calorie devono essere tra {{min}} e {{max}}.",
     "minutes": "Minuti",
+    "minutes_invalid": "I minuti devono essere tra {{min}} e {{max}}.",
     "difficulty": "Difficolta",
     "updating": "Aggiornamento...",
     "update": "Aggiorna esercizio",

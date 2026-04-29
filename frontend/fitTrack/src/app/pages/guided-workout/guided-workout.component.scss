@@ -1,9 +1,9 @@
 .guided-workout-page {
-  --background: linear-gradient(180deg, #20233e 0%, #263255 24%, #f4efe5 24%, #f8f5ef 100%);
+  --background: linear-gradient(180deg, #e7d7ff 0%, #f4effb 34%, #f8f4fc 100%);
 
   &__screen {
     min-height: 100%;
-    max-width: 560px;
+    max-width: 620px;
     margin: 0 auto;
     padding: max(18px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
   }
@@ -11,12 +11,13 @@
   &__back-button {
     width: 44px;
     height: 44px;
-    border: 0;
+    border: 1px solid rgba(110, 97, 143, 0.12);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92);
-    color: #20233e;
+    background: rgba(255, 255, 255, 0.72);
+    color: #2d2744;
     display: grid;
     place-items: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   &__hero {
@@ -25,16 +26,16 @@
 
   &__eyebrow {
     margin: 0 0 8px;
-    color: #dbe2fb;
+    color: #8a84a4;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   &__title {
     margin: 0;
-    color: #ffffff;
+    color: #211c36;
     font-size: clamp(28px, 8vw, 36px);
     line-height: 1.05;
     font-weight: 800;
@@ -43,7 +44,7 @@
 
   &__message {
     margin: 12px 0 0;
-    color: rgba(255, 255, 255, 0.74);
+    color: #544d70;
     font-size: 15px;
     line-height: 1.6;
   }
@@ -53,7 +54,10 @@
     margin-top: 20px;
     padding: 20px 16px;
     border-radius: 28px;
-    background: rgba(255, 255, 255, 0.86);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 18px 32px rgba(36, 31, 57, 0.08);
   }
 
   &__phase-pill {
@@ -61,10 +65,10 @@
     margin-bottom: 18px;
     padding: 8px 14px;
     border-radius: 999px;
-    background: #e4dccd;
-    color: #544d39;
+    background: #eee7f7;
+    color: #716887;
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
@@ -79,15 +83,16 @@
     place-items: center;
     background:
       radial-gradient(circle at center, #ffffff 0 58%, transparent 58%),
-      conic-gradient(#273255 var(--progress), #e7dfd0 var(--progress));
-    color: #273255;
+      conic-gradient(#8d63ff var(--progress), #ece5f7 var(--progress));
+    color: #2f2945;
     position: relative;
+    box-shadow: 0 18px 28px rgba(36, 31, 57, 0.08);
 
     ion-icon {
       position: absolute;
       top: 26%;
       font-size: 28px;
-      opacity: 0.75;
+      opacity: 0.72;
     }
   }
 
@@ -102,15 +107,15 @@
     justify-content: space-between;
     gap: 10px;
     margin-top: 18px;
-    color: #6a644f;
+    color: #6f688c;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &__details {
     h2 {
       margin: 0 0 16px;
-      color: #20233e;
+      color: #211c36;
       font-size: 24px;
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -122,20 +127,20 @@
     justify-content: space-between;
     gap: 16px;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(201, 190, 166, 0.48);
+    border-bottom: 1px solid rgba(195, 186, 217, 0.32);
 
     &:last-child {
       border-bottom: 0;
     }
 
     span {
-      color: #8a826b;
+      color: #8a84a4;
       font-size: 14px;
       font-weight: 600;
     }
 
     strong {
-      color: #20233e;
+      color: #2b2542;
       font-size: 14px;
       font-weight: 700;
       text-align: right;
@@ -154,8 +159,39 @@
     place-items: center;
     text-align: center;
     padding: 28px;
-    color: #5f5964;
+    color: #6f688c;
     gap: 18px;
+  }
+
+  &__primary-button {
+    --background: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    --background-activated: linear-gradient(180deg, #2f2945 0%, #26203d 100%);
+    --background-hover: linear-gradient(180deg, #3a3354 0%, #2d2744 100%);
+    --border-radius: 18px;
+    --box-shadow: 0 14px 28px rgba(36, 31, 57, 0.18);
+    --color: #ffffff;
+    height: 54px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
+
+    &[disabled] {
+      --background: linear-gradient(180deg, #b6afca 0%, #a7a0bc 100%);
+      --background-activated: linear-gradient(180deg, #b6afca 0%, #a7a0bc 100%);
+      --box-shadow: none;
+      --color: rgba(255, 255, 255, 0.92);
+    }
+  }
+
+  &__secondary-button {
+    --border-color: rgba(143, 132, 176, 0.34);
+    --color: #2f2945;
+    --border-radius: 18px;
+    --background: rgba(255, 255, 255, 0.72);
+    height: 54px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: none;
   }
 
   @media (max-width: 480px) {
@@ -166,6 +202,13 @@
 
     &__detail-row strong {
       text-align: left;
+    }
+  }
+
+  @media (min-width: 700px) {
+    &__screen {
+      max-width: 720px;
+      padding-inline: 24px;
     }
   }
 }

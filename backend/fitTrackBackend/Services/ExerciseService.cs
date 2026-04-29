@@ -37,7 +37,12 @@ public class ExerciseService
         var exerciseSeconds = Math.Clamp(user?.DefaultExerciseSeconds ?? 45, 5, 3600);
         var restSeconds = Math.Clamp(user?.DefaultRestSeconds ?? 60, 5, 600);
 
-        var candidates = await FindCandidatesAsync(difficulty, muscleGroup, equipment);
+        var minimumCandidateCount = DetermineMinimumCandidateCount(targetMinutes, maxExercises);
+        var candidates = await FindCandidatesAsync(
+            difficulty,
+            muscleGroup,
+            equipment,
+            minimumCandidateCount);
 
         var selectedExercises = BuildWorkoutPlan(candidates, targetMinutes, maxExercises);
         if (selectedExercises.Count == 0)
@@ -64,7 +69,8 @@ public class ExerciseService
     private async Task<List<ExerciseDto>> FindCandidatesAsync(
         string difficulty,
         string muscleGroup,
-        string? equipment)
+        string? equipment,
+        int minimumCandidateCount)
     {
         var filterAttempts = new (string? Difficulty, string? MuscleGroup, string? Equipment)[]
         {
@@ -78,6 +84,8 @@ public class ExerciseService
             (null, null, null),
         };
 
+        List<ExerciseDto> bestCandidates = [];
+
         foreach (var filterAttempt in filterAttempts)
         {
             var candidates = await BuildCandidateQuery(
@@ -85,13 +93,18 @@ public class ExerciseService
                 filterAttempt.MuscleGroup,
                 filterAttempt.Equipment).ToListAsync();
 
-            if (candidates.Count > 0)
+            if (candidates.Count > bestCandidates.Count)
+            {
+                bestCandidates = candidates;
+            }
+
+            if (candidates.Count >= minimumCandidateCount)
             {
                 return candidates;
             }
         }
 
-        return [];
+        return bestCandidates;
     }
 
     public async Task<ExerciseDto?> GetByIdAsync(int id)
@@ -263,6 +276,21 @@ public class ExerciseService
         }
 
         return Math.Abs(remainingMinutes - exercise.DurationMinutes);
+    }
+
+    private static int DetermineMinimumCandidateCount(int targetMinutes, int maxExercises)
+    {
+        if (maxExercises <= 1)
+        {
+            return 1;
+        }
+
+        if (targetMinutes <= 10)
+        {
+            return 1;
+        }
+
+        return Math.Min(maxExercises, 3);
     }
 
     private static string ResolveDifficulty(string? difficulty, string? fallbackDifficulty)

@@ -6,13 +6,13 @@ public class GenerateWorkoutRequestDto
 {
     public int? UserId { get; set; }
 
-    [MaxLength(50)]
+    [RegularExpression("^(Beginner|Intermediate|Advanced)$")]
     public string? Difficulty { get; set; }
 
-    [MaxLength(50)]
+    [RegularExpression("^(Core|Upper|Lower|Other)$")]
     public string? MuscleGroup { get; set; }
 
-    [MaxLength(150)]
+    [RegularExpression("^(None|Mat|Dumbbell|Resistance Band|Kettlebell|Bench)$")]
     public string? Equipment { get; set; }
 
     [Range(5, 180)]

@@ -45,6 +45,11 @@
                 placeholder="https://example.com/image.jpg"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('imageUrl')) {
+              <p class="edit-exercise-page__field-error">
+                {{ getFieldError('imageUrl') }}
+              </p>
+            }
           </div>
 
           <div class="edit-exercise-page__field">
@@ -60,6 +65,11 @@
                 placeholder="https://example.com/video"
               ></ion-input>
             </ion-item>
+            @if (getFieldError('videoLink')) {
+              <p class="edit-exercise-page__field-error">
+                {{ getFieldError('videoLink') }}
+              </p>
+            }
           </div>
 
           <div class="edit-exercise-page__field">
@@ -71,9 +81,9 @@
                 data-testid="edit-exercise-name-input"
               ></ion-input>
             </ion-item>
-            @if (editExerciseForm.controls.title.touched && editExerciseForm.controls.title.invalid) {
+            @if (getFieldError('title')) {
               <p class="edit-exercise-page__field-error">
-                {{ 'edit_exercise.name_required' | t }}
+                {{ getFieldError('title') }}
               </p>
             }
           </div>
@@ -130,9 +140,17 @@
                 <ion-input
                   type="number"
                   formControlName="calories"
+                  inputmode="numeric"
+                  min="1"
+                  max="2000"
                   placeholder="50"
                 ></ion-input>
               </ion-item>
+              @if (getFieldError('calories')) {
+                <p class="edit-exercise-page__field-error">
+                  {{ getFieldError('calories') }}
+                </p>
+              }
             </div>
 
             <div class="edit-exercise-page__field edit-exercise-page__field--metric">
@@ -141,9 +159,17 @@
                 <ion-input
                   type="number"
                   formControlName="durationMinutes"
+                  inputmode="numeric"
+                  min="1"
+                  max="180"
                   placeholder="10"
                 ></ion-input>
               </ion-item>
+              @if (getFieldError('durationMinutes')) {
+                <p class="edit-exercise-page__field-error">
+                  {{ getFieldError('durationMinutes') }}
+                </p>
+              }
             </div>
           </div>
 
@@ -169,7 +195,7 @@
             expand="block"
             type="submit"
             class="edit-exercise-page__submit"
-            [disabled]="isSaving"
+            [disabled]="!canSubmit"
             data-testid="edit-exercise-submit"
           >
             {{ isSaving ? ('edit_exercise.updating' | t) : ('edit_exercise.update' | t) }}

@@ -41,6 +41,13 @@ type MuscleGroup = 'Core' | 'Upper' | 'Lower' | 'Other';
   ],
 })
 export class CreateExerciseComponent implements OnInit {
+  readonly exerciseLimits = {
+    minCalories: 1,
+    maxCalories: 2000,
+    minDurationMinutes: 1,
+    maxDurationMinutes: 180,
+  };
+  readonly urlPattern = /^https?:\/\/.+/i;
   readonly muscleGroups: MuscleGroup[] = ['Core', 'Upper', 'Lower', 'Other'];
   readonly difficultyOptions = ['Beginner', 'Intermediate', 'Advanced'];
   readonly equipmentOptions = [
@@ -57,13 +64,27 @@ export class CreateExerciseComponent implements OnInit {
   showValidationMessage = false;
 
   createExerciseForm = this.fb.group({
-    imageUrl: [''],
-    videoLink: [''],
+    imageUrl: ['', [Validators.pattern(this.urlPattern)]],
+    videoLink: ['', [Validators.pattern(this.urlPattern)]],
     title: ['', [Validators.required, Validators.maxLength(150)]],
     description: ['', [Validators.maxLength(1000)]],
     equipment: ['None'],
-    calories: [50, [Validators.required, Validators.min(0), Validators.max(5000)]],
-    durationMinutes: [10, [Validators.required, Validators.min(1), Validators.max(300)]],
+    calories: [
+      50,
+      [
+        Validators.required,
+        Validators.min(this.exerciseLimits.minCalories),
+        Validators.max(this.exerciseLimits.maxCalories),
+      ],
+    ],
+    durationMinutes: [
+      10,
+      [
+        Validators.required,
+        Validators.min(this.exerciseLimits.minDurationMinutes),
+        Validators.max(this.exerciseLimits.maxDurationMinutes),
+      ],
+    ],
     difficulty: ['Beginner', [Validators.required, Validators.maxLength(50)]],
   });
 
@@ -81,6 +102,10 @@ export class CreateExerciseComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  get canSubmit(): boolean {
+    return !this.isSaving && this.createExerciseForm.valid;
+  }
 
   selectMuscleGroup(group: MuscleGroup): void {
     this.selectedMuscleGroup = group;
@@ -130,5 +155,39 @@ export class CreateExerciseComponent implements OnInit {
         alert(this.i18nService.translate('create_exercise.save_error'));
       },
     });
+  }
+
+  getFieldError(controlName: string): string {
+    const control = this.createExerciseForm.get(controlName);
+    if (!control?.touched || !control.errors) {
+      return '';
+    }
+
+    if (controlName === 'title' && control.errors['required']) {
+      return this.i18nService.translate('create_exercise.name_required');
+    }
+
+    if ((controlName === 'imageUrl' || controlName === 'videoLink') && control.errors['pattern']) {
+      return this.i18nService.translate('create_exercise.link_invalid');
+    }
+
+    if (controlName === 'calories' && (control.errors['required'] || control.errors['min'] || control.errors['max'])) {
+      return this.i18nService.translate('create_exercise.calories_invalid', {
+        min: this.exerciseLimits.minCalories,
+        max: this.exerciseLimits.maxCalories,
+      });
+    }
+
+    if (
+      controlName === 'durationMinutes' &&
+      (control.errors['required'] || control.errors['min'] || control.errors['max'])
+    ) {
+      return this.i18nService.translate('create_exercise.minutes_invalid', {
+        min: this.exerciseLimits.minDurationMinutes,
+        max: this.exerciseLimits.maxDurationMinutes,
+      });
+    }
+
+    return '';
   }
 }
