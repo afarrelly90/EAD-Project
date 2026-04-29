@@ -9,6 +9,13 @@ export interface AuthUserProfile {
   email: string;
   weight: number | null;
   language: string;
+  preferredDifficulty: string;
+  preferredMuscleGroup: string;
+  preferredWorkoutMinutes: number;
+  preferredEquipment: string | null;
+  defaultSets: number;
+  defaultExerciseSeconds: number;
+  defaultRestSeconds: number;
 }
 
 export interface AuthLoginResponse {
@@ -19,6 +26,13 @@ export interface AuthLoginResponse {
 export interface UpdateProfileDto {
   weight: number | null;
   language: string;
+  preferredDifficulty: string;
+  preferredMuscleGroup: string;
+  preferredWorkoutMinutes: number;
+  preferredEquipment: string | null;
+  defaultSets: number;
+  defaultExerciseSeconds: number;
+  defaultRestSeconds: number;
 }
 
 @Injectable({

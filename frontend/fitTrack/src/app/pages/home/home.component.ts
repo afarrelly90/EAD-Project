@@ -7,6 +7,7 @@ import {
   addOutline,
   chevronForwardOutline,
   closeOutline,
+  flashOutline,
   personCircleOutline,
   searchOutline,
 } from 'ionicons/icons';
@@ -58,6 +59,7 @@ export class HomeComponent implements OnInit {
       addOutline,
       chevronForwardOutline,
       closeOutline,
+      flashOutline,
       personCircleOutline,
       searchOutline,
     });

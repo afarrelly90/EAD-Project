@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var sqlServerConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 var sqliteConnection =
     builder.Configuration.GetConnectionString("SqliteConnection") ??
-    "Data Source=app.db";
+    GetDefaultSqliteConnection(builder.Environment);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -54,16 +54,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    if (db.Database.IsSqlServer())
-    {
-        // Azure SQL is a fresh database, so bootstrap the schema directly from the model.
-        db.Database.EnsureCreated();
-    }
-    else
-    {
-        db.Database.Migrate();
-    }
+    db.Database.Migrate();
 }
 
 app.UseCors("AllowFrontend");
@@ -74,3 +65,21 @@ app.UseSwaggerUI();
 app.MapControllers();
 
 app.Run();
+
+static string GetDefaultSqliteConnection(IHostEnvironment environment)
+{
+    if (environment.IsDevelopment())
+    {
+        return "Data Source=app.db";
+    }
+
+    var homeDirectory = Environment.GetEnvironmentVariable("HOME");
+    if (!string.IsNullOrWhiteSpace(homeDirectory))
+    {
+        var dataDirectory = Path.Combine(homeDirectory, "data", "fittrack");
+        Directory.CreateDirectory(dataDirectory);
+        return $"Data Source={Path.Combine(dataDirectory, "app.db")}";
+    }
+
+    return $"Data Source={Path.Combine(AppContext.BaseDirectory, "app.db")}";
+}

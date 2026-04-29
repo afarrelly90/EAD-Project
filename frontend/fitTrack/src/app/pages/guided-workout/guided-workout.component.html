@@ -1,0 +1,91 @@
+<ion-content fullscreen class="guided-workout-page">
+  @if (hasError || !workout) {
+    <div class="guided-workout-page__state" data-testid="guided-workout-error-state">
+      <p>{{ 'guided_workout.error' | t }}</p>
+      <ion-button
+        type="button"
+        class="guided-workout-page__primary-button"
+        data-testid="guided-workout-return-button"
+        (click)="goBack()"
+      >
+        {{ 'guided_workout.return_to_builder' | t }}
+      </ion-button>
+    </div>
+  } @else {
+    <div class="guided-workout-page__screen">
+      <button
+        type="button"
+        class="guided-workout-page__back-button"
+        [attr.aria-label]="'common.back' | t"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <section class="guided-workout-page__hero">
+        <p class="guided-workout-page__eyebrow">{{ 'guided_workout.eyebrow' | t }}</p>
+        <h1 class="guided-workout-page__title" data-testid="guided-workout-title">{{ currentExercise?.title || workout.title }}</h1>
+        <p class="guided-workout-page__message" data-testid="guided-workout-message">{{ statusMessage }}</p>
+      </section>
+
+      <section class="guided-workout-page__ring-card">
+        <div class="guided-workout-page__phase-pill" data-testid="guided-workout-phase">{{ phaseLabel }}</div>
+
+        <div class="guided-workout-page__ring" [style.--progress]="timerProgressPercent + '%'">
+          <ion-icon name="timer-outline"></ion-icon>
+          <div class="guided-workout-page__countdown" data-testid="guided-workout-countdown">{{ timerDisplayTime }}</div>
+        </div>
+
+        <div class="guided-workout-page__summary">
+          <span>{{ 'guided_workout.exercise_progress' | t:{ current: currentExerciseIndex + 1, total: workout.exercises.length } }}</span>
+          <span>{{ 'guided_workout.set_progress' | t:{ current: currentSet, total: workout.prescribedSets } }}</span>
+        </div>
+      </section>
+
+      <section class="guided-workout-page__details">
+        <h2 data-testid="guided-workout-status-title">{{ statusTitle }}</h2>
+        <div class="guided-workout-page__detail-row">
+          <span>{{ 'guided_workout.plan_label' | t }}</span>
+          <strong>{{ workout.title }}</strong>
+        </div>
+        <div class="guided-workout-page__detail-row">
+          <span>{{ 'guided_workout.duration_label' | t }}</span>
+          <strong>{{ workout.totalMinutes }} {{ 'common.minutes_short' | t }}</strong>
+        </div>
+        <div class="guided-workout-page__detail-row">
+          <span>{{ 'guided_workout.preset_label' | t }}</span>
+          <strong>
+            {{ 'guided_workout.preset_value' | t:{ sets: workout.prescribedSets, exercise: workout.exerciseSeconds, rest: workout.restSeconds } }}
+          </strong>
+        </div>
+      </section>
+
+      <section class="guided-workout-page__actions">
+        <ion-button
+          expand="block"
+          type="button"
+          class="guided-workout-page__primary-button"
+          data-testid="guided-workout-start-button"
+          [disabled]="workoutStarted"
+          (click)="startWorkout()"
+        >
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          {{ 'guided_workout.start' | t }}
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          type="button"
+          class="guided-workout-page__secondary-button"
+          data-testid="guided-workout-reset-button"
+          [disabled]="!workoutStarted && !workoutComplete"
+          (click)="resetWorkout()"
+        >
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          {{ 'guided_workout.reset' | t }}
+        </ion-button>
+      </section>
+    </div>
+  }
+</ion-content>

@@ -78,6 +78,15 @@ namespace fitTrack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("DefaultExerciseSeconds")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DefaultRestSeconds")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DefaultSets")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -93,6 +102,23 @@ namespace fitTrack.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("PreferredDifficulty")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreferredEquipment")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreferredMuscleGroup")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PreferredWorkoutMinutes")
+                        .HasColumnType("INTEGER");
 
                     b.Property<double?>("Weight")
                         .HasColumnType("REAL");

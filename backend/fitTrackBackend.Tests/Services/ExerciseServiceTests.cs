@@ -113,4 +113,108 @@ public class ExerciseServiceTests
         Assert.True(result);
         Assert.Empty(context.Exercises);
     }
+
+    [Fact]
+    public async Task GenerateWorkoutAsync_UsesUserPreferences_WhenRequestDoesNotOverrideThem()
+    {
+        using var context = TestDbContextFactory.CreateContext(nameof(GenerateWorkoutAsync_UsesUserPreferences_WhenRequestDoesNotOverrideThem));
+        context.Users.Add(new User
+        {
+            FullName = "Planner User",
+            Email = "planner@test.com",
+            PasswordHash = "hash",
+            Language = "en",
+            PreferredDifficulty = "Beginner",
+            PreferredMuscleGroup = "Lower",
+            PreferredWorkoutMinutes = 25,
+            PreferredEquipment = "Bench",
+            DefaultSets = 5,
+            DefaultExerciseSeconds = 35,
+            DefaultRestSeconds = 45
+        });
+        context.Exercises.AddRange(
+            new Exercise
+            {
+                Title = "Bench Step-Up",
+                Calories = 60,
+                IsLowerBody = true,
+                Difficulty = "Beginner",
+                DurationMinutes = 12,
+                Equipment = "Bench"
+            },
+            new Exercise
+            {
+                Title = "Bench Split Squat",
+                Calories = 70,
+                IsLowerBody = true,
+                Difficulty = "Beginner",
+                DurationMinutes = 14,
+                Equipment = "Bench"
+            });
+        await context.SaveChangesAsync();
+
+        var service = new ExerciseService(context);
+
+        var workout = await service.GenerateWorkoutAsync(new GenerateWorkoutRequestDto
+        {
+            UserId = 1
+        });
+
+        Assert.NotNull(workout);
+        Assert.Equal("Beginner", workout!.Difficulty);
+        Assert.Equal("Lower", workout.MuscleGroup);
+        Assert.Equal(25, workout.TargetMinutes);
+        Assert.Equal(5, workout.PrescribedSets);
+        Assert.Equal(35, workout.ExerciseSeconds);
+        Assert.Equal(45, workout.RestSeconds);
+        Assert.All(workout.Exercises, x => Assert.Equal("Bench", x.Equipment));
+    }
+
+    [Fact]
+    public async Task GenerateWorkoutAsync_BroadensCriteria_WhenExactMatchOnlyReturnsOneExercise()
+    {
+        using var context = TestDbContextFactory.CreateContext(nameof(GenerateWorkoutAsync_BroadensCriteria_WhenExactMatchOnlyReturnsOneExercise));
+        context.Exercises.AddRange(
+            new Exercise
+            {
+                Title = "Push-Ups",
+                Calories = 80,
+                IsUpperBody = true,
+                Difficulty = "Intermediate",
+                DurationMinutes = 12
+            },
+            new Exercise
+            {
+                Title = "Dumbbell Press",
+                Calories = 75,
+                IsUpperBody = true,
+                Difficulty = "Beginner",
+                DurationMinutes = 10,
+                Equipment = "Dumbbell"
+            },
+            new Exercise
+            {
+                Title = "Step-Up",
+                Calories = 60,
+                IsLowerBody = true,
+                Difficulty = "Intermediate",
+                DurationMinutes = 10
+            });
+        await context.SaveChangesAsync();
+
+        var service = new ExerciseService(context);
+
+        var workout = await service.GenerateWorkoutAsync(new GenerateWorkoutRequestDto
+        {
+            Difficulty = "Intermediate",
+            MuscleGroup = "Upper",
+            TargetMinutes = 20,
+            MaxExercises = 4
+        });
+
+        Assert.NotNull(workout);
+        Assert.Equal(2, workout!.Exercises.Count);
+        Assert.Contains(workout.Exercises, x => x.Title == "Push-Ups");
+        Assert.Contains(workout.Exercises, x => x.Title == "Dumbbell Press");
+    }
 }

@@ -189,6 +189,12 @@
     margin-bottom: 16px;
   }
 
+  &__field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
   &__label {
     display: block;
     margin-bottom: 8px;
@@ -213,6 +219,13 @@
     color: #8a84a4;
     font-size: 12px;
     font-weight: 500;
+  }
+
+  &__field-error {
+    margin: 8px 4px 0;
+    color: #a14f71;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   &__save-button {
@@ -294,6 +307,11 @@
     &__sheet-header,
     &__info-row {
       flex-direction: column;
+    }
+
+    &__field-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
 
     &__edit-button {

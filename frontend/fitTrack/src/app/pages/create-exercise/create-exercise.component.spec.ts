@@ -85,8 +85,8 @@ describe('CreateExerciseComponent', () => {
   it('should submit the exercise and navigate on success', () => {
     component.selectMuscleGroup('Upper');
     component.createExerciseForm.patchValue({
-      imageUrl: ' https://example.com/image.jpg ',
-      videoLink: ' https://example.com/video ',
+      imageUrl: 'https://example.com/image.jpg',
+      videoLink: 'https://example.com/video',
       title: ' Push-Ups ',
       description: ' Upper body exercise ',
       equipment: 'Dumbbell',

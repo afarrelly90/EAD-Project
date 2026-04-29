@@ -66,6 +66,56 @@ public class ExercisesControllerTests
     }
 
     [Fact]
+    public async Task GenerateWorkout_ReturnsPlan_WhenExercisesMatchCriteria()
+    {
+        using var context = TestDbContextFactory.CreateContext(nameof(GenerateWorkout_ReturnsPlan_WhenExercisesMatchCriteria));
+        context.Users.Add(new User
+        {
+            FullName = "Planner User",
+            Email = "planner@test.com",
+            PasswordHash = "hash",
+            Language = "en",
+            PreferredDifficulty = "Intermediate",
+            PreferredMuscleGroup = "Core",
+            PreferredWorkoutMinutes = 18,
+            DefaultSets = 4,
+            DefaultExerciseSeconds = 40,
+            DefaultRestSeconds = 55
+        });
+        context.Exercises.AddRange(
+            new Exercise
+            {
+                Title = "Plank",
+                Calories = 40,
+                IsCore = true,
+                Difficulty = "Intermediate",
+                DurationMinutes = 8
+            },
+            new Exercise
+            {
+                Title = "Russian Twists",
+                Calories = 50,
+                IsCore = true,
+                Difficulty = "Intermediate",
+                DurationMinutes = 10
+            });
+        await context.SaveChangesAsync();
+
+        var controller = new ExercisesController(new ExerciseService(context));
+
+        var result = await controller.GenerateWorkout(new GenerateWorkoutRequestDto
+        {
+            UserId = 1
+        });
+
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var workout = Assert.IsType<GeneratedWorkoutDto>(okResult.Value);
+        Assert.Equal(18, workout.TargetMinutes);
+        Assert.Equal(4, workout.PrescribedSets);
+        Assert.Equal(2, workout.Exercises.Count);
+    }
+
+    [Fact]
     public async Task Update_ReturnsOkWithUpdatedExercise()
     {
         using var context = TestDbContextFactory.CreateContext(nameof(Update_ReturnsOkWithUpdatedExercise));

@@ -1,0 +1,198 @@
+<ion-content fullscreen class="workout-builder-page">
+  <div class="workout-builder-page__screen">
+    <header class="workout-builder-page__hero">
+      <button
+        type="button"
+        class="workout-builder-page__back-button"
+        [attr.aria-label]="'common.back' | t"
+        (click)="goBack()"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+
+      <div class="workout-builder-page__hero-copy">
+        <p class="workout-builder-page__eyebrow">{{ 'builder.eyebrow' | t }}</p>
+        <h1 class="workout-builder-page__title" data-testid="builder-title">{{ 'builder.title' | t }}</h1>
+        <p class="workout-builder-page__subtitle">{{ 'builder.subtitle' | t }}</p>
+      </div>
+    </header>
+
+    <section class="workout-builder-page__card">
+      <div class="workout-builder-page__card-header">
+        <div>
+          <p class="workout-builder-page__section-label">{{ 'builder.form_label' | t }}</p>
+          <h2 class="workout-builder-page__section-title">{{ 'builder.form_title' | t }}</h2>
+        </div>
+
+        <button
+          type="button"
+          class="workout-builder-page__pill-button"
+          data-testid="builder-use-profile-button"
+          [disabled]="isLoadingProfile"
+          (click)="applySavedPreferences()"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+          {{ 'builder.use_profile' | t }}
+        </button>
+      </div>
+
+      <form [formGroup]="builderForm">
+        <div class="workout-builder-page__field-grid">
+          <label class="workout-builder-page__field">
+            <span>{{ 'builder.fields.difficulty' | t }}</span>
+            <ion-item lines="none" class="workout-builder-page__input">
+              <ion-select formControlName="difficulty" interface="action-sheet">
+                <ion-select-option *ngFor="let option of difficultyOptions" [value]="option">
+                  {{ ('exercise.difficulty_options.' + option.toLowerCase()) | t }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </label>
+
+          <label class="workout-builder-page__field">
+            <span>{{ 'builder.fields.muscle_group' | t }}</span>
+            <ion-item lines="none" class="workout-builder-page__input">
+              <ion-select formControlName="muscleGroup" interface="action-sheet">
+                <ion-select-option *ngFor="let option of muscleGroupOptions" [value]="option">
+                  {{ ('exercise.muscle_groups.' + option.toLowerCase()) | t }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </label>
+        </div>
+
+        <div class="workout-builder-page__field-grid">
+          <label class="workout-builder-page__field">
+            <span>{{ 'builder.fields.equipment' | t }}</span>
+            <ion-item lines="none" class="workout-builder-page__input">
+              <ion-select formControlName="equipment" interface="action-sheet">
+                <ion-select-option *ngFor="let option of equipmentOptions" [value]="option">
+                  {{ ('exercise.equipment_options.' + option.toLowerCase().replace(' ', '_')) | t }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </label>
+
+          <label class="workout-builder-page__field">
+            <span>{{ 'builder.fields.target_minutes' | t }}</span>
+            <ion-item lines="none" class="workout-builder-page__input">
+              <ion-input
+                type="number"
+                inputmode="numeric"
+                min="5"
+                max="180"
+                data-testid="builder-target-minutes-input"
+                formControlName="targetMinutes"
+              ></ion-input>
+            </ion-item>
+            @if (getFieldError('targetMinutes')) {
+              <p class="workout-builder-page__field-error">{{ getFieldError('targetMinutes') }}</p>
+            }
+          </label>
+        </div>
+
+        <label class="workout-builder-page__field">
+          <span>{{ 'builder.fields.max_exercises' | t }}</span>
+          <ion-item lines="none" class="workout-builder-page__input">
+            <ion-input
+              type="number"
+              inputmode="numeric"
+              min="1"
+              max="8"
+              data-testid="builder-max-exercises-input"
+              formControlName="maxExercises"
+            ></ion-input>
+          </ion-item>
+          @if (getFieldError('maxExercises')) {
+            <p class="workout-builder-page__field-error">{{ getFieldError('maxExercises') }}</p>
+          }
+        </label>
+
+        @if (hasError) {
+          <p class="workout-builder-page__error">{{ errorMessage || ('builder.error' | t) }}</p>
+        }
+
+        @if (showValidationMessage) {
+          <p class="workout-builder-page__validation">{{ 'builder.validation' | t }}</p>
+        }
+
+        <ion-button
+          expand="block"
+          type="button"
+          data-testid="builder-generate-button"
+          class="workout-builder-page__primary-button"
+          [disabled]="!canGenerateWorkout"
+          (click)="generateWorkout()"
+        >
+          <ion-icon name="sparkles-outline" slot="start"></ion-icon>
+          {{ isGenerating ? ('builder.generating' | t) : ('builder.generate' | t) }}
+        </ion-button>
+      </form>
+    </section>
+
+    @if (generatedWorkout) {
+      <section class="workout-builder-page__preview" data-testid="builder-preview">
+        <div class="workout-builder-page__preview-header">
+          <div>
+            <p class="workout-builder-page__section-label">{{ 'builder.preview_label' | t }}</p>
+            <h2 class="workout-builder-page__section-title">{{ generatedWorkout.title }}</h2>
+          </div>
+
+          <button
+            type="button"
+            class="workout-builder-page__pill-button"
+            data-testid="builder-clear-button"
+            (click)="clearWorkout()"
+          >
+            {{ 'builder.clear' | t }}
+          </button>
+        </div>
+
+        <div class="workout-builder-page__stats">
+          <div class="workout-builder-page__stat">
+            <span>{{ 'builder.summary.total_minutes' | t }}</span>
+            <strong>{{ generatedWorkout.totalMinutes }} {{ 'common.minutes_short' | t }}</strong>
+          </div>
+
+          <div class="workout-builder-page__stat">
+            <span>{{ 'builder.summary.total_calories' | t }}</span>
+            <strong>{{ generatedWorkout.totalCalories }} {{ 'common.calories_short' | t }}</strong>
+          </div>
+
+          <div class="workout-builder-page__stat">
+            <span>{{ 'builder.summary.exercise_count' | t }}</span>
+            <strong>{{ generatedWorkout.exercises.length }}</strong>
+          </div>
+        </div>
+
+        <p class="workout-builder-page__preset">{{ presetSummary }}</p>
+
+        <div class="workout-builder-page__exercise-list">
+          <article
+            *ngFor="let exercise of generatedWorkout.exercises; let index = index; trackBy: trackByExerciseId"
+            class="workout-builder-page__exercise-card"
+            data-testid="builder-exercise-card"
+          >
+            <div class="workout-builder-page__exercise-index">{{ index + 1 }}</div>
+            <div class="workout-builder-page__exercise-copy">
+              <h3>{{ exercise.title }}</h3>
+              <p>{{ exercise.durationMinutes }} {{ 'common.minutes_short' | t }} | {{ exercise.calories }} {{ 'common.calories_short' | t }}</p>
+              <p>{{ translateEquipment(exercise.equipment) }}</p>
+            </div>
+          </article>
+        </div>
+
+        <ion-button
+          expand="block"
+          type="button"
+          data-testid="builder-start-guided-button"
+          class="workout-builder-page__primary-button"
+          (click)="startGuidedWorkout()"
+        >
+          <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+          {{ 'builder.start_guided' | t }}
+        </ion-button>
+      </section>
+    }
+  </div>
+</ion-content>

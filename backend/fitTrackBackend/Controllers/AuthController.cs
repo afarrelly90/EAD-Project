@@ -57,14 +57,7 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             token,
-            user = new
-            {
-                user.Id,
-                user.FullName,
-                user.Email,
-                user.Weight,
-                user.Language
-            }
+            user = MapProfile(user)
         });
     }
 
@@ -93,21 +86,70 @@ public class AuthController : ControllerBase
 
         user.Weight = dto.Weight;
         user.Language = string.IsNullOrWhiteSpace(dto.Language) ? "en" : dto.Language;
+        user.PreferredDifficulty = NormalizeDifficulty(dto.PreferredDifficulty);
+        user.PreferredMuscleGroup = NormalizeMuscleGroup(dto.PreferredMuscleGroup);
+        user.PreferredWorkoutMinutes = Math.Clamp(dto.PreferredWorkoutMinutes, 5, 180);
+        user.PreferredEquipment = NormalizeEquipment(dto.PreferredEquipment);
+        user.DefaultSets = Math.Clamp(dto.DefaultSets, 1, 10);
+        user.DefaultExerciseSeconds = Math.Clamp(dto.DefaultExerciseSeconds, 5, 3600);
+        user.DefaultRestSeconds = Math.Clamp(dto.DefaultRestSeconds, 5, 600);
 
         await _context.SaveChangesAsync();
 
         return Ok(MapProfile(user));
     }
 
-    private static object MapProfile(User user)
+    private static UserProfileDto MapProfile(User user)
     {
-        return new
+        return new UserProfileDto
         {
-            user.Id,
-            user.FullName,
-            user.Email,
-            user.Weight,
-            user.Language
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Weight = user.Weight,
+            Language = user.Language,
+            PreferredDifficulty = NormalizeDifficulty(user.PreferredDifficulty),
+            PreferredMuscleGroup = NormalizeMuscleGroup(user.PreferredMuscleGroup),
+            PreferredWorkoutMinutes = user.PreferredWorkoutMinutes <= 0 ? 20 : user.PreferredWorkoutMinutes,
+            PreferredEquipment = NormalizeEquipment(user.PreferredEquipment),
+            DefaultSets = user.DefaultSets <= 0 ? 3 : user.DefaultSets,
+            DefaultExerciseSeconds = user.DefaultExerciseSeconds <= 0 ? 45 : user.DefaultExerciseSeconds,
+            DefaultRestSeconds = user.DefaultRestSeconds <= 0 ? 60 : user.DefaultRestSeconds
+        };
+    }
+
+    private static string NormalizeDifficulty(string? difficulty)
+    {
+        return difficulty?.Trim().ToLowerInvariant() switch
+        {
+            "advanced" => "Advanced",
+            "intermediate" => "Intermediate",
+            _ => "Beginner"
+        };
+    }
+
+    private static string NormalizeMuscleGroup(string? muscleGroup)
+    {
+        return muscleGroup?.Trim().ToLowerInvariant() switch
+        {
+            "upper" => "Upper",
+            "lower" => "Lower",
+            "other" => "Other",
+            _ => "Core"
+        };
+    }
+
+    private static string? NormalizeEquipment(string? equipment)
+    {
+        if (string.IsNullOrWhiteSpace(equipment))
+        {
+            return null;
+        }
+
+        return equipment.Trim().ToLowerInvariant() switch
+        {
+            "none" => null,
+            _ => equipment.Trim()
         };
     }
 }

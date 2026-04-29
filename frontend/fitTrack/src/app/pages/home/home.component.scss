@@ -92,6 +92,13 @@
     border-radius: 34px;
   }
 
+  &__quick-card {
+    margin-top: 16px;
+    padding: clamp(16px, 4vw, 24px);
+    background: rgba(255, 255, 255, 0.58);
+    border-radius: 34px;
+  }
+
   &__create-action {
     width: 100%;
     border: 0;
@@ -141,6 +148,59 @@
   }
 
   &__create-arrow {
+    font-size: 28px;
+    color: #fff;
+  }
+
+  &__quick-action {
+    width: 100%;
+    border: 0;
+    border-radius: 30px;
+    padding: 18px 20px 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(90deg, #22233e, #46507a);
+    text-align: left;
+  }
+
+  &__quick-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    display: grid;
+    place-items: center;
+    color: #fff4c2;
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  &__quick-copy {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__quick-title {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__quick-subtitle {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  &__quick-arrow {
     font-size: 28px;
     color: #fff;
   }

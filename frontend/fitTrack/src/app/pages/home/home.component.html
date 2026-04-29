@@ -60,6 +60,29 @@
       </button>
     </section>
 
+    <section class="home-page__quick-card" data-testid="home-workout-builder-card">
+      <button
+        type="button"
+        class="home-page__quick-action"
+        data-testid="home-workout-builder-action"
+        routerLink="/workouts/build"
+      >
+        <span class="home-page__quick-icon">
+          <ion-icon name="flash-outline"></ion-icon>
+        </span>
+
+        <span class="home-page__quick-copy">
+          <span class="home-page__quick-title">{{ 'home.builder_title' | t }}</span>
+          <span class="home-page__quick-subtitle">{{ 'home.builder_subtitle' | t }}</span>
+        </span>
+
+        <ion-icon
+          name="chevron-forward-outline"
+          class="home-page__quick-arrow"
+        ></ion-icon>
+      </button>
+    </section>
+
     <section class="home-page__section" data-testid="home-exercises-section">
       <div class="home-page__section-header">
         <h2 class="home-page__section-title">{{ 'home.all_exercises' | t }}</h2>

@@ -19,7 +19,7 @@ public class CreateExerciseDto
     [MaxLength(500)]
     public string? ImageUrl { get; set; }
 
-    [Range(0, 5000)]
+    [Range(1, 2000)]
     public int Calories { get; set; }
 
     public bool IsCore { get; set; }
@@ -28,12 +28,14 @@ public class CreateExerciseDto
 
     public bool IsLowerBody { get; set; }
 
-    [MaxLength(50)]
+    [Required]
+    [RegularExpression("^(Beginner|Intermediate|Advanced)$")]
     public string Difficulty { get; set; } = "Beginner";
 
-    [Range(1, 300)]
+    [Range(1, 180)]
     public int DurationMinutes { get; set; } = 10;
 
     [MaxLength(150)]
+    [RegularExpression("^(Mat|Dumbbell|Resistance Band|Kettlebell|Bench)$")]
     public string? Equipment { get; set; }
 }
