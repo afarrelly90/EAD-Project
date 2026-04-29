@@ -27,6 +27,13 @@ describe('ProfileComponent', () => {
     email: 'test@test.com',
     weight: null,
     language: 'en',
+    preferredDifficulty: 'Beginner',
+    preferredMuscleGroup: 'Core',
+    preferredWorkoutMinutes: 20,
+    preferredEquipment: null,
+    defaultSets: 3,
+    defaultExerciseSeconds: 45,
+    defaultRestSeconds: 60,
   };
 
   beforeEach(async () => {
@@ -71,19 +78,46 @@ describe('ProfileComponent', () => {
 
   it('should update the profile and persist the new data', () => {
     component.toggleEditing();
-    component.profileForm.setValue({ weight: 75.4, language: 'pt' });
+    component.profileForm.setValue({
+      weight: 75.4,
+      language: 'pt',
+      preferredDifficulty: 'Advanced',
+      preferredMuscleGroup: 'Upper',
+      preferredWorkoutMinutes: 35,
+      preferredEquipment: 'Dumbbell',
+      defaultSets: 4,
+      defaultExerciseSeconds: 50,
+      defaultRestSeconds: 75,
+    });
 
     component.saveProfile();
 
     const req = httpMock.expectOne(`${apiUrl}/profile/1`);
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual({ weight: 75.4, language: 'pt' });
+    expect(req.request.body).toEqual({
+      weight: 75.4,
+      language: 'pt',
+      preferredDifficulty: 'Advanced',
+      preferredMuscleGroup: 'Upper',
+      preferredWorkoutMinutes: 35,
+      preferredEquipment: 'Dumbbell',
+      defaultSets: 4,
+      defaultExerciseSeconds: 50,
+      defaultRestSeconds: 75,
+    });
     req.flush({
       id: 1,
       fullName: 'Test User',
       email: 'test@test.com',
       weight: 75.4,
       language: 'it',
+      preferredDifficulty: 'Advanced',
+      preferredMuscleGroup: 'Upper',
+      preferredWorkoutMinutes: 35,
+      preferredEquipment: 'Dumbbell',
+      defaultSets: 4,
+      defaultExerciseSeconds: 50,
+      defaultRestSeconds: 75,
     });
 
     expect(JSON.parse(localStorage.getItem('user') || 'null')).toEqual({
@@ -92,6 +126,13 @@ describe('ProfileComponent', () => {
       email: 'test@test.com',
       weight: 75.4,
       language: 'it',
+      preferredDifficulty: 'Advanced',
+      preferredMuscleGroup: 'Upper',
+      preferredWorkoutMinutes: 35,
+      preferredEquipment: 'Dumbbell',
+      defaultSets: 4,
+      defaultExerciseSeconds: 50,
+      defaultRestSeconds: 75,
     });
   });
 
