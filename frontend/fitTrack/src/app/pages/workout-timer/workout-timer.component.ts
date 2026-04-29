@@ -5,6 +5,7 @@ import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, refreshOutline, timerOutline } from 'ionicons/icons';
 import { TranslatePipe } from 'src/app/pipes/translate.pipe';
+import { CountdownTimer } from 'src/app/services/countdown-timer';
 import { ExerciseDto, ExerciseService } from 'src/app/services/exercise';
 import { I18nService } from 'src/app/services/i18n.service';
 
@@ -39,10 +40,7 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   workoutStarted = false;
   workoutComplete = false;
   private currentPhase: WorkoutPhase = 'idle';
-  private timerId: ReturnType<typeof setInterval> | null = null;
-  private phaseRemainingMs = 0;
-  private phaseDurationMs = 0;
-  private lastTickAt = 0;
+  private readonly countdownTimer = new CountdownTimer();
 
   private readonly setsRange: NumberRange = [this.minSets, this.maxSets];
   private readonly exerciseSecondsRange: NumberRange = [
@@ -72,7 +70,7 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
   }
 
   get nextSetNumber(): number {
@@ -203,7 +201,7 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   get secondsRemaining(): number {
-    return Math.ceil(this.phaseRemainingMs / 1000);
+    return this.countdownTimer.secondsRemaining;
   }
 
   get isWorkoutConfigValid(): boolean {
@@ -242,11 +240,11 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
       return 0;
     }
 
-    if (this.phaseDurationMs <= 0) {
+    if (this.countdownTimer.durationMs <= 0) {
       return 0;
     }
 
-    return ((this.phaseDurationMs - this.phaseRemainingMs) / this.phaseDurationMs) * 100;
+    return this.countdownTimer.progressPercent;
   }
 
   private get activePhaseDuration(): number {
@@ -312,14 +310,11 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   resetWorkoutTimer(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
     this.currentSet = 1;
     this.workoutStarted = false;
     this.workoutComplete = false;
     this.currentPhase = 'idle';
-    this.phaseRemainingMs = 0;
-    this.phaseDurationMs = 0;
-    this.lastTickAt = 0;
     this.plannedSetsInput = this.plannedSets.toString();
     this.exerciseSecondsInput = this.exerciseSeconds.toString();
     this.restSecondsInput = this.restSeconds.toString();
@@ -351,7 +346,7 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   private beginWorkout(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
     this.currentSet = 1;
     this.workoutStarted = true;
     this.workoutComplete = false;
@@ -360,32 +355,10 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
 
   private startPhase(phase: Extract<WorkoutPhase, 'exercise' | 'rest'>, seconds: number): void {
     this.currentPhase = phase;
-    this.setPhaseDuration(seconds);
-    this.startTicking();
-  }
-
-  private startTicking(): void {
-    this.clearTimer();
-    this.lastTickAt = Date.now();
-
-    this.timerId = setInterval(() => {
-      const now = Date.now();
-      const elapsedMs = Math.max(now - this.lastTickAt, 0);
-      this.lastTickAt = now;
-
-      if (this.phaseRemainingMs > 0) {
-        this.phaseRemainingMs = Math.max(this.phaseRemainingMs - elapsedMs, 0);
-      }
-
-      if (this.phaseRemainingMs === 0) {
-        this.advanceWorkoutPhase();
-      }
-    }, 100);
+    this.countdownTimer.start(seconds, () => this.advanceWorkoutPhase());
   }
 
   private advanceWorkoutPhase(): void {
-    this.clearTimer();
-
     if (this.isExerciseActive) {
       if (this.currentSet >= this.plannedSets) {
         this.completeWorkout();
@@ -403,23 +376,9 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   private completeWorkout(): void {
-    this.clearTimer();
+    this.countdownTimer.reset();
     this.currentPhase = 'complete';
-    this.phaseRemainingMs = 0;
-    this.phaseDurationMs = 0;
     this.workoutComplete = true;
-  }
-
-  private clearTimer(): void {
-    if (this.timerId !== null) {
-      clearInterval(this.timerId);
-      this.timerId = null;
-    }
-  }
-
-  private setPhaseDuration(seconds: number): void {
-    this.phaseDurationMs = seconds * 1000;
-    this.phaseRemainingMs = this.phaseDurationMs;
   }
 
   private updateDurationValue(
@@ -441,8 +400,8 @@ export class WorkoutTimerComponent implements OnInit, OnDestroy {
   }
 
   private syncActivePhaseDuration(seconds: number, isActive: boolean): void {
-    if (isActive && this.phaseRemainingMs > seconds * 1000) {
-      this.setPhaseDuration(seconds);
+    if (isActive && this.countdownTimer.remainingMs > seconds * 1000) {
+      this.countdownTimer.setDuration(seconds);
     }
   }
 
