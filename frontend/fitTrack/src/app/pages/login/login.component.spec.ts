@@ -60,7 +60,7 @@ describe('LoginComponent', () => {
   it('should call login API and store token + navigate on success', () => {
     const formData = {
       email: 'test@test.com',
-      password: '123456'
+      password: '12345678'
     };
 
     const mockResponse = {
@@ -96,7 +96,7 @@ describe('LoginComponent', () => {
 
     const formData = {
       email: 'test@test.com',
-      password: 'wrong'
+      password: 'wrongpass'
     };
 
     component.loginForm.setValue(formData);
@@ -109,5 +109,15 @@ describe('LoginComponent', () => {
     req.flush('Error', { status: 401, statusText: 'Unauthorized' });
 
     expect(window.alert).toHaveBeenCalledWith('Invalid credentials');
+  });
+
+  it('should reject short passwords on the form', () => {
+    component.loginForm.setValue({
+      email: 'test@test.com',
+      password: '1234567'
+    });
+
+    expect(component.loginForm.invalid).toBeTrue();
+    expect(component.loginForm.get('password')?.errors?.['minlength']).toBeTruthy();
   });
 });

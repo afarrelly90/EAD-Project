@@ -23,15 +23,19 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
-        if (await _context.Users.AnyAsync(x => x.Email == dto.Email))
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+        var normalizedFullName = dto.FullName.Trim();
+        var normalizedLanguage = string.IsNullOrWhiteSpace(dto.Language) ? "en" : dto.Language.Trim().ToLowerInvariant();
+
+        if (await _context.Users.AnyAsync(x => x.Email == normalizedEmail))
             return BadRequest("Email already exists");
 
         var user = new User
         {
-            FullName = dto.FullName,
-            Email = dto.Email,
+            FullName = normalizedFullName,
+            Email = normalizedEmail,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Language = dto.Language ?? "en",
+            Language = normalizedLanguage,
         };
 
         _context.Users.Add(user);
@@ -43,8 +47,10 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
+        var normalizedEmail = dto.Email.Trim().ToLowerInvariant();
+
         var user = await _context.Users
-            .FirstOrDefaultAsync(x => x.Email == dto.Email);
+            .FirstOrDefaultAsync(x => x.Email == normalizedEmail);
 
         if (user == null ||
             !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))

@@ -5,11 +5,28 @@ using FitTrackApi.Services;
 using fitTrack.Controllers;
 using fitTrackBackend.Tests.TestHelpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 
 namespace fitTrackBackend.Tests.Controllers;
 
 public class AuthControllerTests
 {
+    private static TokenService CreateTokenService()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Jwt:Key"] = "test-super-secret-key-1234567890",
+                ["Jwt:Issuer"] = "fitTrackApi",
+                ["Jwt:Audience"] = "fitTrackApp"
+            })
+            .Build();
+
+        return new TokenService(configuration, new TestHostEnvironment());
+    }
+
     [Fact]
     public async Task Register_ReturnsBadRequest_WhenEmailAlreadyExists()
     {
@@ -23,7 +40,7 @@ public class AuthControllerTests
         });
         await context.SaveChangesAsync();
 
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.Register(new RegisterDto
         {
@@ -41,7 +58,7 @@ public class AuthControllerTests
     public async Task Register_CreatesUser_WhenEmailIsAvailable()
     {
         using var context = TestDbContextFactory.CreateContext(nameof(Register_CreatesUser_WhenEmailIsAvailable));
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.Register(new RegisterDto
         {
@@ -74,7 +91,7 @@ public class AuthControllerTests
         });
         await context.SaveChangesAsync();
 
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.Login(new LoginDto
         {
@@ -99,7 +116,7 @@ public class AuthControllerTests
         });
         await context.SaveChangesAsync();
 
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.Login(new LoginDto
         {
@@ -128,7 +145,7 @@ public class AuthControllerTests
         });
         await context.SaveChangesAsync();
 
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.GetProfile(1);
 
@@ -150,7 +167,7 @@ public class AuthControllerTests
         });
         await context.SaveChangesAsync();
 
-        var controller = new AuthController(context, new TokenService());
+        var controller = new AuthController(context, CreateTokenService());
 
         var result = await controller.UpdateProfile(1, new UpdateProfileDto
         {
@@ -178,5 +195,13 @@ public class AuthControllerTests
         Assert.Equal(4, updated.DefaultSets);
         Assert.Equal(50, updated.DefaultExerciseSeconds);
         Assert.Equal(75, updated.DefaultRestSeconds);
+    }
+
+    private sealed class TestHostEnvironment : IHostEnvironment
+    {
+        public string EnvironmentName { get; set; } = Environments.Development;
+        public string ApplicationName { get; set; } = "fitTrackBackend.Tests";
+        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
+        public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
     }
 }
