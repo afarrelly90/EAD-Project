@@ -56,6 +56,13 @@ describe('AuthService', () => {
         email: 'test@test.com',
         weight: null,
         language: 'en',
+        preferredDifficulty: 'Beginner',
+        preferredMuscleGroup: 'Core',
+        preferredWorkoutMinutes: 20,
+        preferredEquipment: null,
+        defaultSets: 3,
+        defaultExerciseSeconds: 45,
+        defaultRestSeconds: 60,
       },
     };
 
@@ -79,6 +86,13 @@ describe('AuthService', () => {
         email: 'test@test.com',
         weight: 72,
         language: 'it',
+        preferredDifficulty: 'Intermediate',
+        preferredMuscleGroup: 'Lower',
+        preferredWorkoutMinutes: 30,
+        preferredEquipment: 'Bench',
+        defaultSets: 4,
+        defaultExerciseSeconds: 50,
+        defaultRestSeconds: 75,
       },
     };
 
