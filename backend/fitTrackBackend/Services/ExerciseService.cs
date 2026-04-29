@@ -22,6 +22,78 @@ public class ExerciseService
             .ToListAsync();
     }
 
+    public async Task<GeneratedWorkoutDto?> GenerateWorkoutAsync(GenerateWorkoutRequestDto request)
+    {
+        var user = request.UserId.HasValue
+            ? await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.UserId.Value)
+            : null;
+
+        var difficulty = ResolveDifficulty(request.Difficulty, user?.PreferredDifficulty);
+        var muscleGroup = ResolveMuscleGroup(request.MuscleGroup, user?.PreferredMuscleGroup);
+        var equipment = ResolveEquipment(request.Equipment, user?.PreferredEquipment);
+        var targetMinutes = Math.Clamp(request.TargetMinutes ?? user?.PreferredWorkoutMinutes ?? 20, 5, 180);
+        var maxExercises = Math.Clamp(request.MaxExercises ?? 6, 1, 8);
+        var prescribedSets = Math.Clamp(user?.DefaultSets ?? 3, 1, 10);
+        var exerciseSeconds = Math.Clamp(user?.DefaultExerciseSeconds ?? 45, 5, 3600);
+        var restSeconds = Math.Clamp(user?.DefaultRestSeconds ?? 60, 5, 600);
+
+        var candidates = await FindCandidatesAsync(difficulty, muscleGroup, equipment);
+
+        var selectedExercises = BuildWorkoutPlan(candidates, targetMinutes, maxExercises);
+        if (selectedExercises.Count == 0)
+        {
+            return null;
+        }
+
+        return new GeneratedWorkoutDto
+        {
+            Title = BuildWorkoutTitle(muscleGroup, difficulty),
+            Difficulty = difficulty,
+            MuscleGroup = muscleGroup,
+            Equipment = equipment,
+            TargetMinutes = targetMinutes,
+            TotalMinutes = selectedExercises.Sum(x => x.DurationMinutes),
+            TotalCalories = selectedExercises.Sum(x => x.Calories),
+            PrescribedSets = prescribedSets,
+            ExerciseSeconds = exerciseSeconds,
+            RestSeconds = restSeconds,
+            Exercises = selectedExercises
+        };
+    }
+
+    private async Task<List<ExerciseDto>> FindCandidatesAsync(
+        string difficulty,
+        string muscleGroup,
+        string? equipment)
+    {
+        var filterAttempts = new (string? Difficulty, string? MuscleGroup, string? Equipment)[]
+        {
+            (difficulty, muscleGroup, equipment),
+            (difficulty, muscleGroup, null),
+            (difficulty, null, equipment),
+            (null, muscleGroup, equipment),
+            (difficulty, null, null),
+            (null, muscleGroup, null),
+            (null, null, equipment),
+            (null, null, null),
+        };
+
+        foreach (var filterAttempt in filterAttempts)
+        {
+            var candidates = await BuildCandidateQuery(
+                filterAttempt.Difficulty,
+                filterAttempt.MuscleGroup,
+                filterAttempt.Equipment).ToListAsync();
+
+            if (candidates.Count > 0)
+            {
+                return candidates;
+            }
+        }
+
+        return [];
+    }
+
     public async Task<ExerciseDto?> GetByIdAsync(int id)
     {
         return await _context.Exercises
@@ -110,5 +182,140 @@ public class ExerciseService
             Equipment = exercise.Equipment,
             CreatedAtUtc = exercise.CreatedAtUtc
         };
+    }
+
+    private IQueryable<ExerciseDto> BuildCandidateQuery(
+        string? difficulty,
+        string? muscleGroup,
+        string? equipment)
+    {
+        var query = _context.Exercises.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(difficulty))
+        {
+            var normalizedDifficulty = difficulty.ToLowerInvariant();
+            query = query.Where(x => x.Difficulty.ToLower() == normalizedDifficulty);
+        }
+
+        query = muscleGroup?.ToLowerInvariant() switch
+        {
+            "upper" => query.Where(x => x.IsUpperBody),
+            "lower" => query.Where(x => x.IsLowerBody),
+            "other" => query.Where(x => !x.IsUpperBody && !x.IsLowerBody && !x.IsCore),
+            "core" => query.Where(x => x.IsCore),
+            _ => query
+        };
+
+        if (!string.IsNullOrWhiteSpace(equipment))
+        {
+            var normalizedEquipment = equipment.ToLowerInvariant();
+            query = query.Where(x => (x.Equipment ?? string.Empty).ToLower() == normalizedEquipment);
+        }
+
+        return query
+            .OrderBy(x => x.DurationMinutes)
+            .ThenByDescending(x => x.Calories)
+            .ThenBy(x => x.Title)
+            .Select(x => MapToDto(x));
+    }
+
+    private static List<ExerciseDto> BuildWorkoutPlan(
+        List<ExerciseDto> candidates,
+        int targetMinutes,
+        int maxExercises)
+    {
+        if (candidates.Count == 0)
+        {
+            return [];
+        }
+
+        var selected = new List<ExerciseDto>();
+        var available = new List<ExerciseDto>(candidates);
+
+        while (available.Count > 0 && selected.Count < maxExercises)
+        {
+            var currentTotal = selected.Sum(x => x.DurationMinutes);
+            var remainingMinutes = Math.Max(targetMinutes - currentTotal, 0);
+
+            var nextExercise = available
+                .OrderBy(x => ScoreCandidate(x, remainingMinutes))
+                .ThenByDescending(x => x.Calories)
+                .ThenBy(x => x.Title)
+                .First();
+
+            selected.Add(nextExercise);
+            available.RemoveAll(x => x.Id == nextExercise.Id);
+
+            if (selected.Sum(x => x.DurationMinutes) >= targetMinutes)
+            {
+                break;
+            }
+        }
+
+        return selected;
+    }
+
+    private static int ScoreCandidate(ExerciseDto exercise, int remainingMinutes)
+    {
+        if (remainingMinutes <= 0)
+        {
+            return exercise.DurationMinutes;
+        }
+
+        return Math.Abs(remainingMinutes - exercise.DurationMinutes);
+    }
+
+    private static string ResolveDifficulty(string? difficulty, string? fallbackDifficulty)
+    {
+        return difficulty?.Trim().ToLowerInvariant() switch
+        {
+            "advanced" => "Advanced",
+            "intermediate" => "Intermediate",
+            "beginner" => "Beginner",
+            _ => fallbackDifficulty?.Trim().ToLowerInvariant() switch
+            {
+                "advanced" => "Advanced",
+                "intermediate" => "Intermediate",
+                _ => "Beginner"
+            }
+        };
+    }
+
+    private static string ResolveMuscleGroup(string? muscleGroup, string? fallbackMuscleGroup)
+    {
+        return muscleGroup?.Trim().ToLowerInvariant() switch
+        {
+            "upper" => "Upper",
+            "lower" => "Lower",
+            "other" => "Other",
+            "core" => "Core",
+            _ => fallbackMuscleGroup?.Trim().ToLowerInvariant() switch
+            {
+                "upper" => "Upper",
+                "lower" => "Lower",
+                "other" => "Other",
+                _ => "Core"
+            }
+        };
+    }
+
+    private static string? ResolveEquipment(string? equipment, string? fallbackEquipment)
+    {
+        var resolvedValue = string.IsNullOrWhiteSpace(equipment) ? fallbackEquipment : equipment;
+        if (string.IsNullOrWhiteSpace(resolvedValue))
+        {
+            return null;
+        }
+
+        return resolvedValue.Trim().ToLowerInvariant() switch
+        {
+            "none" => null,
+            _ => resolvedValue.Trim()
+        };
+    }
+
+    private static string BuildWorkoutTitle(string muscleGroup, string difficulty)
+    {
+        return $"{muscleGroup} {difficulty} Workout";
     }
 }

@@ -57,6 +57,8 @@
     "search_placeholder": "Search for an exercise...",
     "create_title": "Create New Exercise",
     "create_subtitle": "Add a custom exercise",
+    "builder_title": "Build My Workout",
+    "builder_subtitle": "Generate a guided plan from your saved preferences",
     "all_exercises": "All Exercises",
     "loading": "Loading exercises...",
     "error": "Could not load exercises right now.",
@@ -83,7 +85,44 @@
       "en": "English",
       "it": "Italian"
     },
+    "goal_difficulty": "Preferred difficulty",
+    "goal_muscle_group": "Focus area",
+    "goal_duration": "Workout length",
+    "goal_equipment": "Preferred equipment",
+    "default_sets": "Default sets",
+    "default_exercise_seconds": "Exercise seconds",
+    "default_rest_seconds": "Rest seconds",
+    "timer_preset": "Timer preset",
+    "timer_preset_value": "{{sets}} sets · {{exercise}}s work · {{rest}}s rest",
     "update_error": "Could not update your profile."
+  },
+  "builder": {
+    "eyebrow": "Workout Builder",
+    "title": "Generate a custom session",
+    "subtitle": "Use your saved preferences or tweak the settings to build a guided workout from the exercises already in your library.",
+    "form_label": "Preferences",
+    "form_title": "Plan settings",
+    "use_profile": "Use profile defaults",
+    "generate": "Generate workout",
+    "generating": "Generating...",
+    "validation": "Choose a valid workout length and exercise count before generating.",
+    "error": "Could not generate a workout for these settings.",
+    "clear": "Clear",
+    "preview_label": "Generated plan",
+    "start_guided": "Start guided workout",
+    "preset_summary": "{{sets}} sets · {{exercise}}s exercise · {{rest}}s rest",
+    "fields": {
+      "difficulty": "Difficulty",
+      "muscle_group": "Muscle group",
+      "equipment": "Equipment",
+      "target_minutes": "Target minutes",
+      "max_exercises": "Max exercises"
+    },
+    "summary": {
+      "total_minutes": "Total time",
+      "total_calories": "Estimated calories",
+      "exercise_count": "Exercises"
+    }
   },
   "exercise": {
     "muscle_groups": {
@@ -208,5 +247,34 @@
     },
     "total_sets": "{{count}} total",
     "validation_message": "Enter {{minSets}}-{{maxSets}} sets, {{minExercise}}-{{maxExercise}} exercise seconds, and {{minRest}}-{{maxRest}} rest seconds."
+  },
+  "guided_workout": {
+    "eyebrow": "Guided Workout",
+    "error": "There is no generated workout ready yet.",
+    "return_to_builder": "Return to builder",
+    "start": "Start workout",
+    "reset": "Reset workout",
+    "phase": {
+      "ready": "Ready",
+      "exercise": "Exercise",
+      "rest": "Rest",
+      "complete": "Complete"
+    },
+    "status": {
+      "setup_title": "Ready to begin",
+      "complete_title": "Workout complete",
+      "progress_title": "Exercise {{exercise}} of {{total}}, set {{set}} of {{sets}}",
+      "setup_message": "Your guided session includes {{count}} exercises.",
+      "complete_message": "You completed all {{count}} exercises in this workout.",
+      "exercise_message": "{{title}} is active for {{time}}.",
+      "rest_message": "Rest for {{time}} before the next round.",
+      "ready_message": "Press start when you are ready."
+    },
+    "exercise_progress": "Exercise {{current}} / {{total}}",
+    "set_progress": "Set {{current}} / {{total}}",
+    "plan_label": "Generated plan",
+    "duration_label": "Workout duration",
+    "preset_label": "Timer preset",
+    "preset_value": "{{sets}} sets · {{exercise}}s work · {{rest}}s rest"
   }
 }

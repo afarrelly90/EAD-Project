@@ -23,6 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/profile.component').then( m => m.ProfileComponent)
   },
   {
+    path: 'workouts/build',
+    loadComponent: () => import('./pages/workout-builder/workout-builder.component').then( m => m.WorkoutBuilderComponent)
+  },
+  {
+    path: 'workouts/guided',
+    loadComponent: () => import('./pages/guided-workout/guided-workout.component').then( m => m.GuidedWorkoutComponent)
+  },
+  {
     path: 'exercises/create',
     loadComponent: () => import('./pages/create-exercise/create-exercise.component').then( m => m.CreateExerciseComponent)
   },

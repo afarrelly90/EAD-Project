@@ -22,6 +22,18 @@ public class ExercisesController : ControllerBase
         return Ok(exercises);
     }
 
+    [HttpGet("generate-workout")]
+    public async Task<ActionResult<GeneratedWorkoutDto>> GenerateWorkout([FromQuery] GenerateWorkoutRequestDto request)
+    {
+        var workout = await _exerciseService.GenerateWorkoutAsync(request);
+        if (workout == null)
+        {
+            return NotFound(new { message = "No exercises matched the selected workout criteria" });
+        }
+
+        return Ok(workout);
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ExerciseDto>> GetById(int id)
     {

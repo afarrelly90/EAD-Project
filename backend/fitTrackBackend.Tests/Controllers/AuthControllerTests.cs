@@ -155,7 +155,14 @@ public class AuthControllerTests
         var result = await controller.UpdateProfile(1, new UpdateProfileDto
         {
             Weight = 80.2,
-            Language = "pt"
+            Language = "pt",
+            PreferredDifficulty = "Advanced",
+            PreferredMuscleGroup = "Upper",
+            PreferredWorkoutMinutes = 35,
+            PreferredEquipment = "Dumbbell",
+            DefaultSets = 4,
+            DefaultExerciseSeconds = 50,
+            DefaultRestSeconds = 75
         });
 
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -164,5 +171,12 @@ public class AuthControllerTests
         var updated = await context.Users.SingleAsync();
         Assert.Equal(80.2, updated.Weight);
         Assert.Equal("pt", updated.Language);
+        Assert.Equal("Advanced", updated.PreferredDifficulty);
+        Assert.Equal("Upper", updated.PreferredMuscleGroup);
+        Assert.Equal(35, updated.PreferredWorkoutMinutes);
+        Assert.Equal("Dumbbell", updated.PreferredEquipment);
+        Assert.Equal(4, updated.DefaultSets);
+        Assert.Equal(50, updated.DefaultExerciseSeconds);
+        Assert.Equal(75, updated.DefaultRestSeconds);
     }
 }

@@ -52,6 +52,17 @@ import { I18nService } from 'src/app/services/i18n.service';
   ],
 })
 export class ProfileComponent implements OnInit {
+  readonly difficultyOptions = ['Beginner', 'Intermediate', 'Advanced'];
+  readonly muscleGroupOptions = ['Core', 'Upper', 'Lower', 'Other'];
+  readonly equipmentOptions = [
+    'None',
+    'Mat',
+    'Dumbbell',
+    'Resistance Band',
+    'Kettlebell',
+    'Bench',
+  ];
+
   user: AuthUserProfile | null = null;
   profileForm!: FormGroup;
   isLoading = true;
@@ -79,6 +90,13 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       weight: [null, [Validators.min(0)]],
       language: ['en', [Validators.required]],
+      preferredDifficulty: ['Beginner', [Validators.required]],
+      preferredMuscleGroup: ['Core', [Validators.required]],
+      preferredWorkoutMinutes: [20, [Validators.required, Validators.min(5), Validators.max(180)]],
+      preferredEquipment: ['None'],
+      defaultSets: [3, [Validators.required, Validators.min(1), Validators.max(10)]],
+      defaultExerciseSeconds: [45, [Validators.required, Validators.min(5), Validators.max(3600)]],
+      defaultRestSeconds: [60, [Validators.required, Validators.min(5), Validators.max(600)]],
     });
 
     this.loadProfile();
@@ -115,6 +133,41 @@ export class ProfileComponent implements OnInit {
     return this.i18nService.translate(`profile.language_options.${language}`);
   }
 
+  get preferredDifficultyLabel(): string {
+    const difficulty = this.user?.preferredDifficulty?.toLowerCase() || 'beginner';
+    return this.i18nService.translate(`exercise.difficulty_options.${difficulty}`);
+  }
+
+  get preferredMuscleGroupLabel(): string {
+    const muscleGroup = this.user?.preferredMuscleGroup?.toLowerCase() || 'core';
+    return this.i18nService.translate(`exercise.muscle_groups.${muscleGroup}`);
+  }
+
+  get preferredEquipmentLabel(): string {
+    const equipment = this.user?.preferredEquipment;
+    if (!equipment) {
+      return this.i18nService.translate('exercise.equipment_options.none');
+    }
+
+    const key = `exercise.equipment_options.${equipment
+      .toLowerCase()
+      .replace(/ /g, '_')}`;
+    const translated = this.i18nService.translate(key);
+    return translated === key ? equipment : translated;
+  }
+
+  get timerPresetLabel(): string {
+    if (!this.user) {
+      return '';
+    }
+
+    return this.i18nService.translate('profile.timer_preset_value', {
+      sets: this.user.defaultSets,
+      exercise: this.user.defaultExerciseSeconds,
+      rest: this.user.defaultRestSeconds,
+    });
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -130,6 +183,13 @@ export class ProfileComponent implements OnInit {
       this.profileForm.patchValue({
         weight: this.user.weight,
         language: this.user.language || 'en',
+        preferredDifficulty: this.user.preferredDifficulty || 'Beginner',
+        preferredMuscleGroup: this.user.preferredMuscleGroup || 'Core',
+        preferredWorkoutMinutes: this.user.preferredWorkoutMinutes || 20,
+        preferredEquipment: this.user.preferredEquipment || 'None',
+        defaultSets: this.user.defaultSets || 3,
+        defaultExerciseSeconds: this.user.defaultExerciseSeconds || 45,
+        defaultRestSeconds: this.user.defaultRestSeconds || 60,
       });
       return;
     }
@@ -147,6 +207,17 @@ export class ProfileComponent implements OnInit {
     const payload: UpdateProfileDto = {
       weight: Number.isNaN(parsedWeight) ? null : parsedWeight,
       language: this.profileForm.value.language || 'en',
+      preferredDifficulty: this.profileForm.value.preferredDifficulty || 'Beginner',
+      preferredMuscleGroup: this.profileForm.value.preferredMuscleGroup || 'Core',
+      preferredWorkoutMinutes: Number(this.profileForm.value.preferredWorkoutMinutes) || 20,
+      preferredEquipment:
+        !this.profileForm.value.preferredEquipment ||
+        this.profileForm.value.preferredEquipment === 'None'
+          ? null
+          : this.profileForm.value.preferredEquipment,
+      defaultSets: Number(this.profileForm.value.defaultSets) || 3,
+      defaultExerciseSeconds: Number(this.profileForm.value.defaultExerciseSeconds) || 45,
+      defaultRestSeconds: Number(this.profileForm.value.defaultRestSeconds) || 60,
     };
 
     this.isSaving = true;
@@ -212,6 +283,13 @@ export class ProfileComponent implements OnInit {
     this.profileForm.reset({
       weight: this.user.weight,
       language: this.user.language || 'en',
+      preferredDifficulty: this.user.preferredDifficulty || 'Beginner',
+      preferredMuscleGroup: this.user.preferredMuscleGroup || 'Core',
+      preferredWorkoutMinutes: this.user.preferredWorkoutMinutes || 20,
+      preferredEquipment: this.user.preferredEquipment || 'None',
+      defaultSets: this.user.defaultSets || 3,
+      defaultExerciseSeconds: this.user.defaultExerciseSeconds || 45,
+      defaultRestSeconds: this.user.defaultRestSeconds || 60,
     });
   }
 }

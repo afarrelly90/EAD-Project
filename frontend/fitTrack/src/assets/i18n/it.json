@@ -57,6 +57,8 @@
     "search_placeholder": "Cerca un esercizio...",
     "create_title": "Crea nuovo esercizio",
     "create_subtitle": "Aggiungi un esercizio personalizzato",
+    "builder_title": "Crea il mio allenamento",
+    "builder_subtitle": "Genera un piano guidato dalle tue preferenze salvate",
     "all_exercises": "Tutti gli esercizi",
     "loading": "Caricamento esercizi...",
     "error": "Impossibile caricare gli esercizi in questo momento.",
@@ -83,7 +85,44 @@
       "en": "Inglese",
       "it": "Italiano"
     },
+    "goal_difficulty": "Difficolta preferita",
+    "goal_muscle_group": "Area di lavoro",
+    "goal_duration": "Durata allenamento",
+    "goal_equipment": "Attrezzatura preferita",
+    "default_sets": "Serie predefinite",
+    "default_exercise_seconds": "Secondi esercizio",
+    "default_rest_seconds": "Secondi recupero",
+    "timer_preset": "Preset timer",
+    "timer_preset_value": "{{sets}} serie · {{exercise}}s lavoro · {{rest}}s recupero",
     "update_error": "Impossibile aggiornare il tuo profilo."
+  },
+  "builder": {
+    "eyebrow": "Creatore allenamento",
+    "title": "Genera una sessione personalizzata",
+    "subtitle": "Usa le tue preferenze salvate o modifica i parametri per creare un allenamento guidato dagli esercizi gia presenti nella libreria.",
+    "form_label": "Preferenze",
+    "form_title": "Impostazioni piano",
+    "use_profile": "Usa i valori del profilo",
+    "generate": "Genera allenamento",
+    "generating": "Generazione...",
+    "validation": "Scegli una durata allenamento e un numero di esercizi validi prima di generare.",
+    "error": "Impossibile generare un allenamento con queste impostazioni.",
+    "clear": "Svuota",
+    "preview_label": "Piano generato",
+    "start_guided": "Avvia allenamento guidato",
+    "preset_summary": "{{sets}} serie · {{exercise}}s esercizio · {{rest}}s recupero",
+    "fields": {
+      "difficulty": "Difficolta",
+      "muscle_group": "Gruppo muscolare",
+      "equipment": "Attrezzatura",
+      "target_minutes": "Minuti obiettivo",
+      "max_exercises": "Numero massimo esercizi"
+    },
+    "summary": {
+      "total_minutes": "Tempo totale",
+      "total_calories": "Calorie stimate",
+      "exercise_count": "Esercizi"
+    }
   },
   "exercise": {
     "muscle_groups": {
@@ -208,5 +247,34 @@
     },
     "total_sets": "{{count}} totali",
     "validation_message": "Inserisci {{minSets}}-{{maxSets}} serie, {{minExercise}}-{{maxExercise}} secondi di esercizio e {{minRest}}-{{maxRest}} secondi di recupero."
+  },
+  "guided_workout": {
+    "eyebrow": "Allenamento guidato",
+    "error": "Non c'e ancora un allenamento generato pronto.",
+    "return_to_builder": "Torna al creatore",
+    "start": "Avvia allenamento",
+    "reset": "Reimposta allenamento",
+    "phase": {
+      "ready": "Pronto",
+      "exercise": "Esercizio",
+      "rest": "Recupero",
+      "complete": "Completato"
+    },
+    "status": {
+      "setup_title": "Pronto a iniziare",
+      "complete_title": "Allenamento completato",
+      "progress_title": "Esercizio {{exercise}} di {{total}}, serie {{set}} di {{sets}}",
+      "setup_message": "La tua sessione guidata include {{count}} esercizi.",
+      "complete_message": "Hai completato tutti i {{count}} esercizi di questo allenamento.",
+      "exercise_message": "{{title}} e attivo per {{time}}.",
+      "rest_message": "Recupera per {{time}} prima del prossimo round.",
+      "ready_message": "Premi avvia quando sei pronto."
+    },
+    "exercise_progress": "Esercizio {{current}} / {{total}}",
+    "set_progress": "Serie {{current}} / {{total}}",
+    "plan_label": "Piano generato",
+    "duration_label": "Durata allenamento",
+    "preset_label": "Preset timer",
+    "preset_value": "{{sets}} serie · {{exercise}}s lavoro · {{rest}}s recupero"
   }
 }

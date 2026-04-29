@@ -68,6 +68,33 @@
           <span class="profile-page__info-label">{{ 'common.language' | t }}</span>
           <span class="profile-page__info-value">{{ languageLabel }}</span>
         </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">{{ 'profile.goal_difficulty' | t }}</span>
+          <span class="profile-page__info-value">{{ preferredDifficultyLabel }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">{{ 'profile.goal_muscle_group' | t }}</span>
+          <span class="profile-page__info-value">{{ preferredMuscleGroupLabel }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">{{ 'profile.goal_duration' | t }}</span>
+          <span class="profile-page__info-value">
+            {{ user.preferredWorkoutMinutes }} {{ 'common.minutes_short' | t }}
+          </span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">{{ 'profile.goal_equipment' | t }}</span>
+          <span class="profile-page__info-value">{{ preferredEquipmentLabel }}</span>
+        </div>
+
+        <div class="profile-page__info-row">
+          <span class="profile-page__info-label">{{ 'profile.timer_preset' | t }}</span>
+          <span class="profile-page__info-value">{{ timerPresetLabel }}</span>
+        </div>
       </div>
 
       @if (isEditing) {
@@ -99,6 +126,89 @@
                 <ion-select-option value="en">{{ 'profile.language_options.en' | t }}</ion-select-option>
                 <ion-select-option value="it">{{ 'profile.language_options.it' | t }}</ion-select-option>
               </ion-select>
+            </ion-item>
+          </div>
+
+          <div class="profile-page__field-grid">
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.goal_difficulty' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-select formControlName="preferredDifficulty" interface="action-sheet">
+                  <ion-select-option *ngFor="let option of difficultyOptions" [value]="option">
+                    {{ ('exercise.difficulty_options.' + option.toLowerCase()) | t }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </div>
+
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.goal_muscle_group' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-select formControlName="preferredMuscleGroup" interface="action-sheet">
+                  <ion-select-option *ngFor="let option of muscleGroupOptions" [value]="option">
+                    {{ ('exercise.muscle_groups.' + option.toLowerCase()) | t }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="profile-page__field-grid">
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.goal_duration' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-input
+                  type="number"
+                  formControlName="preferredWorkoutMinutes"
+                  inputmode="numeric"
+                ></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.goal_equipment' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-select formControlName="preferredEquipment" interface="action-sheet">
+                  <ion-select-option *ngFor="let option of equipmentOptions" [value]="option">
+                    {{ ('exercise.equipment_options.' + option.toLowerCase().replace(' ', '_')) | t }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="profile-page__field-grid">
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.default_sets' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-input
+                  type="number"
+                  formControlName="defaultSets"
+                  inputmode="numeric"
+                ></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="profile-page__field">
+              <label class="profile-page__label">{{ 'profile.default_exercise_seconds' | t }}</label>
+              <ion-item lines="none" class="profile-page__input">
+                <ion-input
+                  type="number"
+                  formControlName="defaultExerciseSeconds"
+                  inputmode="numeric"
+                ></ion-input>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="profile-page__field">
+            <label class="profile-page__label">{{ 'profile.default_rest_seconds' | t }}</label>
+            <ion-item lines="none" class="profile-page__input">
+              <ion-input
+                type="number"
+                formControlName="defaultRestSeconds"
+                inputmode="numeric"
+              ></ion-input>
             </ion-item>
           </div>
 
